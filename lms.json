@@ -1,0 +1,758 @@
+{
+  "instructors": [
+    {
+      "id": "INS001",
+      "name": "Ahmad Ali",
+      "email": "ahmad@example.com",
+      "password": "1234",
+      "role": "Instructor"
+    },
+    {
+      "id": "INS002",
+      "name": "Sara Ahmad",
+      "email": "sara@example.com",
+      "password": "1234",
+      "role": "Instructor"
+    },
+    {
+      "id": "INS003",
+      "name": "Mohammad Khaled",
+      "email": "mohammad@example.com",
+      "password": "1234",
+      "role": "Instructor"
+    }
+  ],
+
+  "courses": [
+    {
+      "id": "COURSE001",
+      "name": "JavaScript",
+      "description": "Modern JavaScript programming and DOM manipulation",
+      "instructorId": "INS001",
+      "studentsCount": 8
+    },
+    {
+      "id": "COURSE002",
+      "name": "HTML & CSS",
+      "description": "Web structure, styling and responsive design",
+      "instructorId": "INS001",
+      "studentsCount": 6
+    },
+    {
+      "id": "COURSE003",
+      "name": "Python",
+      "description": "Python programming fundamentals",
+      "instructorId": "INS002",
+      "studentsCount": 7
+    },
+    {
+      "id": "COURSE004",
+      "name": "Data Structures",
+      "description": "Algorithms and fundamental data structures",
+      "instructorId": "INS003",
+      "studentsCount": 5
+    },
+    {
+      "id": "COURSE005",
+      "name": "Database Fundamentals",
+      "description": "SQL, relational databases and database design",
+      "instructorId": "INS003",
+      "studentsCount": 4
+    }
+  ],
+
+  "students": [
+    {
+      "id": "ST001",
+      "name": "Omar Khaled",
+      "email": "omar@example.com",
+      "phone": "+962791111111",
+      "instructorId": "INS001",
+      "courseIds": ["COURSE001", "COURSE002"],
+      "status": "active",
+      "enrollmentDate": "2026-09-01",
+
+      "grades": {
+        "assignments": [
+          {
+            "id": "A001",
+            "name": "JavaScript Basics",
+            "score": 90,
+            "maxScore": 100,
+            "date": "2026-09-05"
+          },
+          {
+            "id": "A002",
+            "name": "DOM Manipulation",
+            "score": 85,
+            "maxScore": 100,
+            "date": "2026-09-12"
+          },
+          {
+            "id": "A003",
+            "name": "ES6 Practice",
+            "score": 92,
+            "maxScore": 100,
+            "date": "2026-09-20"
+          }
+        ],
+
+        "quizzes": [
+          {
+            "id": "Q001",
+            "name": "JavaScript Quiz 1",
+            "score": 88,
+            "maxScore": 100,
+            "date": "2026-09-08"
+          },
+          {
+            "id": "Q002",
+            "name": "JavaScript Quiz 2",
+            "score": 94,
+            "maxScore": 100,
+            "date": "2026-09-18"
+          }
+        ],
+
+        "midterm": {
+          "score": 87,
+          "maxScore": 100,
+          "date": "2026-09-22"
+        },
+
+        "finalExam": {
+          "score": 91,
+          "maxScore": 100,
+          "date": "2026-09-29"
+        }
+      },
+
+      "attendance": {
+        "totalClasses": 30,
+        "attended": 28,
+        "absent": 2,
+        "late": 1,
+        "percentage": 93.33
+      },
+
+      "performance": {
+        "assignmentAverage": 89,
+        "quizAverage": 91,
+        "midterm": 87,
+        "finalExam": 91,
+        "overallGrade": 89.6,
+        "performanceLevel": "Excellent"
+      }
+    },
+
+    {
+      "id": "ST002",
+      "name": "Lina Ahmad",
+      "email": "lina@example.com",
+      "phone": "+962792222222",
+      "instructorId": "INS001",
+      "courseIds": ["COURSE001"],
+      "status": "active",
+      "enrollmentDate": "2026-09-02",
+
+      "grades": {
+        "assignments": [
+          {
+            "id": "A004",
+            "name": "JavaScript Basics",
+            "score": 78,
+            "maxScore": 100,
+            "date": "2026-09-05"
+          },
+          {
+            "id": "A005",
+            "name": "DOM Manipulation",
+            "score": 82,
+            "maxScore": 100,
+            "date": "2026-09-12"
+          }
+        ],
+
+        "quizzes": [
+          {
+            "id": "Q003",
+            "name": "JavaScript Quiz 1",
+            "score": 80,
+            "maxScore": 100,
+            "date": "2026-09-08"
+          },
+          {
+            "id": "Q004",
+            "name": "JavaScript Quiz 2",
+            "score": 85,
+            "maxScore": 100,
+            "date": "2026-09-18"
+          }
+        ],
+
+        "midterm": {
+          "score": 79,
+          "maxScore": 100,
+          "date": "2026-09-22"
+        },
+
+        "finalExam": {
+          "score": 84,
+          "maxScore": 100,
+          "date": "2026-09-29"
+        }
+      },
+
+      "attendance": {
+        "totalClasses": 30,
+        "attended": 27,
+        "absent": 3,
+        "late": 2,
+        "percentage": 90
+      },
+
+      "performance": {
+        "assignmentAverage": 80,
+        "quizAverage": 82.5,
+        "midterm": 79,
+        "finalExam": 84,
+        "overallGrade": 81.1,
+        "performanceLevel": "Good"
+      }
+    },
+
+    {
+      "id": "ST003",
+      "name": "Yousef Ali",
+      "email": "yousef@example.com",
+      "phone": "+962793333333",
+      "instructorId": "INS001",
+      "courseIds": ["COURSE001", "COURSE002"],
+      "status": "active",
+      "enrollmentDate": "2026-09-03",
+
+      "grades": {
+        "assignments": [
+          {
+            "id": "A006",
+            "name": "JavaScript Basics",
+            "score": 65,
+            "maxScore": 100,
+            "date": "2026-09-05"
+          },
+          {
+            "id": "A007",
+            "name": "DOM Manipulation",
+            "score": 72,
+            "maxScore": 100,
+            "date": "2026-09-12"
+          }
+        ],
+
+        "quizzes": [
+          {
+            "id": "Q005",
+            "name": "JavaScript Quiz 1",
+            "score": 68,
+            "maxScore": 100,
+            "date": "2026-09-08"
+          },
+          {
+            "id": "Q006",
+            "name": "JavaScript Quiz 2",
+            "score": 74,
+            "maxScore": 100,
+            "date": "2026-09-18"
+          }
+        ],
+
+        "midterm": {
+          "score": 70,
+          "maxScore": 100,
+          "date": "2026-09-22"
+        },
+
+        "finalExam": {
+          "score": 76,
+          "maxScore": 100,
+          "date": "2026-09-29"
+        }
+      },
+
+      "attendance": {
+        "totalClasses": 30,
+        "attended": 24,
+        "absent": 6,
+        "late": 3,
+        "percentage": 80
+      },
+
+      "performance": {
+        "assignmentAverage": 68.5,
+        "quizAverage": 71,
+        "midterm": 70,
+        "finalExam": 76,
+        "overallGrade": 71.6,
+        "performanceLevel": "Needs Improvement"
+      }
+    },
+
+    {
+      "id": "ST004",
+      "name": "Rana Mohammad",
+      "email": "rana@example.com",
+      "phone": "+962794444444",
+      "instructorId": "INS002",
+      "courseIds": ["COURSE003"],
+      "status": "active",
+      "enrollmentDate": "2026-09-01",
+
+      "grades": {
+        "assignments": [
+          {
+            "id": "A008",
+            "name": "Python Basics",
+            "score": 95,
+            "maxScore": 100,
+            "date": "2026-09-05"
+          },
+          {
+            "id": "A009",
+            "name": "Functions",
+            "score": 91,
+            "maxScore": 100,
+            "date": "2026-09-12"
+          }
+        ],
+
+        "quizzes": [
+          {
+            "id": "Q007",
+            "name": "Python Quiz 1",
+            "score": 93,
+            "maxScore": 100,
+            "date": "2026-09-08"
+          },
+          {
+            "id": "Q008",
+            "name": "Python Quiz 2",
+            "score": 96,
+            "maxScore": 100,
+            "date": "2026-09-18"
+          }
+        ],
+
+        "midterm": {
+          "score": 94,
+          "maxScore": 100,
+          "date": "2026-09-22"
+        },
+
+        "finalExam": {
+          "score": 97,
+          "maxScore": 100,
+          "date": "2026-09-29"
+        }
+      },
+
+      "attendance": {
+        "totalClasses": 30,
+        "attended": 30,
+        "absent": 0,
+        "late": 0,
+        "percentage": 100
+      },
+
+      "performance": {
+        "assignmentAverage": 93,
+        "quizAverage": 94.5,
+        "midterm": 94,
+        "finalExam": 97,
+        "overallGrade": 95,
+        "performanceLevel": "Excellent"
+      }
+    },
+
+    {
+      "id": "ST005",
+      "name": "Khaled Samir",
+      "email": "khaled@example.com",
+      "phone": "+962795555555",
+      "instructorId": "INS002",
+      "courseIds": ["COURSE003"],
+      "status": "active",
+      "enrollmentDate": "2026-09-02",
+
+      "grades": {
+        "assignments": [
+          {
+            "id": "A010",
+            "name": "Python Basics",
+            "score": 72,
+            "maxScore": 100,
+            "date": "2026-09-05"
+          },
+          {
+            "id": "A011",
+            "name": "Functions",
+            "score": 76,
+            "maxScore": 100,
+            "date": "2026-09-12"
+          }
+        ],
+
+        "quizzes": [
+          {
+            "id": "Q009",
+            "name": "Python Quiz 1",
+            "score": 70,
+            "maxScore": 100,
+            "date": "2026-09-08"
+          },
+          {
+            "id": "Q010",
+            "name": "Python Quiz 2",
+            "score": 78,
+            "maxScore": 100,
+            "date": "2026-09-18"
+          }
+        ],
+
+        "midterm": {
+          "score": 74,
+          "maxScore": 100,
+          "date": "2026-09-22"
+        },
+
+        "finalExam": {
+          "score": 81,
+          "maxScore": 100,
+          "date": "2026-09-29"
+        }
+      },
+
+      "attendance": {
+        "totalClasses": 30,
+        "attended": 26,
+        "absent": 4,
+        "late": 2,
+        "percentage": 86.67
+      },
+
+      "performance": {
+        "assignmentAverage": 74,
+        "quizAverage": 74,
+        "midterm": 74,
+        "finalExam": 81,
+        "overallGrade": 76.8,
+        "performanceLevel": "Good"
+      }
+    },
+
+    {
+      "id": "ST006",
+      "name": "Noor Hassan",
+      "email": "noor@example.com",
+      "phone": "+962796666666",
+      "instructorId": "INS002",
+      "courseIds": ["COURSE003"],
+      "status": "active",
+      "enrollmentDate": "2026-09-04",
+
+      "grades": {
+        "assignments": [
+          {
+            "id": "A012",
+            "name": "Python Basics",
+            "score": 58,
+            "maxScore": 100,
+            "date": "2026-09-05"
+          },
+          {
+            "id": "A013",
+            "name": "Functions",
+            "score": 64,
+            "maxScore": 100,
+            "date": "2026-09-12"
+          }
+        ],
+
+        "quizzes": [
+          {
+            "id": "Q011",
+            "name": "Python Quiz 1",
+            "score": 61,
+            "maxScore": 100,
+            "date": "2026-09-08"
+          },
+          {
+            "id": "Q012",
+            "name": "Python Quiz 2",
+            "score": 66,
+            "maxScore": 100,
+            "date": "2026-09-18"
+          }
+        ],
+
+        "midterm": {
+          "score": 60,
+          "maxScore": 100,
+          "date": "2026-09-22"
+        },
+
+        "finalExam": {
+          "score": 68,
+          "maxScore": 100,
+          "date": "2026-09-29"
+        }
+      },
+
+      "attendance": {
+        "totalClasses": 30,
+        "attended": 22,
+        "absent": 8,
+        "late": 4,
+        "percentage": 73.33
+      },
+
+      "performance": {
+        "assignmentAverage": 61,
+        "quizAverage": 63.5,
+        "midterm": 60,
+        "finalExam": 68,
+        "overallGrade": 63.4,
+        "performanceLevel": "Needs Improvement"
+      }
+    },
+
+    {
+      "id": "ST007",
+      "name": "Zaid Omar",
+      "email": "zaid@example.com",
+      "phone": "+962797777777",
+      "instructorId": "INS003",
+      "courseIds": ["COURSE004", "COURSE005"],
+      "status": "active",
+      "enrollmentDate": "2026-09-01",
+
+      "grades": {
+        "assignments": [
+          {
+            "id": "A014",
+            "name": "Arrays and Objects",
+            "score": 88,
+            "maxScore": 100,
+            "date": "2026-09-05"
+          },
+          {
+            "id": "A015",
+            "name": "Database Design",
+            "score": 91,
+            "maxScore": 100,
+            "date": "2026-09-12"
+          }
+        ],
+
+        "quizzes": [
+          {
+            "id": "Q013",
+            "name": "Data Structures Quiz",
+            "score": 86,
+            "maxScore": 100,
+            "date": "2026-09-08"
+          },
+          {
+            "id": "Q014",
+            "name": "SQL Quiz",
+            "score": 90,
+            "maxScore": 100,
+            "date": "2026-09-18"
+          }
+        ],
+
+        "midterm": {
+          "score": 89,
+          "maxScore": 100,
+          "date": "2026-09-22"
+        },
+
+        "finalExam": {
+          "score": 93,
+          "maxScore": 100,
+          "date": "2026-09-29"
+        }
+      },
+
+      "attendance": {
+        "totalClasses": 30,
+        "attended": 29,
+        "absent": 1,
+        "late": 1,
+        "percentage": 96.67
+      },
+
+      "performance": {
+        "assignmentAverage": 89.5,
+        "quizAverage": 88,
+        "midterm": 89,
+        "finalExam": 93,
+        "overallGrade": 90.4,
+        "performanceLevel": "Excellent"
+      }
+    },
+
+    {
+      "id": "ST008",
+      "name": "Huda Ahmad",
+      "email": "huda@example.com",
+      "phone": "+962798888888",
+      "instructorId": "INS003",
+      "courseIds": ["COURSE004"],
+      "status": "active",
+      "enrollmentDate": "2026-09-03",
+
+      "grades": {
+        "assignments": [
+          {
+            "id": "A016",
+            "name": "Arrays and Objects",
+            "score": 79,
+            "maxScore": 100,
+            "date": "2026-09-05"
+          },
+          {
+            "id": "A017",
+            "name": "Linked Lists",
+            "score": 84,
+            "maxScore": 100,
+            "date": "2026-09-12"
+          }
+        ],
+
+        "quizzes": [
+          {
+            "id": "Q015",
+            "name": "Data Structures Quiz",
+            "score": 81,
+            "maxScore": 100,
+            "date": "2026-09-08"
+          },
+          {
+            "id": "Q016",
+            "name": "Algorithms Quiz",
+            "score": 83,
+            "maxScore": 100,
+            "date": "2026-09-18"
+          }
+        ],
+
+        "midterm": {
+          "score": 80,
+          "maxScore": 100,
+          "date": "2026-09-22"
+        },
+
+        "finalExam": {
+          "score": 86,
+          "maxScore": 100,
+          "date": "2026-09-29"
+        }
+      },
+
+      "attendance": {
+        "totalClasses": 30,
+        "attended": 28,
+        "absent": 2,
+        "late": 2,
+        "percentage": 93.33
+      },
+
+      "performance": {
+        "assignmentAverage": 81.5,
+        "quizAverage": 82,
+        "midterm": 80,
+        "finalExam": 86,
+        "overallGrade": 83.2,
+        "performanceLevel": "Good"
+      }
+    }
+  ],
+
+  "notifications": [
+    {
+      "id": "NOT001",
+      "instructorId": "INS001",
+      "studentId": "ST003",
+      "type": "warning",
+      "title": "Low Performance",
+      "message": "Yousef Ali's overall grade is below 75%.",
+      "read": false,
+      "date": "2026-09-29"
+    },
+    {
+      "id": "NOT002",
+      "instructorId": "INS002",
+      "studentId": "ST006",
+      "type": "warning",
+      "title": "Low Attendance",
+      "message": "Noor Hassan's attendance is below 75%.",
+      "read": false,
+      "date": "2026-09-29"
+    },
+    {
+      "id": "NOT003",
+      "instructorId": "INS001",
+      "studentId": "ST001",
+      "type": "success",
+      "title": "Excellent Performance",
+      "message": "Omar Khaled achieved an excellent overall grade.",
+      "read": true,
+      "date": "2026-09-29"
+    }
+  ],
+
+  "reports": [
+    {
+      "id": "REP001",
+      "studentId": "ST001",
+      "instructorId": "INS001",
+      "generatedDate": "2026-09-29",
+      "overallGrade": 89.6,
+      "attendance": 93.33,
+      "performanceLevel": "Excellent"
+    },
+    {
+      "id": "REP002",
+      "studentId": "ST002",
+      "instructorId": "INS001",
+      "generatedDate": "2026-09-29",
+      "overallGrade": 81.1,
+      "attendance": 90,
+      "performanceLevel": "Good"
+    },
+    {
+      "id": "REP003",
+      "studentId": "ST003",
+      "instructorId": "INS001",
+      "generatedDate": "2026-09-29",
+      "overallGrade": 71.6,
+      "attendance": 80,
+      "performanceLevel": "Needs Improvement"
+    }
+  ],
+
+  "gradeWeights": {
+    "assignments": 20,
+    "quizzes": 20,
+    "midterm": 20,
+    "finalExam": 40
+  },
+
+  "settings": {
+    "passingGrade": 60,
+    "excellentGrade": 85,
+    "goodGrade": 70,
+    "lowAttendanceThreshold": 75,
+    "lowGradeThreshold": 60
+  }
+}
