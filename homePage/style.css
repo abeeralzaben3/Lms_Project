@@ -22,11 +22,10 @@ body {
     height: 100%;
     display: grid;
     grid-template-columns: 1fr 4fr;
-    grid-template-rows: auto auto auto auto;
+    grid-template-rows: auto auto;
     grid-template-areas:
         "side header"
         "side main"
-        "side main";
 
 }
 /* ===========================header============================ */
@@ -40,6 +39,8 @@ body {
     
     position: sticky;
     top: 0;
+    right: 0;
+    
     justify-content: end;
 
     border-bottom: 1px solid #E1E3F0;
@@ -362,7 +363,7 @@ a:hover {
 .content {
     grid-area: main;
     height: 100%;
-
+    
     background-color: #F5F6FF;
 
     color: #20204D;
@@ -469,86 +470,233 @@ a:hover {
 }
 
 
-@media (max-width:640px) {
+
+/* ============================= CHARTS ============================ */
+
+.charts {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+
+    padding: 20px;
+}
+
+
+.chartCard {
+    flex: 1;
+    background-color: #FFFFFF;
+
+    border: 1px solid #E1E3F0;
+
+    border-radius: 20px;
+
+    padding: 20px;
+
+    box-shadow:
+        0 6px 20px rgba(101, 88, 245, 0.08);
+}
+
+
+.chartCard h2 {
+    color: #20204D;
+
+    font-size: 20px;
+
+    margin-bottom: 20px;
+}
+
+
+.chartContainer {
+    position: relative;
+
+    width: 100%;
+
+    height: 300px;
+}
+
+
+@media (max-width: 640px) {
+
+    /* ======================= MAIN CONTAINER ======================= */
 
     .mainCountainer {
-        position: relative;
-        max-width: 640px;
+        min-height: 100vh;
         height: auto;
-        grid-template-columns: auto;
-        grid-template-areas:
-            "header header "
-            "side main";
 
+        display: grid;
+
+        grid-template-columns: auto 1fr;
+        grid-template-rows: 70px auto;
+
+        grid-template-areas:
+            "header header"
+            "side main";
     }
+
+
+    /* ======================= HEADER ======================= */
 
     .header {
-        max-width:100%;
-        min-width: 0;
-        width: auto;
+        grid-area: header;
+
+        position: fixed;
+
         top: 0;
-        right: 0;
         left: 0;
+        right: 0;
+
+        width: 100%;
+        height: 70px;
+
+        z-index: 20;
     }
 
-    .account {
-        justify-content: start;
-         min-width: 50px;
-         gap: 2px;
+
+    .headerCountent {
+        width: 100%;
+        min-width: 0;
+
+        padding: 10px;
+
+        gap: 10px;
     }
+
+
+    /* ======================= ACCOUNT ======================= */
+
+    .account {
+        min-width: 50px;
+
+        justify-content: center;
+
+        gap: 2px;
+    }
+
 
     .headerName {
         display: none;
     }
 
+
+    /* ======================= BURGER ======================= */
+
     .burgerMinu {
         display: flex;
-        min-width: 10px;
-        width: 50px;
+
+        width: 40px;
+        min-width: 40px;
+        height: 25px;
     }
 
-    
 
-    .search{
-       
+    /* ======================= SEARCH ======================= */
+
+    .search {
+        width: 100%;
         max-width: 195px;
-        min-width: 50px;
+        min-width: 0;
+
+        flex: 1;
     }
 
-    /* =======================sidebar======================= */
 
+    .searchInput {
+        min-width: 0;
+    }
+
+
+    /* ======================= SIDEBAR ======================= */
 
     .sideBar {
         display: none;
     }
 
     .activeSide {
-        display: inline-block;
-        position: fixed;
-        top: 70px;
-        bottom: 0px;
-        width:auto ;
-        
-        
-        
+    display: block;
+    min-height: 100vh;
+    position: fixed;
 
-    }
+    top: 70px;
+    left: 0;
+    bottom: 0;
+
+    width: 250px;
+
+    background-color: #FFFFFF;
+
+    z-index: 30;
+
+    box-shadow: 5px 0 20px rgba(101, 88, 245, 0.15);
+}
 
 
+    /* ======================= MAIN ======================= */
 
-    /* =======================main======================= */
     .content {
-        position: sticky;
-       right: 0;
-       left: 0;
-       top: 70px;
-       min-width: 0;
-        
+        grid-area: main;
 
+        width: 100%;
+        min-width: 0;
+
+        min-height: calc(100vh - 70px);
+
+        padding: 10px;
+
+        position: static;
     }
 
-    
 
-    
-    
+    /* ======================= MAIN HEADER ======================= */
+
+    .mainHeader {
+        margin: 20px 10px;
+
+        gap: 15px;
+
+        flex-direction: column;
+    }
+
+
+    .attendanceBtn {
+        align-self: flex-start;
+    }
+
+
+    /* ======================= CARDS ======================= */
+
+    .cards {
+        padding: 10px;
+
+        flex-direction: column;
+
+        gap: 15px;
+    }
+
+
+    .card {
+        width: 100%;
+    }
+
+
+    /* ======================= CHARTS ======================= */
+
+    .charts {
+        padding: 10px;
+
+        flex-direction: column;
+
+        gap: 15px;
+    }
+
+
+    .chartCard {
+        width: 100%;
+
+        min-width: 0;
+    }
+
+
+    .chartContainer {
+        height: 250px;
+    }
 }
