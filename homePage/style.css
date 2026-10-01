@@ -29,7 +29,7 @@ body {
         "side main";
 
 }
-
+/* ===========================header============================ */
 .header {
     grid-area: header;
     display: flex;
@@ -37,7 +37,7 @@ body {
     background-color: #FFFFFF;
 
     height: 70px;
-    min-width: 0;
+    
     position: sticky;
     top: 0;
     justify-content: end;
@@ -59,17 +59,19 @@ body {
     flex-direction: row-reverse;
     gap: 20px;
 }
-.burgerMinu{
-display: flex;
-flex-direction: column;
-width: 40px;
-height: 25px;
-justify-content: space-between;
-cursor: pointer;
-display: none;
+
+.burgerMinu {
+    flex-direction: column;
+    max-width: 50px;
+    width: 40px;
+    height: 25px;
+    justify-content: space-between;
+    cursor: pointer;
+    display: none;
 }
-.borderMinu{
-border-bottom:2px solid #c7cbe4;
+
+.borderMinu {
+    border-bottom: 2px solid #c7cbe4;
 
 
 }
@@ -77,7 +79,7 @@ border-bottom:2px solid #c7cbe4;
 .account {
     height: 50px;
 
-    min-width: 200px;
+    min-width: 100px;
 
     display: flex;
 
@@ -103,7 +105,7 @@ border-bottom:2px solid #c7cbe4;
 }
 
 .account:hover {
-    
+
 
     background: linear-gradient(90deg,
             rgba(101, 88, 245, 0.12),
@@ -113,7 +115,7 @@ border-bottom:2px solid #c7cbe4;
 
     box-shadow: 0 5px 15px rgba(101, 88, 245, 0.08);
 
-    
+
 }
 
 
@@ -161,11 +163,12 @@ border-bottom:2px solid #c7cbe4;
     box-shadow: 0 4px 12px rgba(101, 88, 245, 0.30);
 }
 
-a{
-    text-decoration: none ;
+a {
+    text-decoration: none;
     color: #20204D;
 }
-.options  {
+
+.options {
     text-decoration: none;
 
     color: #20204D;
@@ -178,15 +181,18 @@ a{
 }
 
 
-.options:hover ,a:hover{
+.options:hover,
+a:hover {
     background-color: #F1EFFF;
 
     color: #6558F5;
 }
 
-.active{
-    display: block;
+.activeAccount {
+    display: inline-block;
 }
+
+
 
 .headerName {
     font-size: 13px;
@@ -198,7 +204,7 @@ a{
     display: flex;
     height: 40px;
     width: 400px;
-
+    min-width: 0px;
     background-color: #F8F8FF;
 
     border-radius: 20px;
@@ -352,7 +358,7 @@ a{
     color: inherit;
     width: 100%;
 }
-
+/* ===================================main======================================= */
 .content {
     grid-area: main;
     height: 100%;
@@ -464,18 +470,85 @@ a{
 
 
 @media (max-width:640px) {
+
+    .mainCountainer {
+        position: relative;
+        max-width: 640px;
+        height: auto;
+        grid-template-columns: auto;
+        grid-template-areas:
+            "header header "
+            "side main";
+
+    }
+
+    .header {
+        max-width:100%;
+        min-width: 0;
+        width: auto;
+        top: 0;
+        right: 0;
+        left: 0;
+    }
+
+    .account {
+        justify-content: start;
+         min-width: 50px;
+         gap: 2px;
+    }
+
+    .headerName {
+        display: none;
+    }
+
+    .burgerMinu {
+        display: flex;
+        min-width: 10px;
+        width: 50px;
+    }
+
+    
+
+    .search{
+       
+        max-width: 195px;
+        min-width: 50px;
+    }
+
+    /* =======================sidebar======================= */
+
+
     .sideBar {
         display: none;
     }
 
-    .burgerMinu{display: flex;}
+    .activeSide {
+        display: inline-block;
+        position: fixed;
+        top: 70px;
+        bottom: 0px;
+        width:auto ;
+        
+        
+        
 
-        .mainCountainer {
-            height: 100%;
-            grid-template-areas:
-                "header header"
-                "main main"
-                "main main";
+    }
 
-        }
+
+
+    /* =======================main======================= */
+    .content {
+        position: sticky;
+       right: 0;
+       left: 0;
+       top: 70px;
+       min-width: 0;
+        
+
+    }
+
+    
+
+    
+    
 }
