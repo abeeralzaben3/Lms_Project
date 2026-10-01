@@ -1,0 +1,129 @@
+{
+  "students": [
+    {
+      "id": "stu_001",
+      "studentId": "20260045",
+      "name": "Lina Omar",
+      "courses": ["JS101"],
+      "scores": [
+        { "assessmentId": "a1", "score": 9 },
+        { "assessmentId": "a2", "score": 8 },
+        { "assessmentId": "a3", "score": 36 },
+        { "assessmentId": "a4", "score": 45 }
+      ],
+      "attendance": [
+        { "date": "2026-09-20", "course": "JS101", "status": "present" },
+        { "date": "2026-09-22", "course": "JS101", "status": "present" },
+        { "date": "2026-09-24", "course": "JS101", "status": "present" }
+      ],
+      "archived": false
+    },
+    {
+      "id": "stu_002",
+      "studentId": "20260046",
+      "name": "Omar Khaled",
+      "courses": ["JS101"],
+      "scores": [
+        { "assessmentId": "a1", "score": 7 },
+        { "assessmentId": "a2", "score": 6 },
+        { "assessmentId": "a3", "score": 28 },
+        { "assessmentId": "a4", "score": 38 }
+      ],
+      "attendance": [
+        { "date": "2026-09-20", "course": "JS101", "status": "present" },
+        { "date": "2026-09-22", "course": "JS101", "status": "absent" },
+        { "date": "2026-09-24", "course": "JS101", "status": "present" }
+      ],
+      "archived": false
+    },
+    {
+      "id": "stu_003",
+      "studentId": "20260047",
+      "name": "Sara Nasser",
+      "courses": ["JS101"],
+      "scores": [
+        { "assessmentId": "a1", "score": 10 },
+        { "assessmentId": "a2", "score": 10 },
+        { "assessmentId": "a3", "score": 39 },
+        { "assessmentId": "a4", "score": 49 }
+      ],
+      "attendance": [
+        { "date": "2026-09-20", "course": "JS101", "status": "present" },
+        { "date": "2026-09-22", "course": "JS101", "status": "present" },
+        { "date": "2026-09-24", "course": "JS101", "status": "present" }
+      ],
+      "archived": false
+    },
+    {
+      "id": "stu_004",
+      "studentId": "20260048",
+      "name": "Yousef Haddad",
+      "courses": ["JS101"],
+      "scores": [
+        { "assessmentId": "a1", "score": 5 },
+        { "assessmentId": "a2", "score": 4 },
+        { "assessmentId": "a3", "score": 20 },
+        { "assessmentId": "a4", "score": 27 }
+      ],
+      "attendance": [
+        { "date": "2026-09-20", "course": "JS101", "status": "absent" },
+        { "date": "2026-09-22", "course": "JS101", "status": "present" },
+        { "date": "2026-09-24", "course": "JS101", "status": "absent" }
+      ],
+      "archived": false
+    },
+    {
+      "id": "stu_005",
+      "studentId": "20260049",
+      "name": "Maya Saleh",
+      "courses": ["JS101"],
+      "scores": [
+        { "assessmentId": "a1", "score": 8 },
+        { "assessmentId": "a2", "score": 9 },
+        { "assessmentId": "a3", "score": 33 }
+      ],
+      "attendance": [
+        { "date": "2026-09-20", "course": "JS101", "status": "present" },
+        { "date": "2026-09-22", "course": "JS101", "status": "present" },
+        { "date": "2026-09-24", "course": "JS101", "status": "absent" }
+      ],
+      "archived": false
+    },
+    {
+      "id": "stu_006",
+      "studentId": "20260050",
+      "name": "Hassan Mansour",
+      "courses": ["JS101"],
+      "scores": [
+        { "assessmentId": "a1", "score": 3 },
+        { "assessmentId": "a2", "score": 5 },
+        { "assessmentId": "a3", "score": 15 },
+        { "assessmentId": "a4", "score": 22 }
+      ],
+      "attendance": [
+        { "date": "2026-09-20", "course": "JS101", "status": "absent" },
+        { "date": "2026-09-22", "course": "JS101", "status": "absent" },
+        { "date": "2026-09-24", "course": "JS101", "status": "present" }
+      ],
+      "archived": false
+    },
+    {
+      "id": "stu_007",
+      "studentId": "20260051",
+      "name": "Nour Abdallah",
+      "courses": ["JS101"],
+      "scores": [
+        { "assessmentId": "a1", "score": 9 },
+        { "assessmentId": "a2", "score": 7 },
+        { "assessmentId": "a3", "score": 31 },
+        { "assessmentId": "a4", "score": 41 }
+      ],
+      "attendance": [
+        { "date": "2026-09-20", "course": "JS101", "status": "present" },
+        { "date": "2026-09-22", "course": "JS101", "status": "present" },
+        { "date": "2026-09-24", "course": "JS101", "status": "present" }
+      ],
+      "archived": true
+    }
+  ]
+}

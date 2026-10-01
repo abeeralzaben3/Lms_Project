@@ -4,15 +4,15 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Mudarris - Login</title>
-  
+
   <!-- Plus Jakarta Sans Font from Google Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
-  
+
   <!-- FontAwesome Icons Library -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  
+
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
@@ -31,12 +31,13 @@
 
       <!-- Main Panel Content -->
       <div class="auth__panel-content">
-        <div class="logo">
-          <span class="logo__text">Mudarris <i class="fa-solid fa-graduation-cap"></i></span>
+        <div class="logo logo--white">
+          <i class="fa-solid fa-graduation-cap"></i>
+          <span class="logo__text">Mudarris</span>
         </div>
         <h2>Manage Your Students Effortlessly</h2>
         <p>Grades, attendance, and progress all in one place</p>
-        
+
         <div class="panel-icons">
           <i class="fa-solid fa-book-open"></i>
           <i class="fa-solid fa-graduation-cap"></i>
@@ -53,16 +54,20 @@
     <!-- Form Side (Welcome Back) -->
     <div class="auth__form-side">
       <div class="auth__box">
-        
-        <h1 class="auth__title">Welcome back <i class="fa-solid fa-hand-wave"></i></h1>
+
+        <h1 class="auth__title">Welcome back 👋</h1>
         <p class="auth__subtitle">Sign in to your account to continue</p>
 
-        <form dir="ltr">
+        <!-- رسالة الخطأ (login.js بيكتب فيها) -->
+        <div class="form-error" id="formError" role="alert"></div>
+
+        <!-- id="loginForm" و name لكل حقل: login.js بيعتمد عليهم -->
+        <form id="loginForm" dir="ltr" novalidate>
           <!-- Email Field -->
           <div class="field">
             <label for="email">Email Address</label>
             <div class="input-wrap">
-              <input type="email" id="email" placeholder="name@example.com" required>
+              <input type="email" id="email" name="email" placeholder="name@example.com" autocomplete="email">
             </div>
           </div>
 
@@ -70,7 +75,7 @@
           <div class="field">
             <label for="password">Password</label>
             <div class="input-wrap">
-              <input type="password" id="password" placeholder="••••••••" required>
+              <input type="password" id="password" name="password" placeholder="••••••••" autocomplete="current-password">
               <button type="button" class="toggle-pass" aria-label="Toggle password visibility">
                 <i class="fa-regular fa-eye"></i>
               </button>
@@ -80,32 +85,25 @@
           <!-- Remember Me / Forgot Password -->
           <div class="form-meta">
             <label class="check">
-              <input type="checkbox">
+              <input type="checkbox" id="remember" name="remember">
               <span>Remember me</span>
             </label>
             <a href="#">Forgot password?</a>
           </div>
 
           <!-- Submit Button -->
-          <button type="submit" class="btn">
-            <span class="spinner"></span>
-            Sign In
-          </button>
+          <button type="submit" class="btn">Sign In</button>
         </form>
 
         <p class="switch">
-          Don't have an account? <a href="#">Create an account</a>
+          Don't have an account? <a href="rej.html">Create an account</a>
         </p>
-
-        <!-- Demo Accounts Box -->
-        <div class="demo-box">
-          <b>Demo Accounts</b><br>
-          <code>teacher@mudarris.demo · student@mudarris.demo — Demo1234</code>
-        </div>
 
       </div>
     </div>
   </div>
 
+  <!-- لازم type="module" لأن login.js بيستخدم import -->
+  <script type="module" src="login.js"></script>
 </body>
 </html>
