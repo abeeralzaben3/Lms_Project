@@ -1,4 +1,4 @@
-import { loginUser, saveLoggedInUser } from './fetchStudents.js';
+import {loginUser, saveLoggedInUser} from './fetchStudents.js';
 
 const form = document.getElementById('loginForm');
 const formError = document.getElementById('formError');

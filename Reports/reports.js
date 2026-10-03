@@ -1,3 +1,59 @@
+// ==================================================
+// MOCK MODE: true = fake data (no login / json-server needed)
+//            false = real data from localStorage + json-server
+// ==================================================
+
+const USE_MOCK_DATA = true;
+
+const mockInstructor = {
+    id: 'ins_mock',
+    fullName: 'Dr. Ahmad Ali',
+    email: 'ahmad@mock.com',
+    role: 'instructor',
+    courses: ['JS101', 'Databases', 'Web Design'],
+    assessments: [
+        { id: 'a1', course: 'JS101',      type: 'task',    title: 'Task 1',        maxScore: 10 },
+        { id: 'a2', course: 'JS101',      type: 'task',    title: 'Task 2',        maxScore: 10 },
+        { id: 'a3', course: 'JS101',      type: 'project', title: 'Mini Project',  maxScore: 40 },
+        { id: 'a4', course: 'JS101',      type: 'project', title: 'Final Project', maxScore: 50 },
+        { id: 'a5', course: 'Databases',  type: 'task',    title: 'Quiz 1',        maxScore: 20 },
+        { id: 'a6', course: 'Databases',  type: 'project', title: 'Report',        maxScore: 30 },
+        { id: 'a7', course: 'Databases',  type: 'project', title: 'Final Exam',    maxScore: 50 },
+        { id: 'a8', course: 'Web Design', type: 'task',    title: 'Design Task',   maxScore: 10 },
+        { id: 'a9', course: 'Web Design', type: 'project', title: 'Portfolio',     maxScore: 40 }
+    ]
+};
+
+// builds a mark for every assessment around a target percentage
+// "skip" = assessment ids left ungraded (null)
+function makeScores(level, seed, skip = []) {
+    return mockInstructor.assessments.map((assessment, index) => {
+        if (level === null || skip.includes(assessment.id)) {
+            return { assessmentId: assessment.id, score: null };
+        }
+
+        const jitter = ((index * 7 + seed * 3) % 11) - 5;
+        const percent = Math.min(100, Math.max(0, level + jitter));
+
+        return {
+            assessmentId: assessment.id,
+            score: Math.round((assessment.maxScore * percent) / 100)
+        };
+    });
+}
+
+const mockStudents = [
+    { id: 'm1', studentId: '20260045', name: 'Lina Omar',      archived: false, scores: makeScores(95, 1) },
+    { id: 'm2', studentId: '20260046', name: 'Omar Khaled',    archived: false, scores: makeScores(86, 2) },
+    { id: 'm3', studentId: '20260047', name: 'Sara Nasser',    archived: false, scores: makeScores(74, 3, ['a4', 'a7']) },
+    { id: 'm4', studentId: '20260048', name: 'Yousef Haddad',  archived: false, scores: makeScores(65, 4) },
+    { id: 'm5', studentId: '20260049', name: 'Maya Saleh',     archived: false, scores: makeScores(48, 5) },
+    { id: 'm6', studentId: '20260050', name: 'Hassan Mansour', archived: false, scores: makeScores(81, 6) },
+    { id: 'm7', studentId: '20260051', name: 'Nour Abdallah',  archived: true,  scores: makeScores(91, 7) },   // archived: skipped
+    { id: 'm8', studentId: '20260052', name: 'Lina Hassan',    archived: false, scores: makeScores(null, 8) }  // no grades yet
+];
+
+
 // ---------- elements ----------
 
 const courseSelect = document.getElementById('courseSelect');
@@ -18,10 +74,10 @@ const PASS_MARK = 60; // percentage needed to pass
 
 // highest grade first: a percentage gets the first letter it reaches
 const GRADES = [
-    { letter: 'A', min: 90, label: 'A (90-100)', color: '#10b981' },
-    { letter: 'B', min: 80, label: 'B (80-89)',  color: '#6366f1' },
-    { letter: 'C', min: 70, label: 'C (70-79)',  color: '#8b5cf6' },
-    { letter: 'D', min: 60, label: 'D (60-69)',  color: '#f59e0b' },
+    { letter: 'A', min: 90, label: 'A (90-100)',   color: '#10b981' },
+    { letter: 'B', min: 80, label: 'B (80-89)',    color: '#6366f1' },
+    { letter: 'C', min: 70, label: 'C (70-79)',    color: '#8b5cf6' },
+    { letter: 'D', min: 60, label: 'D (60-69)',    color: '#f59e0b' },
     { letter: 'F', min: 0,  label: 'F (below 60)', color: '#f43f5e' }
 ];
 
@@ -36,15 +92,18 @@ function getCookie(name) {
     return match ? decodeURIComponent(match.slice(name.length + 1)) : null;
 }
 
-// only a logged-in instructor can open this page
+// only a logged-in instructor can open this page (mock mode skips the check)
 const loggedIn = JSON.parse(localStorage.getItem('loggedInUser') || 'null');
-const allowed = getCookie('currentUser') && loggedIn && loggedIn.role === 'instructor';
+const allowed = USE_MOCK_DATA
+    || (getCookie('currentUser') && loggedIn && loggedIn.role === 'instructor');
 
 if (!allowed) {
     location.href = '../auth/login.html';
 }
 
 function getCurrentInstructor(instructors) {
+    if (USE_MOCK_DATA) return mockInstructor;
+
     const email = (getCookie('currentUser') || '').toLowerCase();
 
     let found = instructors.find(i => i.email && i.email.toLowerCase() === email);
@@ -70,6 +129,8 @@ function getCourses(instructor) {
 }
 
 async function getStudents() {
+    if (USE_MOCK_DATA) return mockStudents;
+
     let students = getData('students');
 
     if (!students.length) {
@@ -190,8 +251,7 @@ function drawChart(oldChart, canvasId, config) {
 }
 
 function showSummary(rows) {
-    const graded = rows.filter(r => r.percent !== null);
-    const percents = graded.map(r => r.percent);
+    const percents = rows.filter(r => r.percent !== null).map(r => r.percent);
 
     sumStudents.textContent = rows.length;
 
@@ -412,7 +472,9 @@ if (allowed) start();
     }
 
     const email = (getCookie('currentUser') || '').toLowerCase();
-    const instructor = getData('instructors').find(i => i.email && i.email.toLowerCase() === email) || loggedIn;
+    const instructor = USE_MOCK_DATA
+        ? mockInstructor
+        : getData('instructors').find(i => i.email && i.email.toLowerCase() === email) || loggedIn;
 
     const fullName = ((instructor && (instructor.fullName || instructor.name)) || '').trim()
         || (instructor && instructor.email) || '';

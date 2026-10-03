@@ -90,3 +90,9 @@ The mockups and wireframes are in the `design` folder, including the phone versi
 - Chart.js
 - `localStorage` and cookies
 - A local JSON API for student data
+
+## Design
+
+The UI mockups and wireframes were designed in Figma, including the phone version of every page.
+
+[Figma Design](https://www.figma.com/design/s051MSjxQmFSF7Im7G4AyN/Untitled?node-id=0-1&t=B0QJkjrPn0uQPc19-0)
