@@ -17,21 +17,14 @@ const settings = document.getElementById("settings");
 const logout = document.getElementById("logout");
 
 
-document.cookie = "name=Sara Ahmad; max-age=3600; ";
-let insName = document.cookie.split("; ")[0].split("=")[1]
-console.log(insName)
+
 
 // =====================cookies=====================
+document.cookie = "name=Ahmad Ali; max-age=3600; ";
 function getCookies() {
-    let cokiesName = document.cookie.split("; ")
-    const usernameCookie = cokiesName.find(cookie =>
-        cookie.startsWith("name=")
-
-    );
-
-    const username = usernameCookie.split("=")[1];
-
-    return username;
+    let insName = document.cookie.split("; ")[0].split("=")[1]
+console.log(insName)
+    return insName;
 }
 
 const name = getCookies()
@@ -61,12 +54,12 @@ burgerMinu.addEventListener('click', function (e) {
 });
 
 //======================Sitting & Log out=============================
-settings.addEventListener("click",function(e){
-    window.location.href="/asd.html"
+settings.addEventListener("click", function (e) {
+    window.location.href = "/asd.html"
 })
-logout.addEventListener("click",function(e){
-    document.cookie= "name=; max-age=0;"
-    window.location.href="/asd.html"
+logout.addEventListener("click", function (e) {
+    document.cookie = "name=; max-age=0;"
+    window.location.href = "/asd.html"
 })
 
 // ===================INFORMATION SECTION===================
@@ -95,8 +88,7 @@ async function getCourseID() {
     const courses = await getData("courses");
     let instCourse;
     for (const instructor of instructors) {
-
-        if (instructor.name === insName) {
+        if (instructor.name === name) {
 
             const instId = instructor.id;
 
@@ -111,7 +103,6 @@ async function getCourseID() {
 
     }
     return instCourse;
-
 }
 
 
@@ -125,7 +116,8 @@ async function setStudentInfo() {
     let attendcount = 0;
     let absentcount = 0;
     let totalAttendance = 0;
-    let presentCount = 0;
+    let totalpresentCount = 0;
+
     const myStudents = students.filter(student =>
         student.courses.includes(coursId)
     );
@@ -138,7 +130,7 @@ async function setStudentInfo() {
             totalAttendance++;
 
             if (attend.status === "present") {
-                presentCount++;
+                totalpresentCount++;
             }
         }
 
@@ -156,10 +148,8 @@ async function setStudentInfo() {
         }
     }
 
-    console.log("Present:", attendcount);
-    console.log("Absent:", absentcount);
-    const totalStudent = attendcount + absentcount;
-    studentsTotal.textContent = totalStudent;
+    const totalStudents = attendcount + absentcount;
+    studentsTotal.textContent = totalStudents;
     presentToday.textContent = attendcount;
     absentToday.textContent = absentcount;
 
@@ -186,14 +176,13 @@ async function setStudentInfo() {
             )
         ).length
     );
+    const last7Days = dates.slice(-7);
 
-    const lastWeekDates = dates.slice(-7);
-
-    const labels = lastWeekDates.map(date => {
+    const labels = last7Days.map(date => {
         const d = new Date(date);
 
         return d.toLocaleDateString("en-US", {
-            weekday: "long"
+            weekday: "short"
         });
     });
 
@@ -234,7 +223,7 @@ async function setStudentInfo() {
 
     //==============================COMMITMENT CHART==============================
 
-    const commitmentReat = (presentCount / totalAttendance *100).toFixed(2)
+    const commitmentReat = (totalpresentCount / totalAttendance * 100).toFixed(2)
     console.log(commitmentReat)
     const commitmentChart = document.getElementById("commitmentChart");
 
@@ -245,15 +234,15 @@ async function setStudentInfo() {
         data: {
 
             labels: [
-                commitmentReat  + "% Committed " ,
-                100-commitmentReat + "% Not Committed"
+                commitmentReat + "% Committed ",
+                100 - commitmentReat + "% Not Committed"
             ],
 
             datasets: [{
 
                 data: [
                     commitmentReat,
-                    100-commitmentReat
+                    100 - commitmentReat
                 ],
 
                 borderWidth: 1
