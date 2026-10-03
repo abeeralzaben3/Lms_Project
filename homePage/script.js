@@ -1,136 +1,283 @@
+'use strict'
 const accountMinu = document.getElementById("accountMinu");
 const account = document.getElementById("account");
-const burgerMinu=document.getElementById("burgerMinu");
-const sideBar=document.getElementById("sideBar");
+const burgerMinu = document.getElementById("burgerMinu");
+const sideBar = document.getElementById("sideBar");
 const attendanceChart = document.getElementById("attendanceChart");
+const headerName = document.getElementById("headerName");
+const techName = document.getElementById("techName");
+const logo = document.getElementById("logo");
+const searchInput = document.getElementById("searchInput");
+const searchBtn = document.getElementById("searchBtn");
+const studentsTotal = document.getElementById("studentsTotal");
+const presentToday = document.getElementById("presentToday");
+const absentToday = document.getElementById("absentToday");
+const attendanceRate = document.getElementById("attendanceRate");
+const settings = document.getElementById("settings");
+const logout = document.getElementById("logout");
 
 
-// Account Minu
-account.addEventListener("click",function(e){
-accountMinu.classList.toggle("activeAccount");
+document.cookie = "name=Sara Ahmad; max-age=3600; ";
+let insName = document.cookie.split("; ")[0].split("=")[1]
+console.log(insName)
+
+// =====================cookies=====================
+function getCookies() {
+    let cokiesName = document.cookie.split("; ")
+    const usernameCookie = cokiesName.find(cookie =>
+        cookie.startsWith("name=")
+
+    );
+
+    const username = usernameCookie.split("=")[1];
+
+    return username;
+}
+
+const name = getCookies()
+
+headerName.textContent = name;
+techName.textContent = name;
+logo.textContent = name.slice(0, 2).toUpperCase();
+
+
+// ======================search botton=======================
+searchBtn.addEventListener("click", function () {
+    const search = searchInput.value
+    console.log(search)
+}
+
+)
+
+// ======================Account Minu=======================
+account.addEventListener("click", function (e) {
+    accountMinu.classList.toggle("activeAccount");
 })
 
-burgerMinu.addEventListener('click', function(e){
+burgerMinu.addEventListener('click', function (e) {
     sideBar.classList.toggle("activeSide");
-    
-    
+
+
 });
-const data=[
-                90,
-                95,
-                88,
-                100,
-                94
-            ]
-// chart
 
-new Chart(attendanceChart, {
+//======================Sitting & Log out=============================
+settings.addEventListener("click",function(e){
+    window.location.href="/asd.html"
+})
+logout.addEventListener("click",function(e){
+    document.cookie= "name=; max-age=0;"
+    window.location.href="/asd.html"
+})
 
-    type: "line",
+// ===================INFORMATION SECTION===================
 
-    data: {
 
-        labels: [
-            "Sunday",
-            "Monday",
-            "Tuesday",
-            "Wednesday",
-            "Thursday"
-        ],
+async function getData(info) {
+    const response = await fetch(`http://localhost:3000/${info}`);
 
-        datasets: [{
+    const data = await response.json();
 
-            label: "Present Students",
+    // =================================================
+    localStorage.setItem(info, JSON.stringify(data));
+    // =================================================
 
-            data: [
-                90,
-                95,
-                88,
-                100,
-                94
+    const getData = JSON.parse(localStorage.getItem(info));
+
+    return getData;
+}
+
+
+// ===================instOfStudent===================
+
+async function getCourseID() {
+
+    const instructors = await getData("instructors");
+    const courses = await getData("courses");
+    let instCourse;
+    for (const instructor of instructors) {
+
+        if (instructor.name === insName) {
+
+            const instId = instructor.id;
+
+            for (const course of courses) {
+
+                if (course.instructorId === instId) {
+                    instCourse = course.id
+
+                }
+            }
+        }
+
+    }
+    return instCourse;
+
+}
+
+
+// ===================setStudentInfo===================
+
+async function setStudentInfo() {
+
+    const students = await getData("students");
+    const coursId = await getCourseID();
+
+    let attendcount = 0;
+    let absentcount = 0;
+    let totalAttendance = 0;
+    let presentCount = 0;
+    const myStudents = students.filter(student =>
+        student.courses.includes(coursId)
+    );
+
+
+    for (const student of myStudents) {
+
+        for (const attend of student.attendance) {
+
+            totalAttendance++;
+
+            if (attend.status === "present") {
+                presentCount++;
+            }
+        }
+
+        if (student.attendance.length === 0 || student.archived === true) {
+            continue;
+        }
+
+        const lastAttendance =
+            student.attendance[student.attendance.length - 1];
+
+        if (lastAttendance.status === "present") {
+            attendcount++;
+        } else {
+            absentcount++;
+        }
+    }
+
+    console.log("Present:", attendcount);
+    console.log("Absent:", absentcount);
+    const totalStudent = attendcount + absentcount;
+    studentsTotal.textContent = totalStudent;
+    presentToday.textContent = attendcount;
+    absentToday.textContent = absentcount;
+
+    attendanceRate.textContent =
+        ((attendcount / (attendcount + absentcount)) * 100).toFixed(1) + "%";
+
+
+
+    //========================= AttendanceChart Chart  =========================
+
+
+    const dates = [...new Set(
+        myStudents.flatMap(student =>
+            student.attendance.map(record => record.date)
+        )
+    )].sort();
+
+    const presentStudents = dates.map(date =>
+        myStudents.filter(student =>
+            student.attendance.some(record =>
+                record.date === date &&
+                record.status === "present" &&
+                student.archived === false
+            )
+        ).length
+    );
+
+    const lastWeekDates = dates.slice(-7);
+
+    const labels = lastWeekDates.map(date => {
+        const d = new Date(date);
+
+        return d.toLocaleDateString("en-US", {
+            weekday: "long"
+        });
+    });
+
+    new Chart(attendanceChart, {
+        type: "line",
+
+        data: {
+            labels: labels,
+
+            datasets: [{
+                label: "Present Students",
+                data: presentStudents,
+                borderWidth: 2,
+                tension: 0.4,
+                fill: false
+            }]
+        },
+
+        options: {
+            responsive: true,
+
+            plugins: {
+                legend: {
+                    display: true
+                }
+            },
+
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            }
+        }
+    });
+
+
+
+
+    //==============================COMMITMENT CHART==============================
+
+    const commitmentReat = (presentCount / totalAttendance *100).toFixed(2)
+    console.log(commitmentReat)
+    const commitmentChart = document.getElementById("commitmentChart");
+
+    new Chart(commitmentChart, {
+
+        type: "doughnut",
+
+        data: {
+
+            labels: [
+                commitmentReat  + "% Committed " ,
+                100-commitmentReat + "% Not Committed"
             ],
 
-            borderWidth: 2,
+            datasets: [{
 
-            tension: 0.4,
+                data: [
+                    commitmentReat,
+                    100-commitmentReat
+                ],
 
-            fill: false
+                borderWidth: 1
 
-        }]
-
-    },
-
-    options: {
-
-        responsive: true,
-
-        plugins: {
-
-            legend: {
-                display: true
-            }
+            }]
 
         },
 
-        scales: {
+        options: {
 
-            y: {
+            responsive: true,
 
-                beginAtZero: true
+            plugins: {
 
-            }
+                legend: {
 
-        }
+                    position: "bottom"
 
-    }
-
-});
-
-
-// ==============================
-// COMMITMENT CHART
-// ==============================
-
-const commitmentChart = document.getElementById("commitmentChart");
-
-new Chart(commitmentChart, {
-
-    type: "doughnut",
-
-    data: {
-
-        labels: [
-            "Committed",
-            "Not Committed"
-        ],
-
-        datasets: [{
-
-            data: [
-                94,
-                6
-            ],
-
-            borderWidth: 0
-
-        }]
-
-    },
-
-    options: {
-
-        responsive: true,
-
-        plugins: {
-
-            legend: {
-
-                position: "bottom"
+                }
 
             }
 
         }
 
-    }
-
-});
+    })
+}
+setStudentInfo();

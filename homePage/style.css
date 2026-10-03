@@ -164,26 +164,26 @@ body {
     box-shadow: 0 4px 12px rgba(101, 88, 245, 0.30);
 }
 
-a {
-    text-decoration: none;
-    color: #20204D;
-}
 
 .options {
     text-decoration: none;
-
+    display: flex;
     color: #20204D;
-
+    align-items: center;
     padding: 10px;
 
     border-radius: 10px;
 
     transition: 0.3s;
+
+    padding: 20px;
 }
 
+.options svg{
+    margin-right: 7px;
+}
 
-.options:hover,
-a:hover {
+.options:hover {
     background-color: #F1EFFF;
 
     color: #6558F5;
@@ -445,6 +445,10 @@ a:hover {
     padding: 20px;
 }
 
+.cardTitle{
+    font-weight: bold;
+}
+
 .info {
     width: 100%;
     display: flex;
@@ -495,10 +499,11 @@ a:hover {
     box-shadow:
         0 6px 20px rgba(101, 88, 245, 0.08);
 
-        display: flex;
-        flex-direction: column;
-    justify-content: center;
-    align-items: center;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+   
 }
 
 
@@ -513,10 +518,12 @@ a:hover {
 
 .chartContainer {
     position: relative;
-
     width: 100%;
 
     height: 300px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 
