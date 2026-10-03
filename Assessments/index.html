@@ -41,7 +41,7 @@
                 <!-- ACCOUNT OPTIONS -->
                 <div class="account" id="account">
 
-                    <!-- logo + name are filled by layout.js -->
+                    <!-- logo + name are filled by index.js -->
                     <div class="logo" id="logo"></div>
                     <div class="headerName" id="name"></div>
 
@@ -55,7 +55,7 @@
                     <div class="accountMinu" id="accountMinu">
                         <p class="options"><a href="account.html">Account</a></p>
                         <p class="options"><a href="settings.html">Settings</a></p>
-                        <p class="options">Logout</p>
+                        <p class="options" id="logoutBtn">Logout</p>
                     </div>
 
                 </div>
@@ -149,8 +149,8 @@
 
             <form id="assessmentForm">
 
-                <label for="name">Assessment Name</label>
-                <input type="text" id="name" placeholder="Assessment name">
+                <label for="assessmentName">Assessment Name</label>
+                <input type="text" id="assessmentName" placeholder="Assessment name">
 
                 <label for="type">Type</label>
                 <select id="type">
@@ -206,9 +206,8 @@
         </div>
     </div>
 
-    <!-- index.js first (it seeds the instructor data), then layout.js -->
+
     <script src="./index.js"></script>
-    <script src="./layout.js"></script>
 </body>
 
 </html>

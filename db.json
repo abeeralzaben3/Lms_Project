@@ -4,6 +4,8 @@
       "id": "stu_001",
       "studentId": "20260045",
       "name": "Lina Omar",
+      "email": "lina@student.com",
+      "password": "Lina@1234",
       "courses": ["c1"],
       "scores": [
         { "assessmentId": "a1", "score": 9 },
@@ -22,6 +24,8 @@
       "id": "stu_002",
       "studentId": "20260046",
       "name": "Omar Khaled",
+      "email": "omar@student.com",
+      "password": "Omar@1234",
       "courses": ["c1"],
       "scores": [
         { "assessmentId": "a1", "score": 7 },
@@ -40,6 +44,8 @@
       "id": "stu_003",
       "studentId": "20260047",
       "name": "Sara Nasser",
+      "email": "sara@student.com",
+      "password": "Sara@1234",
       "courses": ["c1"],
       "scores": [
         { "assessmentId": "a1", "score": 10 },
@@ -58,6 +64,8 @@
       "id": "stu_004",
       "studentId": "20260048",
       "name": "Yousef Haddad",
+      "email": "yousef@student.com",
+      "password": "Yousef@1234",
       "courses": ["c1"],
       "scores": [
         { "assessmentId": "a1", "score": 5 },
@@ -76,6 +84,8 @@
       "id": "stu_005",
       "studentId": "20260049",
       "name": "Maya Saleh",
+      "email": "maya@student.com",
+      "password": "Maya@1234",
       "courses": ["c1"],
       "scores": [
         { "assessmentId": "a1", "score": 8 },
@@ -93,6 +103,8 @@
       "id": "stu_006",
       "studentId": "20260050",
       "name": "Hassan Mansour",
+      "email": "hassan@student.com",
+      "password": "Hassan@1234",
       "courses": ["c1"],
       "scores": [
         { "assessmentId": "a1", "score": 3 },
@@ -111,6 +123,8 @@
       "id": "stu_007",
       "studentId": "20260051",
       "name": "Nour Abdallah",
+      "email": "nour@student.com",
+      "password": "Nour@1234",
       "courses": ["c1"],
       "scores": [
         { "assessmentId": "a1", "score": 9 },

@@ -10,7 +10,6 @@ const assessmentModal = document.getElementById('assessmentModal');
 const assessmentForm = document.getElementById('assessmentForm');
 const closeModal = document.getElementById('closeModal');
 
-// NEW: edit modals (same style as the add modals)
 const editCourseModal = document.getElementById('editCourseModal');
 const editCourseForm = document.getElementById('editCourseForm');
 const closeEditCourseModal = document.getElementById('closeEditCourseModal');
@@ -31,28 +30,6 @@ let editingCourse = null;        // course name being edited
 let editingAssessmentId = null;  // assessment id being edited
 
 
-// ---------- first-time seed (only if nothing is saved yet) ----------
-
-if (!localStorage.getItem('instructors')) {
-    localStorage.setItem('instructors', JSON.stringify([
-        {
-            id: 'ins_001',
-            username: 'ali',
-            name: 'Dr. Ahmad',
-            email: 'ahmad@school.com',
-            createdAt: '2026-10-01',
-            courses: ['JS101'],
-            assessments: [
-                { id: 'a1', course: 'JS101', type: 'task', title: 'Task 1', maxScore: 10 },
-                { id: 'a2', course: 'JS101', type: 'task', title: 'Task 2', maxScore: 10 },
-                { id: 'a3', course: 'JS101', type: 'project', title: 'Mini Project', maxScore: 40 },
-                { id: 'a4', course: 'JS101', type: 'project', title: 'Final Project', maxScore: 50 }
-            ]
-        }
-    ]));
-}
-
-
 // ---------- helpers ----------
 
 const getData = (key) => JSON.parse(localStorage.getItem(key)) || [];
@@ -63,17 +40,30 @@ function getCookie(name) {
     return match ? decodeURIComponent(match.slice(name.length + 1)) : null;
 }
 
-// only set a default user if nobody is logged in yet
-if (!getCookie('cur_user')) {
-    document.cookie = 'cur_user=ali; path=/';
+// only a logged-in instructor can open this page
+const loggedIn = JSON.parse(localStorage.getItem('loggedInUser') || 'null');
+if (!getCookie('currentUser') || !loggedIn || loggedIn.role !== 'instructor') {
+    location.href = '../auth/login.html';
 }
 
-// the saved instructor may have no username, so fall back to the first one
+// the current instructor is found by the email saved in the login cookie
 function getCurrentInstructor(instructors) {
-    const username = getCookie('cur_user');
-    return instructors.find(i => i.username === username) || instructors[0];
-}
+    const email = (getCookie('currentUser') || '').toLowerCase();
 
+    let found = instructors.find(i => i.email && i.email.toLowerCase() === email);
+
+    // accounts registered before the fix are in "users": move them into "instructors"
+    if (!found) {
+        const old = getData('users').find(u => u.email && u.email.toLowerCase() === email);
+        if (old) {
+            found = { ...old, role: 'instructor' };
+            instructors.push(found);
+            saveData('instructors', instructors);
+        }
+    }
+
+    return found;
+}
 // courses = saved course list + any course already used by an assessment
 function getCourses(instructor) {
     const fromList = instructor.courses || [];
@@ -291,7 +281,7 @@ assessmentForm.addEventListener('submit', async event => {
 
     if (!selectedCourse) return;
 
-    const title = document.getElementById('name').value.trim();
+    const title = document.getElementById('assessmentName').value.trim();
     const maxScore = Number(document.getElementById('maxScore').value);
     const type = document.getElementById('type').value;
 
@@ -703,7 +693,8 @@ saveMarks.addEventListener('click', async () => {
 
     // then save
     inputs.forEach(input => {
-        const student = students.find(s => s.id === input.dataset.studentId);
+        // dataset values are always strings, so compare as strings
+        const student = students.find(s => String(s.id) === input.dataset.studentId);
         if (!student) return;
 
         student.scores = student.scores || [];
@@ -733,8 +724,8 @@ studentsSection.style.display = 'none';
 showCourses();
 showAssessments();
 
-// Header + sidebar behavior. Safe to include on every page.
-// Wrapped in a function so its variables never clash with index.js.
+// Header + sidebar behavior.
+// Wrapped in a function so its variables never clash with the code above.
 
 (function () {
 
@@ -742,6 +733,7 @@ showAssessments();
     const accountMenu = document.getElementById("accountMinu");
     const burgerMenu = document.getElementById("burgerMinu");
     const sideBar = document.getElementById("sideBar");
+    const logoutBtn = document.getElementById("logoutBtn");
 
 
     // ---------- instructor name (from saved data, not hardcoded) ----------
@@ -760,9 +752,8 @@ showAssessments();
     }
 
     function currentInstructor() {
-        const list = readJSON("instructors");
-        const username = readCookie("cur_user");
-        return list.find(i => i.username === username) || list[0] || null;
+        const email = (readCookie("currentUser") || "").toLowerCase();
+        return readJSON("instructors").find(i => i.email && i.email.toLowerCase() === email) || null;
     }
 
     // "Dr. Ahmad Ali" -> "AA", "Dr. Ahmad" -> "A"
@@ -774,16 +765,27 @@ showAssessments();
         return words.slice(0, 2).map(w => w[0].toUpperCase()).join("") || "?";
     }
 
-    // the name shows once, in the header (falls back to the username, never a generic word)
+    // the name shows once, in the header (registered instructors use fullName)
     const instructor = currentInstructor();
-    const fullName = (instructor && instructor.name ? instructor.name.trim() : "")
-        || (instructor && instructor.username) || "";
+    const fullName = ((instructor && (instructor.fullName || instructor.name)) || "").trim()
+        || (instructor && instructor.email) || "";
 
     const nameEl = document.getElementById("name");
     const logoEl = document.getElementById("logo");
 
     if (nameEl) nameEl.textContent = fullName;
     if (logoEl) logoEl.textContent = fullName ? getInitials(fullName) : "";
+
+
+    // ---------- logout ----------
+
+    if (logoutBtn) {
+        logoutBtn.addEventListener("click", () => {
+            document.cookie = "currentUser=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/";
+            localStorage.removeItem("loggedInUser");
+            location.href = "../auth/login.html";
+        });
+    }
 
 
     // ---------- account menu ----------
