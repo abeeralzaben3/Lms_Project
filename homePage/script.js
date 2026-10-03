@@ -15,6 +15,7 @@ const absentToday = document.getElementById("absentToday");
 const attendanceRate = document.getElementById("attendanceRate");
 const settings = document.getElementById("settings");
 const logout = document.getElementById("logout");
+const attendanceBtn = document.getElementById("attendanceBtn");
 
 
 
@@ -59,9 +60,12 @@ settings.addEventListener("click", function (e) {
 })
 logout.addEventListener("click", function (e) {
     document.cookie = "name=; max-age=0;"
-    window.location.href = "/asd.html"
+    window.location.href = "auth/login.html"
 })
 
+attendanceBtn.addEventListener("click", function (e) {
+    window.location.href = "/fuad/update.html"
+})
 // ===================INFORMATION SECTION===================
 
 
