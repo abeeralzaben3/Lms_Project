@@ -136,9 +136,9 @@ burgerMinu.addEventListener('click', function (e) {
 
 });
 settings.addEventListener("click",function(e){
-    window.location.href="/asd.html"
+    window.location.href = "../Setting/index.html";
 })
 logout.addEventListener("click",function(e){
     document.cookie= "name=; max-age=0;"
-    window.location.href="/asd.html"
+    window.location.href="../auth/login/index.html"
 })
