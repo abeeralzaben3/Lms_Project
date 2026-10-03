@@ -24,11 +24,18 @@
 }
 
 body {
-    font-family: Arial, sans-serif;
-    background-color: var(--bg);
-    color: var(--text);
+    font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande',
+        'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+
+    line-height: 1.7;
+
+    background-color: #F5F6FF;
+    color: #20204D;
 }
 
+.btn {
+    border: none;
+}
 
 .Containner {
 
@@ -145,224 +152,7 @@ img{
     transform: translateY(-2px);
 }
 
-/* =========================================
-   DASHBOARD SIDEBAR
-========================================= */
-
-.side {
-    background: #9B3DF0;
-    grid-area: side;
-    min-height: 100vh;
-    padding: 30px 20px;
-}
-
-.side-content {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-}
-
-.side-content h2 {
-    color: white;
-    margin-bottom: 30px;
-}
-
-.side-content a {
-    color: white;
-    text-decoration: none;
-    padding: 12px 15px;
-    border-radius: 10px;
-    transition: 0.2s;
-}
-
-.side-content a:hover {
-    background: rgba(255, 255, 255, 0.2);
-    transform: translateX(4px);
-}
-
-
-/* =========================================
-   HEADER
-========================================= */
-
-.header {
-    background: #6558F5;
-    grid-area: header;
-    min-height: 70px;
-}
-
-.header-content {
-    height: 100%;
-    display: flex;
-    align-items: center;
-    padding: 0 30px;
-}
-
-.header-content h4 {
-    color: white;
-    margin: 0;
-}
-
-
-/* =========================================
-   MAIN
-========================================= */
-
-.main {
-    background-color: #F5F6FF;
-    grid-area: main;
-    min-height: calc(100vh - 70px);
-    padding: 20px;
-}
-
-
-/* =========================================
-   FORM CARD
-========================================= */
-
-.form-card {
-    background: white;
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    padding: 25px;
-    margin-top: 20px;
-}
-
-
-/* =========================================
-   FORM GRID
-========================================= */
-
-.form-grid {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 20px;
-}
-
-.form-group {
-    display: flex;
-    flex-direction: column;
-    gap: 7px;
-}
-
-.form-group label {
-    font-weight: 600;
-    color: var(--text);
-}
-
-
-/* =========================================
-   FORM BUTTONS
-========================================= */
-
-.form-buttons {
-    display: flex;
-    justify-content: flex-end;
-    gap: 10px;
-    margin-top: 25px;
-    padding-top: 20px;
-    border-top: 1px solid var(--border);
-}
-
-
-/* =========================================
-   SEARCH STUDENT
-========================================= */
-
-.search-student {
-    background: white;
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    padding: 20px;
-    margin-top: 20px;
-}
-
-.search-student h5 {
-    margin-bottom: 15px;
-    color: var(--text);
-}
-
-.search-student .form-inline {
-    width: 100%;
-}
-
-.search-student .form-control {
-    flex: 1;
-}
-
-
-/* =========================================
-   RESPONSIVE
-========================================= */
-
-@media (max-width: 900px) {
-
-    .mainCountainer {
-        grid-template-columns: 1fr;
-        grid-template-areas:
-            "header"
-            "side"
-            "main";
-    }
-
-    .side {
-        min-height: auto;
-    }
-
-    .side-content {
-        flex-direction: row;
-        flex-wrap: wrap;
-    }
-
-    .side-content h2 {
-        width: 100%;
-        margin-bottom: 10px;
-    }
-
-    .form-grid {
-        grid-template-columns: 1fr;
-    }
-}
-
-
-@media (max-width: 600px) {
-
-    .main {
-        padding: 10px;
-    }
-
-    .Containner {
-        width: 100%;
-        margin: 10px auto;
-        padding: 15px;
-    }
-
-    .MainHeader {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 15px;
-    }
-
-    .form-inline {
-        width: 100%;
-        flex-wrap: wrap;
-    }
-
-    .form-inline .form-control {
-        width: 100%;
-    }
-
-    .form-buttons {
-        flex-direction: column;
-    }
-
-    .form-buttons button,
-    .form-buttons a {
-        width: 100%;
-        text-align: center;
-    }
-}
-
+/* ===========================header============================ */
 .header {
     grid-area: header;
     display: flex;
@@ -498,26 +288,26 @@ img{
     box-shadow: 0 4px 12px rgba(101, 88, 245, 0.30);
 }
 
-a {
-    text-decoration: none;
-    color: #20204D;
-}
 
 .options {
     text-decoration: none;
-
+    display: flex;
     color: #20204D;
-
+    align-items: center;
     padding: 10px;
 
     border-radius: 10px;
 
     transition: 0.3s;
+
+    padding: 20px;
 }
 
+.options svg{
+    margin-right: 7px;
+}
 
-.options:hover,
-a:hover {
+.options:hover {
     background-color: #F1EFFF;
 
     color: #6558F5;
@@ -542,7 +332,7 @@ a:hover {
     min-width: 0px;
     background-color: #F8F8FF;
 
-    
+    border-radius: 20px;
     align-items: center;
 
     border: 1px solid #E1E3F0;
@@ -576,7 +366,7 @@ a:hover {
     outline: none;
 }
 
-.searchBtn1 {
+.searchBtn {
     background: linear-gradient(135deg,
             #6558F5,
             #9B3DF0);
@@ -585,21 +375,19 @@ a:hover {
 
     align-content: center;
     border: none;
-    
 
     text-align: center;
     height: 100%;
-    width: 20%;
+    width: 10%;
 
-   
-    justify-content: space-between;
+    border-radius: 20px 0 0 20px;
 
     transition: 0.3s;
 
     box-shadow: 0 3px 10px rgba(101, 88, 245, 0.20);
 }
 
-.searchBtn1:hover {
+.searchBtn:hover {
     background: linear-gradient(135deg,
             #584BEF,
             #8D32E8);
@@ -702,6 +490,7 @@ a:hover {
 
 .main {
     font-family: "Segoe UI", system-ui, -apple-system, Roboto, Arial, sans-serif;
+   
 }
 
 /* ---------- Main container ---------- */
@@ -1051,9 +840,130 @@ a:hover {
     transform: translateY(-2px);
 }
 
+.absent-card {
+  background-color: #ffcccc;
+}
+
 /* ---------- Mobile ---------- */
 @media (max-width: 600px) {
     .main .form-card {
         padding: 18px;
     }
+}
+
+/* =========================================
+   RESPONSIVE
+========================================= */
+
+/* Stop the grid from overflowing and let content shrink */
+.mainCountainer {
+    grid-template-columns: minmax(200px, 1fr) minmax(0, 4fr);
+    min-height: 100vh;
+}
+.main { min-width: 0; }
+
+img { max-width: 100%; }
+
+/* ---------- Laptops / small desktops ---------- */
+@media (max-width: 1100px) {
+    .search { width: 280px; }
+
+    .StudentData .carddiv {
+        grid-template-columns: 56px 80px 1.2fr 1fr 100px auto auto;
+        gap: 12px;
+    }
+}
+
+/* ---------- Tablets: sidebar becomes a slide-in drawer ---------- */
+@media (max-width: 900px) {
+    .mainCountainer {
+        grid-template-columns: 1fr;
+        grid-template-areas:
+            "header"
+            "main";
+    }
+
+    .sideBar {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 260px;
+        max-width: 80vw;
+        height: 100vh;
+        overflow-y: auto;
+        transform: translateX(-100%);
+        transition: transform 0.3s ease;
+        z-index: 50;
+    }
+    .sideBar.open { transform: translateX(0); }
+
+    .burgerMinu { display: flex; }
+
+    .headerCountent {
+        flex-direction: row-reverse;
+        gap: 12px;
+    }
+    .search { flex: 1; width: auto; max-width: 400px; }
+
+    .main .Containner { width: 94%; }
+
+    .StudentData .carddiv {
+        grid-template-columns: 56px 1fr 1fr;
+        row-gap: 12px;
+    }
+    .StudentData .carddiv .btn { justify-self: start; }
+}
+
+/* ---------- Phones ---------- */
+@media (max-width: 600px) {
+    body { line-height: 1.5; }
+
+    .header { height: 60px; }
+    .headerCountent { padding: 6px 10px; gap: 8px; }
+    .headerName { display: none; }
+    .account { min-width: 0; height: 44px; padding: 6px 10px; gap: 8px; }
+    .accountMinu { width: min(200px, 85vw); }
+
+    .main .Containner {
+        width: 100%;
+        margin: 12px 0;
+        padding: 16px;
+        border-radius: 14px;
+    }
+
+    .MainHeader {
+        flex-wrap: wrap;
+        gap: 12px;
+    }
+    .MainHeader h2 { font-size: 21px; }
+
+    .form-inline { flex-wrap: wrap; width: 100%; }
+    .form-inline #addStudentBtn { width: 100%; justify-content: center; }
+
+    .StudentData .carddiv {
+      DISPLAY: FLEX;
+      flex-direction: column;
+    }
+    .StudentData .carddiv .btn {
+        width: 100%;
+        justify-self: stretch;
+        text-align: center;
+    }
+
+    .main .form-card { padding: 16px; }
+    .main .form-card .form-control,
+    .main .form-card .form-select { font-size: 16px; } /* stops iOS zoom on focus */
+
+    .main .form-buttons {
+        display: flex;
+        flex-direction: column-reverse;
+        gap: 10px;
+    }
+    .main .form-buttons .btn { width: 100%; }
+}
+
+/* ---------- Very small phones ---------- */
+@media (max-width: 380px) {
+    .search { display: none; }
+    .MainHeader h2 { font-size: 18px; }
 }

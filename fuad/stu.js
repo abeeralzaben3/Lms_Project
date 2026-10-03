@@ -64,7 +64,6 @@ function updateStudent(id) {
 
 let allStudents = [];
 
-// Build the cards from any array of students
 function renderStudents(list) {
   const container = document.getElementById('StudentData');
 
@@ -74,12 +73,13 @@ function renderStudents(list) {
   }
 
   container.innerHTML = list.map(student => `
-    <div class="carddiv">
+    <div class="carddiv ${String(student.attendance).toLowerCase() === 'absent' ? 'absent-card' : ''}">
       <img src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png" alt="">
+      
       <p>${student.id}</p>
       <p>${student.name}</p>
       <p>${student.course}</p>
-      <p>attended</p>
+      <p>${student.attendance}</p>
 
       <button class="btn btn-outline-danger"
         onclick="deletestudentFromLocalStorage('${student.id}')">
@@ -93,7 +93,6 @@ function renderStudents(list) {
     </div>
   `).join('');
 }
-
 // Filter by id, name or course (case-insensitive)
 function searchStudents() {
   const query = document.getElementById('searchInput').value.trim().toLowerCase();
@@ -125,3 +124,21 @@ window.addEventListener('load', async function () {
     if (e.key === 'Enter') searchStudents();
   });
 });
+
+
+account.addEventListener("click", function (e) {
+    accountMinu.classList.toggle("activeAccount");
+})
+
+burgerMinu.addEventListener('click', function (e) {
+    sideBar.classList.toggle("activeSide");
+
+
+});
+settings.addEventListener("click",function(e){
+    window.location.href="/asd.html"
+})
+logout.addEventListener("click",function(e){
+    document.cookie= "name=; max-age=0;"
+    window.location.href="/asd.html"
+})

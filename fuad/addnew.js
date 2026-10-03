@@ -34,7 +34,7 @@ form.addEventListener("submit", function (event) {
       name: studentName.value || "Not specified",
       course: course.value || "Not specified",
       status: studentStatus.value,
-      attendance: attendanceStatus.value
+      attendance: studentStatus.value
     });
 
     location.href = "students.html";
