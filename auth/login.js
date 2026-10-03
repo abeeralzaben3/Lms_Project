@@ -48,7 +48,7 @@ form.addEventListener('submit', async function (event) {
   if (foundUser.role === 'student') {
     window.location.href = '../student_dashboard/index.html';
   } else {
-    window.location.href = '../Reports/index.html';
+    window.location.href = '../homePage/index.html';
   }
 });
 

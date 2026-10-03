@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Dashboard</title>
+
+    <link rel="stylesheet" href="style.css">
+
+
+</head>
+
+
+<body>
+
+    <div class="mainCountainer">
+
+
+        <!-- ============== HEADER ============== -->
+
+        <header class="header">
+
+            <div class="headerCountent">
+
+                <!-- ACCOUNT OPTIONS -->
+
+                <div class="account" id="account">
+
+                    <div class="logo size" id="logo">
+                        MH
+                    </div>
+
+                    <div class="headerName size" id="headerName">
+                        Muhammad
+                    </div>
+
+                    <div>
+
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+
+                            <path d="m6 9 6 6 6-6"></path>
+
+                        </svg>
+
+                    </div>
+<div class="accountMinu" id="accountMinu">
+
+    <a class="options" id="settings" href="../Setting/index.html">
+        <svg xmlns="http://www.w3.org/2000/svg"
+             width="20" height="20"
+             viewBox="0 0 24 24"
+             fill="none"
+             stroke="currentColor"
+             stroke-width="2"
+             stroke-linecap="round"
+             stroke-linejoin="round">
+
+            <path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.38a2 2 0 0 0-.73-2.73l-.15-.09a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z" />
+
+            <circle cx="12" cy="12" r="3" />
+        </svg>
+
+        Settings
+    </a>
+
+    <p class="options" id="logout">
+        <!-- logout SVG -->
+        Log out
+    </p>
+
+</div>
+
+                </div>
+
+
+                <!-- SEARCH BAR -->
+
+                <div class="search">
+
+                    <button class="icons btn searchBtn" id="searchBtn">
+
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+
+                            <path d="m21 21-4.34-4.34"></path>
+
+                            <circle cx="11" cy="11" r="8"></circle>
+
+                        </svg>
+
+                    </button>
+
+
+                    <input type="text" class="searchInput" id="searchInput" placeholder="Students Search">
+
+                </div>
+                <!-- BURGER MENU -->
+                <div class="burgerMinu" id="burgerMinu">
+                    <span class="borderMinu"></span>
+                    <span class="borderMinu"></span>
+                    <span class="borderMinu"></span>
+                </div>
+
+
+            </div>
+
+        </header>
+
+
+
+        <!-- ============== SIDE BAR ============== -->
+
+        <aside class="sideBar" id="sideBar">
+
+
+            <!-- SIDE HEADER -->
+
+            <div class="sideHeader" id="sideHeader">
+
+                <div class="role">
+                    T
+                </div>
+
+                <p class="techName" id="techName">
+                    Muhammad Alshawabkeh
+                </p>
+
+            </div>
+
+
+            <!-- NAVIGATION -->
+
+            <nav class="nav">
+
+                <ul class="linksCount">
+
+                    <li class="liLinks" id="dashboard">
+                        <a href="./index.html">Dashboard</a>       
+                    </li>
+
+
+                    <li class="liLinks" id="students">
+                        <a href="../Student/students.html">Students</a>
+                    </li>
+
+
+                    <li class="liLinks" id="assessments">
+                        <a href="../Assessments/index.html">Assessments</a>
+                            
+                        
+                    </li>
+
+
+                    <li class="liLinks" id="reports">
+    <a href="../Reports/index.html">Reports</a>
+                    </li>
+
+                </ul>
+
+            </nav>
+
+        </aside>
+
+
+
+        <!-- ============== MAIN CONTENT ============== -->
+
+        <main class="content" id="main">
+
+
+            <!-- MAIN HEADER -->
+
+            <div class="mainHeader">
+
+
+                <div class="mainTitle">
+
+                    <h1>
+                        Dashboard
+                    </h1>
+
+                    <p>
+                        A quick overview of today's attendance
+                        and departmental performance.
+                    </p>
+
+                </div>
+
+
+                <button class="btn attendanceBtn" id="attendanceBtn">
+
+                    + Attendance Registration
+
+                </button>
+
+            </div>
+
+
+
+            <!-- ============== STUDENTS INFORMATION ============== -->
+
+            <div class="cards">
+
+
+                <!-- TOTAL STUDENTS -->
+
+                <div class="card">
+
+                    <div class="cardInfo">
+
+                        <div class="info">
+
+                            <div>
+
+                                <p class="cardTitle">
+                                    Students Total
+                                </p>
+
+                                <p id="studentsTotal">
+                                    120
+                                </p>
+
+                            </div>
+
+
+                            <span class="icons">
+
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                    fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                    stroke-linejoin="round">
+
+                                    <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path>
+
+                                    <path d="M16 3.128a4 4 0 0 1 0 7.744"></path>
+
+                                    <path d="M22 21v-2a4 4 0 0 0-3-3.87"></path>
+
+                                    <circle cx="9" cy="7" r="4"></circle>
+
+                                </svg>
+
+                            </span>
+
+                        </div>
+
+
+                       
+
+                    </div>
+
+                </div>
+
+
+
+                <!-- PRESENT TODAY -->
+
+                <div class="card">
+
+                    <div class="cardInfo">
+
+                        <div class="info">
+
+                            <div>
+
+                                <p class="cardTitle">
+                                    Present Today
+                                </p>
+
+                                <p id="presentToday">
+                                    95
+                                </p>
+
+                            </div>
+
+
+                            <span class="icons">
+
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                    fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                    stroke-linejoin="round">
+
+                                    <path d="m16 11 2 2 4-4"></path>
+
+                                    <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path>
+
+                                    <circle cx="9" cy="7" r="4"></circle>
+
+                                </svg>
+
+                            </span>
+
+                        </div>
+
+
+                       
+
+                    </div>
+
+                </div>
+
+
+
+                <!-- ABSENT TODAY -->
+
+                <div class="card">
+
+                    <div class="cardInfo">
+
+                        <div class="info">
+
+                            <div>
+
+                                <p class="cardTitle">
+                                    Absent Today
+                                </p>
+
+                                <p id="absentToday">
+                                    5
+                                </p>
+
+                            </div>
+
+
+                            <span class="icons">
+
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                    fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                    stroke-linejoin="round">
+
+                                    <circle cx="12" cy="12" r="10"></circle>
+
+                                    <path d="M12 6v6l4 2"></path>
+
+                                </svg>
+
+                            </span>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+
+                <!-- ATTENDANCE RATE -->
+
+                <div class="card">
+
+                    <div class="cardInfo">
+
+                        <div class="info">
+
+                            <div>
+
+                                <p class="cardTitle">
+                                    Attendance Rate
+                                </p>
+
+                                <p id="attendanceRate">
+                                    94%
+                                </p>
+
+                            </div>
+
+
+                            <span class="icons">
+
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                    fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                    stroke-linejoin="round">
+
+                                    <path d="M16 7h6v6"></path>
+
+                                    <path d="m22 7-8.5 8.5-5-5L2 17"></path>
+
+                                </svg>
+
+                            </span>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+
+            <!-- ============== CHARTS ============== -->
+
+            <section class="charts">
+
+
+                <!-- ATTENDANCE CHART -->
+
+                <div class="chartCard">
+
+                    <h2>
+                        Attendance During the Week
+                    </h2>
+
+
+                    <div class="chartContainer">
+
+                        <canvas id="attendanceChart">
+
+                        </canvas>
+
+                    </div>
+
+                </div>
+
+
+
+                <!-- COMMITMENT CHART -->
+
+                <div class="chartCard">
+
+                    <h2>
+                        Commitment Rate
+                    </h2>
+
+
+                    <div class="chartContainer">
+
+                        <canvas id="commitmentChart"></canvas>
+
+                    </div>
+
+                </div>
+
+
+            </section>
+
+
+        </main>
+
+
+    </div>
+
+
+
+    <!-- ============== JAVASCRIPT LIBRARIES ============== -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <script src="script.js"></script>
+
+
+</body>
+
+</html>

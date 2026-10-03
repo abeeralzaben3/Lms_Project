@@ -116,7 +116,7 @@ form.addEventListener('submit', async function (event) {
 
   // 4) Go to the login page
   alert('Account created successfully');
-  location.href = '../Assessments/index.html';
+  location.href = '../homepage/index.html';
 });
 
 // Eye icon: show / hide password
