@@ -22,8 +22,11 @@ function hasAny(text, chars) {
 const digits = '0123456789';
 const specials = '!@#$%^&*()_+-=?.,';
 
+// الاسم: ممنوع الأرقام والرموز (بدون - عشان أسماء مثل Al-Bayt)
+const nameBlocked = digits + '!@#$%^&*()_+=?.,<>/\\|{}[]';
+
 // When the user clicks "Create account"
-form.addEventListener('submit', function (event) {
+form.addEventListener('submit', async function (event) {
   event.preventDefault(); // stop the page from reloading
   showError('');
 
@@ -36,11 +39,11 @@ form.addEventListener('submit', function (event) {
   // 2) Validate them
 
   // الاسم: كلمتين على الأقل وبدون أرقام ولا رموز
-  if (fullName.split(' ').length < 2) {
+  if (fullName.split(/\s+/).length < 2) {
     showError('Please enter your full name (first and last name)');
     return;
   }
-  if (hasAny(fullName, digits + specials)) {
+  if (hasAny(fullName, nameBlocked)) {
     showError('Name must contain letters only');
     return;
   }
@@ -103,9 +106,9 @@ form.addEventListener('submit', function (event) {
     return;
   }
 
-  // 3) Add the teacher (addUser checks for a duplicate email and throws an error)
+  // 3) Add the instructor (addUser checks for a duplicate email and throws an error)
   try {
-    addUser(fullName, email, phone, password);
+    await addUser(fullName, email, phone, password);
   } catch (err) {
     showError(err.message);
     return;
@@ -113,7 +116,7 @@ form.addEventListener('submit', function (event) {
 
   // 4) Go to the login page
   alert('Account created successfully');
-  location.href = 'login.html';
+  location.href = '../Assessments/index.html';
 });
 
 // Eye icon: show / hide password

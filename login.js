@@ -1,4 +1,4 @@
-import { loginUser, saveLoggedInUser } from './fetchStudents.js';
+import {loginUser, saveLoggedInUser} from './fetchStudents.js';
 
 const form = document.getElementById('loginForm');
 const formError = document.getElementById('formError');
@@ -43,7 +43,13 @@ form.addEventListener('submit', async function (event) {
   const days = form.remember && form.remember.checked ? 7 : null;
   saveLoggedInUser(foundUser, days);
 
-  window.location.href = 'dashboard.html';
+  // instructor -> instructor dashboard, student -> student dashboard
+
+  if (foundUser.role === 'student') {
+    window.location.href = '../student_dashboard/index.html';
+  } else {
+    window.location.href = '../Reports/index.html';
+  }
 });
 
 const eye = document.querySelector('.toggle-pass');
