@@ -1,15 +1,19 @@
+// ===== LocalStorage =====
 
+// قراءة البيانات
 export function getData(key) {
   const data = localStorage.getItem(key);
   return data ? JSON.parse(data) : [];
 }
 
-// حفظ البيانات في LocalStorage
+// حفظ البيانات
 export function saveData(key, value) {
   localStorage.setItem(key, JSON.stringify(value));
 }
 
-// إنشاء Cookie (حفظ المستخدم المسجل)
+// ===== Cookies =====
+
+// حفظ Cookie
 export function setCookie(name, value, days) {
   let expires = '';
   if (days) {
@@ -17,66 +21,88 @@ export function setCookie(name, value, days) {
     date.setTime(date.getTime() + days * 24 * 60 * 60 * 1000);
     expires = '; expires=' + date.toUTCString();
   }
-  document.cookie = name + '=' + (value || '') + expires + '; path=/';
+  document.cookie = name + '=' + value + expires + '; path=/';
 }
 
-// جلب الـ Cookie المطلوبة
+// قراءة Cookie
 export function getCookie(name) {
-  const nameEQ = name + '=';
-  const ca = document.cookie.split(';');
-  for (let i = 0; i < ca.length; i++) {
-    let c = ca[i];
-    while (c.charAt(0) === ' ') c = c.substring(1, c.length);
-    if (c.indexOf(nameEQ) === 0) return c.substring(nameEQ.length, c.length);
+  const cookies = document.cookie.split('; ');
+  for (let i = 0; i < cookies.length; i++) {
+    const parts = cookies[i].split('=');
+    if (parts[0] === name) return parts[1];
   }
   return null;
 }
 
-// معرفة البريد الإلكتروني للمستخدم الحالي
+// المستخدم الحالي
 export function getCurrentUser() {
   return getCookie('currentUser');
 }
 
-// إضافة حساب جديد مع التحقق من عدم تكرار البريد (تستخدمها rej.js)
+// تسجيل الخروج (بنمسح الكوكي)
+export function logout() {
+  setCookie('currentUser', '', -1);
+}
+
+// ===== المستخدمين =====
+
+// إضافة مستخدم جديد
 export function addUser(fullName, email, phone, password) {
   const users = getData('users');
 
-  // التأكد من عدم وجود بريد مستخدم مسجل سابقاً
-  const exists = users.some((user) => user.email === email);
-  if (exists) {
-    throw new Error('This email address is already registered');
+  for (let i = 0; i < users.length; i++) {
+    if (users[i].email === email) {
+      throw new Error('This email address is already registered');
+    }
   }
 
-  const newUser = {
-    id: Date.now(),
-    fullName,
-    email,
-    phone,
-    password,
-  };
-
+  const newUser = { id: Date.now(), fullName, email, phone, password };
   users.push(newUser);
   saveData('users', users);
   return newUser;
 }
 
-// جلب قائمة الطلاب من LocalStorage أو من سيرفر فرعي (تلقائي)
-export default async function getStudents() {
-  let students = getData('students');
+// ===== جلب البيانات من db.json =====
 
-  if (!students.length) {
+async function loadFromServer(key) {
+  let items = getData(key);
+
+  if (items.length === 0) {
     try {
-      const response = await fetch('http://localhost:3000/students');
-      if (!response.ok) {
-        throw new Error('Failed to fetch students');
-      }
-      students = await response.json();
-      saveData('students', students);
+      const response = await fetch('http://localhost:3000/' + key);
+      items = await response.json();
+      saveData(key, items);
     } catch (error) {
-      console.warn('Could not fetch from server, returning empty array:', error);
       return [];
     }
   }
 
-  return students;
+  return items;
+}
+
+export async function getInstructors() {
+  return loadFromServer('instructors');
+}
+
+export async function getCourses() {
+  return loadFromServer('courses');
+}
+
+export default async function getStudents() {
+  return loadFromServer('students');
+}
+
+// ===== تسجيل الدخول =====
+// بيقارن المدخلات مع المستخدمين المسجلين ومع المدرسين
+export async function loginUser(email, password) {
+  const users = getData('users');
+  const instructors = await getInstructors();
+  const all = users.concat(instructors);
+
+  for (let i = 0; i < all.length; i++) {
+    if (all[i].email === email && all[i].password === password) {
+      return all[i];
+    }
+  }
+  return null;
 }

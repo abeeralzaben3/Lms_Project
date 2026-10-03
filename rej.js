@@ -1,19 +1,26 @@
-
-
 import { addUser } from './fetchStudents.js';
-
-
 
 const form = document.getElementById('registerForm');
 const formError = document.getElementById('formError');
 
-
+function showError(message) {
   if (formError) {
     formError.textContent = message;
   } else if (message !== '') {
     alert(message);
   }
+}
 
+// دالة بتفحص إذا النص فيه أي حرف من الحروف المعطاة
+function hasAny(text, chars) {
+  for (let i = 0; i < text.length; i++) {
+    if (chars.includes(text[i])) return true;
+  }
+  return false;
+}
+
+const digits = '0123456789';
+const specials = '!@#$%^&*()_+-=?.,';
 
 // When the user clicks "Create account"
 form.addEventListener('submit', function (event) {
@@ -27,23 +34,70 @@ form.addEventListener('submit', function (event) {
   const password = form.password.value;
 
   // 2) Validate them
-  if (fullName.length < 3) {
-    showError('Please enter your full name');
+
+  // الاسم: كلمتين على الأقل وبدون أرقام ولا رموز
+  if (fullName.split(' ').length < 2) {
+    showError('Please enter your full name (first and last name)');
     return;
   }
-if (!email.includes('@') || !email.includes('.')) {
-  showError('Invalid email address');
-  return;
-}
+  if (hasAny(fullName, digits + specials)) {
+    showError('Name must contain letters only');
+    return;
+  }
 
-if (isNaN(phone) || phone.length < 9 || phone.length > 15) {
-  showError('Invalid phone number (digits only)');
-  return;
-}
+  // الإيميل
+  if (email.includes(' ')) {
+    showError('Email must not contain spaces');
+    return;
+  }
+  if (email.indexOf('@') < 1 || email.indexOf('@') !== email.lastIndexOf('@')) {
+    showError('Email must have one @ with a name before it');
+    return;
+  }
+  if (email.lastIndexOf('.') < email.indexOf('@') + 2 || email.endsWith('.')) {
+    showError('Email must look like name@gmail.com');
+    return;
+  }
+
+  // الرقم: 10 خانات وأرقام فقط
+  if (phone.length !== 10) {
+    showError('Phone number must be exactly 10 digits');
+    return;
+  }
+  for (let i = 0; i < phone.length; i++) {
+    if (!digits.includes(phone[i])) {
+      showError('Phone number must contain digits only');
+      return;
+    }
+  }
+
+  // كلمة السر القوية
   if (password.length < 8) {
     showError('Password must be at least 8 characters');
     return;
   }
+  if (password.includes(' ')) {
+    showError('Password must not contain spaces');
+    return;
+  }
+  if (password === password.toLowerCase()) {
+    showError('Password must contain an uppercase letter');
+    return;
+  }
+  if (password === password.toUpperCase()) {
+    showError('Password must contain a lowercase letter');
+    return;
+  }
+  if (!hasAny(password, digits)) {
+    showError('Password must contain a number');
+    return;
+  }
+  if (!hasAny(password, specials)) {
+    showError('Password must contain a special character (!@#$...)');
+    return;
+  }
+
+  // الموافقة على الشروط
   if (!form.terms.checked) {
     showError('You must agree to the terms');
     return;

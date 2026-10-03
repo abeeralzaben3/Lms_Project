@@ -1,129 +1,712 @@
 {
-  "students": [
+  "instructors": [
     {
-      "id": "stu_001",
-      "studentId": "20260045",
-      "name": "Lina Omar",
-      "courses": ["JS101"],
-      "scores": [
-        { "assessmentId": "a1", "score": 9 },
-        { "assessmentId": "a2", "score": 8 },
-        { "assessmentId": "a3", "score": 36 },
-        { "assessmentId": "a4", "score": 45 }
-      ],
-      "attendance": [
-        { "date": "2026-09-20", "course": "JS101", "status": "present" },
-        { "date": "2026-09-22", "course": "JS101", "status": "present" },
-        { "date": "2026-09-24", "course": "JS101", "status": "present" }
-      ],
-      "archived": false
+      "id": "INS001",
+      "name": "Ahmad Ali",
+      "email": "ahmad@example.com",
+      "password": "1234",
+      "role": "Instructor"
     },
     {
-      "id": "stu_002",
-      "studentId": "20260046",
-      "name": "Omar Khaled",
-      "courses": ["JS101"],
-      "scores": [
-        { "assessmentId": "a1", "score": 7 },
-        { "assessmentId": "a2", "score": 6 },
-        { "assessmentId": "a3", "score": 28 },
-        { "assessmentId": "a4", "score": 38 }
-      ],
-      "attendance": [
-        { "date": "2026-09-20", "course": "JS101", "status": "present" },
-        { "date": "2026-09-22", "course": "JS101", "status": "absent" },
-        { "date": "2026-09-24", "course": "JS101", "status": "present" }
-      ],
-      "archived": false
+      "id": "INS002",
+      "name": "Sara Ahmad",
+      "email": "sara@example.com",
+      "password": "1234",
+      "role": "Instructor"
     },
     {
-      "id": "stu_003",
-      "studentId": "20260047",
-      "name": "Sara Nasser",
-      "courses": ["JS101"],
-      "scores": [
-        { "assessmentId": "a1", "score": 10 },
-        { "assessmentId": "a2", "score": 10 },
-        { "assessmentId": "a3", "score": 39 },
-        { "assessmentId": "a4", "score": 49 }
-      ],
-      "attendance": [
-        { "date": "2026-09-20", "course": "JS101", "status": "present" },
-        { "date": "2026-09-22", "course": "JS101", "status": "present" },
-        { "date": "2026-09-24", "course": "JS101", "status": "present" }
-      ],
-      "archived": false
-    },
-    {
-      "id": "stu_004",
-      "studentId": "20260048",
-      "name": "Yousef Haddad",
-      "courses": ["JS101"],
-      "scores": [
-        { "assessmentId": "a1", "score": 5 },
-        { "assessmentId": "a2", "score": 4 },
-        { "assessmentId": "a3", "score": 20 },
-        { "assessmentId": "a4", "score": 27 }
-      ],
-      "attendance": [
-        { "date": "2026-09-20", "course": "JS101", "status": "absent" },
-        { "date": "2026-09-22", "course": "JS101", "status": "present" },
-        { "date": "2026-09-24", "course": "JS101", "status": "absent" }
-      ],
-      "archived": false
-    },
-    {
-      "id": "stu_005",
-      "studentId": "20260049",
-      "name": "Maya Saleh",
-      "courses": ["JS101"],
-      "scores": [
-        { "assessmentId": "a1", "score": 8 },
-        { "assessmentId": "a2", "score": 9 },
-        { "assessmentId": "a3", "score": 33 }
-      ],
-      "attendance": [
-        { "date": "2026-09-20", "course": "JS101", "status": "present" },
-        { "date": "2026-09-22", "course": "JS101", "status": "present" },
-        { "date": "2026-09-24", "course": "JS101", "status": "absent" }
-      ],
-      "archived": false
-    },
-    {
-      "id": "stu_006",
-      "studentId": "20260050",
-      "name": "Hassan Mansour",
-      "courses": ["JS101"],
-      "scores": [
-        { "assessmentId": "a1", "score": 3 },
-        { "assessmentId": "a2", "score": 5 },
-        { "assessmentId": "a3", "score": 15 },
-        { "assessmentId": "a4", "score": 22 }
-      ],
-      "attendance": [
-        { "date": "2026-09-20", "course": "JS101", "status": "absent" },
-        { "date": "2026-09-22", "course": "JS101", "status": "absent" },
-        { "date": "2026-09-24", "course": "JS101", "status": "present" }
-      ],
-      "archived": false
-    },
-    {
-      "id": "stu_007",
-      "studentId": "20260051",
-      "name": "Nour Abdallah",
-      "courses": ["JS101"],
-      "scores": [
-        { "assessmentId": "a1", "score": 9 },
-        { "assessmentId": "a2", "score": 7 },
-        { "assessmentId": "a3", "score": 31 },
-        { "assessmentId": "a4", "score": 41 }
-      ],
-      "attendance": [
-        { "date": "2026-09-20", "course": "JS101", "status": "present" },
-        { "date": "2026-09-22", "course": "JS101", "status": "present" },
-        { "date": "2026-09-24", "course": "JS101", "status": "present" }
-      ],
-      "archived": true
+      "id": "INS003",
+      "name": "Mohammad Khaled",
+      "email": "mohammad@example.com",
+      "password": "1234",
+      "role": "Instructor"
     }
-  ]
+  ],
+
+  "courses": [
+    {
+      "id": "COURSE001",
+      "name": "JavaScript",
+      "description": "Modern JavaScript programming and DOM manipulation",
+      "instructorId": "INS001",
+      "studentsCount": 10
+    },
+    {
+      "id": "COURSE002",
+      "name": "HTML & CSS",
+      "description": "Web structure, styling and responsive design",
+      "instructorId": "INS001",
+      "studentsCount": 10
+    },
+    {
+      "id": "COURSE003",
+      "name": "Python",
+      "description": "Python programming fundamentals",
+      "instructorId": "INS002",
+      "studentsCount": 10
+    },
+    {
+      "id": "COURSE004",
+      "name": "Data Structures",
+      "description": "Algorithms and fundamental data structures",
+      "instructorId": "INS003",
+      "studentsCount": 10
+    },
+    {
+      "id": "COURSE005",
+      "name": "Database Fundamentals",
+      "description": "SQL, relational databases and database design",
+      "instructorId": "INS003",
+      "studentsCount": 10
+    }
+  ],
+
+  "students": [
+  {
+    "id": "stu_001",
+    "studentId": "20260045",
+    "name": "Lina Omar",
+    "email": "lina@example.com",
+    "courses": ["COURSE001"],
+    "scores": [
+      { "assessmentId": "a1", "score": 9 },
+      { "assessmentId": "a2", "score": 8 },
+      { "assessmentId": "a3", "score": 36 },
+      { "assessmentId": "a4", "score": 45 }
+    ],
+    "attendance": [
+      { "date": "2026-09-20", "courseId": "COURSE001", "status": "present" },
+      { "date": "2026-09-22", "courseId": "COURSE001", "status": "present" },
+      { "date": "2026-09-24", "courseId": "COURSE001", "status": "present" }
+    ],
+    "archived": false
+  },
+  {
+    "id": "stu_002",
+    "studentId": "20260046",
+    "name": "Omar Khaled",
+    "email": "omar@example.com",
+    "courses": ["COURSE001"],
+    "scores": [
+      { "assessmentId": "a1", "score": 7 },
+      { "assessmentId": "a2", "score": 6 },
+      { "assessmentId": "a3", "score": 28 },
+      { "assessmentId": "a4", "score": 38 }
+    ],
+    "attendance": [
+      { "date": "2026-09-20", "courseId": "COURSE001", "status": "present" },
+      { "date": "2026-09-22", "courseId": "COURSE001", "status": "absent" },
+      { "date": "2026-09-24", "courseId": "COURSE001", "status": "present" }
+    ],
+    "archived": false
+  },
+  {
+    "id": "stu_003",
+    "studentId": "20260047",
+    "name": "Sara Nasser",
+    "email": "sara.nasser@example.com",
+    "courses": ["COURSE001"],
+    "scores": [
+      { "assessmentId": "a1", "score": 10 },
+      { "assessmentId": "a2", "score": 10 },
+      { "assessmentId": "a3", "score": 39 },
+      { "assessmentId": "a4", "score": 49 }
+    ],
+    "attendance": [
+      { "date": "2026-09-20", "courseId": "COURSE001", "status": "present" },
+      { "date": "2026-09-22", "courseId": "COURSE001", "status": "present" },
+      { "date": "2026-09-24", "courseId": "COURSE001", "status": "present" }
+    ],
+    "archived": false
+  },
+  {
+    "id": "stu_004",
+    "studentId": "20260048",
+    "name": "Yousef Haddad",
+    "email": "yousef@example.com",
+    "courses": ["COURSE001"],
+    "scores": [
+      { "assessmentId": "a1", "score": 5 },
+      { "assessmentId": "a2", "score": 4 },
+      { "assessmentId": "a3", "score": 20 },
+      { "assessmentId": "a4", "score": 27 }
+    ],
+    "attendance": [
+      { "date": "2026-09-20", "courseId": "COURSE001", "status": "absent" },
+      { "date": "2026-09-22", "courseId": "COURSE001", "status": "present" },
+      { "date": "2026-09-24", "courseId": "COURSE001", "status": "absent" }
+    ],
+    "archived": false
+  },
+  {
+    "id": "stu_005",
+    "studentId": "20260049",
+    "name": "Maya Saleh",
+    "email": "maya@example.com",
+    "courses": ["COURSE001"],
+    "scores": [
+      { "assessmentId": "a1", "score": 8 },
+      { "assessmentId": "a2", "score": 9 },
+      { "assessmentId": "a3", "score": 33 },
+      { "assessmentId": "a4", "score": 42 }
+    ],
+    "attendance": [
+      { "date": "2026-09-20", "courseId": "COURSE001", "status": "present" },
+      { "date": "2026-09-22", "courseId": "COURSE001", "status": "present" },
+      { "date": "2026-09-24", "courseId": "COURSE001", "status": "absent" }
+    ],
+    "archived": false
+  },
+  {
+    "id": "stu_006",
+    "studentId": "20260050",
+    "name": "Hassan Mansour",
+    "email": "hassan@example.com",
+    "courses": ["COURSE001"],
+    "scores": [
+      { "assessmentId": "a1", "score": 3 },
+      { "assessmentId": "a2", "score": 5 },
+      { "assessmentId": "a3", "score": 15 },
+      { "assessmentId": "a4", "score": 22 }
+    ],
+    "attendance": [
+      { "date": "2026-09-20", "courseId": "COURSE001", "status": "absent" },
+      { "date": "2026-09-22", "courseId": "COURSE001", "status": "absent" },
+      { "date": "2026-09-24", "courseId": "COURSE001", "status": "present" }
+    ],
+    "archived": false
+  },
+  {
+    "id": "stu_007",
+    "studentId": "20260051",
+    "name": "Nour Abdallah",
+    "email": "nour@example.com",
+    "courses": ["COURSE001"],
+    "scores": [
+      { "assessmentId": "a1", "score": 9 },
+      { "assessmentId": "a2", "score": 7 },
+      { "assessmentId": "a3", "score": 31 },
+      { "assessmentId": "a4", "score": 41 }
+    ],
+    "attendance": [
+      { "date": "2026-09-20", "courseId": "COURSE001", "status": "present" },
+      { "date": "2026-09-22", "courseId": "COURSE001", "status": "present" },
+      { "date": "2026-09-24", "courseId": "COURSE001", "status": "present" }
+    ],
+    "archived": false
+  },
+
+  {
+    "id": "stu_008",
+    "studentId": "20260052",
+    "name": "Ahmad Saleh",
+    "email": "ahmad.saleh@example.com",
+    "courses": ["COURSE001"],
+    "scores": [],
+    "attendance": [],
+    "archived": false
+  },
+  {
+    "id": "stu_009",
+    "studentId": "20260053",
+    "name": "Khaled Ali",
+    "email": "khaled.ali@example.com",
+    "courses": ["COURSE001"],
+    "scores": [],
+    "attendance": [],
+    "archived": false
+  },
+  {
+    "id": "stu_010",
+    "studentId": "20260054",
+    "name": "Dana Mohammad",
+    "email": "dana.mohammad@example.com",
+    "courses": ["COURSE001"],
+    "scores": [],
+    "attendance": [],
+    "archived": false
+  },
+
+  {
+    "id": "stu_011",
+    "studentId": "20260055",
+    "name": "Rami Ahmad",
+    "email": "rami.ahmad@example.com",
+    "courses": ["COURSE002"],
+    "scores": [],
+    "attendance": [],
+    "archived": false
+  },
+  {
+    "id": "stu_012",
+    "studentId": "20260056",
+    "name": "Leen Khalil",
+    "email": "leen.khalil@example.com",
+    "courses": ["COURSE002"],
+    "scores": [],
+    "attendance": [],
+    "archived": false
+  },
+  {
+    "id": "stu_013",
+    "studentId": "20260057",
+    "name": "Tariq Hassan",
+    "email": "tariq.hassan@example.com",
+    "courses": ["COURSE002"],
+    "scores": [],
+    "attendance": [],
+    "archived": false
+  },
+  {
+    "id": "stu_014",
+    "studentId": "20260058",
+    "name": "Hala Nasser",
+    "email": "hala.nasser@example.com",
+    "courses": ["COURSE002"],
+    "scores": [],
+    "attendance": [],
+    "archived": false
+  },
+  {
+    "id": "stu_015",
+    "studentId": "20260059",
+    "name": "Zaid Omar",
+    "email": "zaid.omar@example.com",
+    "courses": ["COURSE002"],
+    "scores": [],
+    "attendance": [],
+    "archived": false
+  },
+  {
+    "id": "stu_016",
+    "studentId": "20260060",
+    "name": "Reem Ali",
+    "email": "reem.ali@example.com",
+    "courses": ["COURSE002"],
+    "scores": [],
+    "attendance": [],
+    "archived": false
+  },
+  {
+    "id": "stu_017",
+    "studentId": "20260061",
+    "name": "Sami Khaled",
+    "email": "sami.khaled@example.com",
+    "courses": ["COURSE002"],
+    "scores": [],
+    "attendance": [],
+    "archived": false
+  },
+  {
+    "id": "stu_018",
+    "studentId": "20260062",
+    "name": "Aya Saleh",
+    "email": "aya.saleh@example.com",
+    "courses": ["COURSE002"],
+    "scores": [],
+    "attendance": [],
+    "archived": false
+  },
+  {
+    "id": "stu_019",
+    "studentId": "20260063",
+    "name": "Fadi Mansour",
+    "email": "fadi.mansour@example.com",
+    "courses": ["COURSE002"],
+    "scores": [],
+    "attendance": [],
+    "archived": false
+  },
+  {
+    "id": "stu_020",
+    "studentId": "20260064",
+    "name": "Mira Ahmad",
+    "email": "mira.ahmad@example.com",
+    "courses": ["COURSE002"],
+    "scores": [],
+    "attendance": [],
+    "archived": false
+  },
+
+  {
+    "id": "stu_021",
+    "studentId": "20260065",
+    "name": "Adam Hassan",
+    "email": "adam.hassan@example.com",
+    "courses": ["COURSE003"],
+    "scores": [],
+    "attendance": [],
+    "archived": false
+  },
+  {
+    "id": "stu_022",
+    "studentId": "20260066",
+    "name": "Jana Khaled",
+    "email": "jana.khaled@example.com",
+    "courses": ["COURSE003"],
+    "scores": [],
+    "attendance": [],
+    "archived": false
+  },
+  {
+    "id": "stu_023",
+    "studentId": "20260067",
+    "name": "Yazan Omar",
+    "email": "yazan.omar@example.com",
+    "courses": ["COURSE003"],
+    "scores": [],
+    "attendance": [],
+    "archived": false
+  },
+  {
+    "id": "stu_024",
+    "studentId": "20260068",
+    "name": "Farah Ali",
+    "email": "farah.ali@example.com",
+    "courses": ["COURSE003"],
+    "scores": [],
+    "attendance": [],
+    "archived": false
+  },
+  {
+    "id": "stu_025",
+    "studentId": "20260069",
+    "name": "Laith Nasser",
+    "email": "laith.nasser@example.com",
+    "courses": ["COURSE003"],
+    "scores": [],
+    "attendance": [],
+    "archived": false
+  },
+  {
+    "id": "stu_026",
+    "studentId": "20260070",
+    "name": "Dima Saleh",
+    "email": "dima.saleh@example.com",
+    "courses": ["COURSE003"],
+    "scores": [],
+    "attendance": [],
+    "archived": false
+  },
+  {
+    "id": "stu_027",
+    "studentId": "20260071",
+    "name": "Omar Mansour",
+    "email": "omar.mansour@example.com",
+    "courses": ["COURSE003"],
+    "scores": [],
+    "attendance": [],
+    "archived": false
+  },
+  {
+    "id": "stu_028",
+    "studentId": "20260072",
+    "name": "Rana Ahmad",
+    "email": "rana.ahmad@example.com",
+    "courses": ["COURSE003"],
+    "scores": [],
+    "attendance": [],
+    "archived": false
+  },
+  {
+    "id": "stu_029",
+    "studentId": "20260073",
+    "name": "Kareem Khalil",
+    "email": "kareem.khalil@example.com",
+    "courses": ["COURSE003"],
+    "scores": [],
+    "attendance": [],
+    "archived": false
+  },
+  {
+    "id": "stu_030",
+    "studentId": "20260074",
+    "name": "Lama Hassan",
+    "email": "lama.hassan@example.com",
+    "courses": ["COURSE003"],
+    "scores": [],
+    "attendance": [],
+    "archived": false
+  },
+
+  {
+    "id": "stu_031",
+    "studentId": "20260075",
+    "name": "Ibrahim Ali",
+    "email": "ibrahim.ali@example.com",
+    "courses": ["COURSE004"],
+    "scores": [],
+    "attendance": [],
+    "archived": false
+  },
+  {
+    "id": "stu_032",
+    "studentId": "20260076",
+    "name": "Malak Omar",
+    "email": "malak.omar@example.com",
+    "courses": ["COURSE004"],
+    "scores": [],
+    "attendance": [],
+    "archived": false
+  },
+  {
+    "id": "stu_033",
+    "studentId": "20260077",
+    "name": "Saeed Khaled",
+    "email": "saeed.khaled@example.com",
+    "courses": ["COURSE004"],
+    "scores": [],
+    "attendance": [],
+    "archived": false
+  },
+  {
+    "id": "stu_034",
+    "studentId": "20260078",
+    "name": "Nouran Nasser",
+    "email": "nouran.nasser@example.com",
+    "courses": ["COURSE004"],
+    "scores": [],
+    "attendance": [],
+    "archived": false
+  },
+  {
+    "id": "stu_035",
+    "studentId": "20260079",
+    "name": "Hussein Saleh",
+    "email": "hussein.saleh@example.com",
+    "courses": ["COURSE004"],
+    "scores": [],
+    "attendance": [],
+    "archived": false
+  },
+  {
+    "id": "stu_036",
+    "studentId": "20260080",
+    "name": "Razan Mansour",
+    "email": "razan.mansour@example.com",
+    "courses": ["COURSE004"],
+    "scores": [],
+    "attendance": [],
+    "archived": false
+  },
+  {
+    "id": "stu_037",
+    "studentId": "20260081",
+    "name": "Basil Ahmad",
+    "email": "basil.ahmad@example.com",
+    "courses": ["COURSE004"],
+    "scores": [],
+    "attendance": [],
+    "archived": false
+  },
+  {
+    "id": "stu_038",
+    "studentId": "20260082",
+    "name": "Samar Khalil",
+    "email": "samar.khalil@example.com",
+    "courses": ["COURSE004"],
+    "scores": [],
+    "attendance": [],
+    "archived": false
+  },
+  {
+    "id": "stu_039",
+    "studentId": "20260083",
+    "name": "Mahmoud Hassan",
+    "email": "mahmoud.hassan@example.com",
+    "courses": ["COURSE004"],
+    "scores": [],
+    "attendance": [],
+    "archived": false
+  },
+  {
+    "id": "stu_040",
+    "studentId": "20260084",
+    "name": "Aya Omar",
+    "email": "aya.omar@example.com",
+    "courses": ["COURSE004"],
+    "scores": [],
+    "attendance": [],
+    "archived": false
+  },
+
+  {
+    "id": "stu_041",
+    "studentId": "20260085",
+    "name": "Tamer Ali",
+    "email": "tamer.ali@example.com",
+    "courses": ["COURSE005"],
+    "scores": [],
+    "attendance": [],
+    "archived": false
+  },
+  {
+    "id": "stu_042",
+    "studentId": "20260086",
+    "name": "Huda Khaled",
+    "email": "huda.khaled@example.com",
+    "courses": ["COURSE005"],
+    "scores": [],
+    "attendance": [],
+    "archived": false
+  },
+  {
+    "id": "stu_043",
+    "studentId": "20260087",
+    "name": "Anas Nasser",
+    "email": "anas.nasser@example.com",
+    "courses": ["COURSE005"],
+    "scores": [],
+    "attendance": [],
+    "archived": false
+  },
+  {
+    "id": "stu_044",
+    "studentId": "20260088",
+    "name": "Rima Saleh",
+    "email": "rima.saleh@example.com",
+    "courses": ["COURSE005"],
+    "scores": [],
+    "attendance": [],
+    "archived": false
+  },
+  {
+    "id": "stu_045",
+    "studentId": "20260089",
+    "name": "Walid Mansour",
+    "email": "walid.mansour@example.com",
+    "courses": ["COURSE005"],
+    "scores": [],
+    "attendance": [],
+    "archived": false
+  },
+  {
+    "id": "stu_046",
+    "studentId": "20260090",
+    "name": "Sara Ahmad",
+    "email": "sara.ahmad2@example.com",
+    "courses": ["COURSE005"],
+    "scores": [],
+    "attendance": [],
+    "archived": false
+  },
+  {
+    "id": "stu_047",
+    "studentId": "20260091",
+    "name": "Fares Omar",
+    "email": "fares.omar@example.com",
+    "courses": ["COURSE005"],
+    "scores": [],
+    "attendance": [],
+    "archived": false
+  },
+  {
+    "id": "stu_048",
+    "studentId": "20260092",
+    "name": "Dana Khalil",
+    "email": "dana.khalil@example.com",
+    "courses": ["COURSE005"],
+    "scores": [],
+    "attendance": [],
+    "archived": false
+  },
+  {
+    "id": "stu_049",
+    "studentId": "20260093",
+    "name": "Majd Hassan",
+    "email": "majd.hassan@example.com",
+    "courses": ["COURSE005"],
+    "scores": [],
+    "attendance": [],
+    "archived": false
+  },
+  {
+    "id": "stu_050",
+    "studentId": "20260094",
+    "name": "Rama Ali",
+    "email": "rama.ali@example.com",
+    "courses": ["COURSE005"],
+    "scores": [],
+    "attendance": [],
+    "archived": false
+  }
+],
+
+  "notifications": [
+    {
+      "id": "NOT001",
+      "instructorId": "INS001",
+      "studentId": "stu_004",
+      "type": "warning",
+      "title": "Low Performance",
+      "message": "Yousef Haddad's overall grade is below 60%.",
+      "read": false,
+      "date": "2026-09-29"
+    },
+    {
+      "id": "NOT002",
+      "instructorId": "INS001",
+      "studentId": "stu_006",
+      "type": "warning",
+      "title": "Low Attendance",
+      "message": "Hassan Mansour's attendance is below 75%.",
+      "read": false,
+      "date": "2026-09-29"
+    },
+    {
+      "id": "NOT003",
+      "instructorId": "INS001",
+      "studentId": "stu_003",
+      "type": "success",
+      "title": "Excellent Performance",
+      "message": "Sara Nasser achieved an excellent overall grade.",
+      "read": true,
+      "date": "2026-09-29"
+    }
+  ],
+
+  "reports": [
+    {
+      "id": "REP001",
+      "studentId": "stu_001",
+      "instructorId": "INS001",
+      "generatedDate": "2026-09-29",
+      "overallGrade": 89.6,
+      "attendance": 100,
+      "performanceLevel": "Excellent"
+    },
+    {
+      "id": "REP002",
+      "studentId": "stu_002",
+      "instructorId": "INS001",
+      "generatedDate": "2026-09-29",
+      "overallGrade": 79,
+      "attendance": 66.67,
+      "performanceLevel": "Good"
+    },
+    {
+      "id": "REP003",
+      "studentId": "stu_003",
+      "instructorId": "INS001",
+      "generatedDate": "2026-09-29",
+      "overallGrade": 98.4,
+      "attendance": 100,
+      "performanceLevel": "Excellent"
+    }
+  ],
+
+  "gradeWeights": {
+    "assignments": 20,
+    "quizzes": 20,
+    "midterm": 20,
+    "finalExam": 40
+  },
+
+  "settings": {
+    "passingGrade": 60,
+    "excellentGrade": 85,
+    "goodGrade": 70,
+    "lowAttendanceThreshold": 75,
+    "lowGradeThreshold": 60
+  }
 }

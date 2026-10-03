@@ -1,9 +1,8 @@
-import { getData, setCookie } from './fetchStudents.js';
+import { loginUser, saveLoggedInUser } from './fetchStudents.js';
 
 const form = document.getElementById('loginForm');
 const formError = document.getElementById('formError');
 
-// عرض رسالة الخطأ فوق النموذج
 function showError(message) {
   if (formError) {
     formError.textContent = message;
@@ -12,42 +11,41 @@ function showError(message) {
   }
 }
 
-// عند الضغط على زر "Sign in"
-form.addEventListener('submit', function (event) {
+form.addEventListener('submit', async function (event) {
   event.preventDefault();
   showError('');
 
-  // 1) قراءة البيانات
   const email = form.email.value.trim().toLowerCase();
   const password = form.password.value;
 
-  if (email === '' || password === '') {
-    showError('Please enter your email and password');
+  if (email === '') {
+    showError('Please enter your email');
+    return;
+  }
+  if (!email.includes('@') || !email.includes('.')) {
+    showError('Please enter a valid email');
+    return;
+  }
+  if (password === '') {
+    showError('Please enter your password');
     return;
   }
 
-  // 2) البحث عن المستخدم
-  const users = getData('users') || [];
-  const foundUser = Array.isArray(users)
-    ? users.find(function (u) {
-        return u.email === email && u.password === password;
-      })
-    : null;
+  // Compare with registered users (localStorage) and instructors (db.json)
+  const foundUser = await loginUser(email, password);
 
-  // 3) إذا لم يتم العثور على حساب
   if (!foundUser) {
     showError('Incorrect email or password');
     return;
   }
 
-  // 4) حفظ البريد في الـ Cookie
+  // Save in cookie (email) + localStorage (user data without password)
   const days = form.remember && form.remember.checked ? 7 : null;
-  setCookie('currentUser', foundUser.email, days);
+  saveLoggedInUser(foundUser, days);
 
-  // تم إلغاء التحويل التلقائي لـ dashboard.html
+  window.location.href = 'dashboard.html';
 });
 
-// أيقونة إظهار / إخفاء كلمة المرور
 const eye = document.querySelector('.toggle-pass');
 
 if (eye) {
