@@ -1,2362 +1,484 @@
 'use strict';
 
-// ==================================================
-// ELEMENTS
-// ==================================================
-
-const addCourse = document.getElementById('addCourse');
-const courseModal = document.getElementById('courseModal');
-const courseForm = document.getElementById('courseForm');
-const closeCourseModal = document.getElementById('closeCourseModal');
-
-const addAssessment = document.getElementById('addAssessment');
-const assessmentModal = document.getElementById('assessmentModal');
-const assessmentForm = document.getElementById('assessmentForm');
-const closeModal = document.getElementById('closeModal');
-
-const editCourseModal = document.getElementById('editCourseModal');
-const editCourseForm = document.getElementById('editCourseForm');
-const closeEditCourseModal =
-    document.getElementById('closeEditCourseModal');
-
-const editAssessmentModal =
-    document.getElementById('editAssessmentModal');
-
-const editAssessmentForm =
-    document.getElementById('editAssessmentForm');
-
-const closeEditAssessmentModal =
-    document.getElementById('closeEditAssessmentModal');
-
-const coursesBox = document.getElementById('courses');
-const assessmentsBox = document.getElementById('assessments');
-const studentsBox = document.getElementById('students');
-const studentsSection = document.getElementById('studentsSection');
-const saveMarks = document.getElementById('saveMarks');
-
-let selectedCourseId = null;
-let selectedAssessmentId = null;
-
-let editingCourseId = null;
-let editingAssessmentId = null;
-
-
-// ==================================================
-// LOCAL STORAGE HELPERS
-// ==================================================
-
-function getData(key) {
-    try {
-        return JSON.parse(localStorage.getItem(key)) || [];
-    } catch {
-        return [];
-    }
-}
-
-function saveData(key, value) {
-    localStorage.setItem(key, JSON.stringify(value));
-}
-
-
-// ==================================================
-// COOKIE
-// ==================================================
+// ---------- helpers ----------
+const $ = id => document.getElementById(id);
+const load = key => { try { return JSON.parse(localStorage.getItem(key)) || []; } catch { return []; } };
+const save = (key, value) => localStorage.setItem(key, JSON.stringify(value));
+const same = (a, b) => String(a) === String(b);
+const lower = text => String(text).trim().toLowerCase();
 
 function getCookie(name) {
-    const match = document.cookie
-        .split('; ')
-        .find(row => row.startsWith(name + '='));
-
-    return match
-        ? decodeURIComponent(
-            match.slice(name.length + 1)
-        )
-        : null;
+    const match = document.cookie.split('; ').find(row => row.startsWith(name + '='));
+    return match ? decodeURIComponent(match.slice(name.length + 1)) : null;
 }
 
-
-// ==================================================
-// MESSAGE POPUP
-// ==================================================
-
-function showMessage(message) {
-
-    const popup = document.getElementById('messagePopup');
-
-    if (!popup) {
-        console.log(message);
-        return;
-    }
-
-    popup.innerText = message;
+function showMessage(text) {
+    const popup = $('messagePopup');
+    if (!popup) return console.log(text);
+    popup.innerText = text;
     popup.style.display = 'block';
-
-    setTimeout(() => {
-        popup.style.display = 'none';
-    }, 2000);
+    setTimeout(() => (popup.style.display = 'none'), 2000);
 }
 
+function getInitials(name) {
+    const words = String(name).split(/\s+/).filter(w => w && !/^(dr|prof|mr|mrs|ms|eng)\.?$/i.test(w));
+    return words.slice(0, 2).map(w => w[0].toUpperCase()).join('') || '?';
+}
 
-// ==================================================
-// LOGIN CHECK
-// ==================================================
+// next id like COURSE004 / AS003
+function nextId(prefix, list) {
+    const numbers = list.map(item => String(item.id).match(new RegExp(`^${prefix}(\\d+)$`))).filter(Boolean).map(m => +m[1]);
+    return prefix + String((numbers.length ? Math.max(...numbers) : 0) + 1).padStart(3, '0');
+}
 
-const loggedInUser = JSON.parse(
-    localStorage.getItem('loggedInUser') || 'null'
-);
+async function getStudents() {
+    let students = load('students');
+    if (students.length) return students;
 
-const currentUserEmail = (
-    getCookie('currentUser') || ''
-).toLowerCase();
+    try {
+        const response = await fetch('http://localhost:3000/students');
+        if (!response.ok) throw new Error('Failed to fetch students');
+        students = await response.json();
+        save('students', students);
+    } catch (error) {
+        console.error(error);
+        showMessage('Could not load students');
+    }
+    return students;
+}
 
-if (
-    !currentUserEmail ||
-    !loggedInUser ||
-    loggedInUser.role?.toLowerCase() !== 'instructor'
-) {
+const showModal = modal => (modal.style.display = 'flex');
+const hideModal = modal => (modal.style.display = 'none');
+
+
+// ---------- login check + current instructor ----------
+const loggedIn = JSON.parse(localStorage.getItem('loggedInUser') || 'null');
+const email = (getCookie('currentUser') || '').toLowerCase();
+
+if (!email || !loggedIn || String(loggedIn.role).toLowerCase() !== 'instructor') {
     window.location.href = '../auth/login.html';
 }
 
+const instructors = load('instructors');
+const me = instructors.find(i => loggedIn && same(i.id, loggedIn.id))
+    || instructors.find(i => i.email && lower(i.email) === email)
+    || null;
 
-// ==================================================
-// CURRENT INSTRUCTOR
-// ==================================================
+// ---------- state + data getters ----------
+let selectedCourseId = null;
+let selectedAssessmentId = null;
+let editingCourseId = null;
+let editingAssessmentId = null;
 
-function getCurrentInstructor() {
+const myCourses = () => load('courses').filter(c => me && same(c.instructorId, me.id));
+const myAssessments = () => load('lms_assessments').filter(a => me && same(a.instructorId, me.id));
+const findAssessment = id => load('lms_assessments').find(a => same(a.id, id));
+const courseExists = (name, exceptId) => myCourses().some(c => lower(c.name) === lower(name) && !same(c.id, exceptId));
+const assessmentExists = (courseId, name, exceptId) =>
+    myAssessments().some(a => same(a.courseId, courseId) && lower(a.name) === lower(name) && !same(a.id, exceptId));
 
-    const instructors = getData('instructors');
-
-    // First try the logged-in user ID.
-    if (loggedInUser?.id) {
-
-        const byId = instructors.find(
-            instructor =>
-                String(instructor.id) ===
-                String(loggedInUser.id)
-        );
-
-        if (byId) {
-            return byId;
-        }
-    }
-
-    // Then try email.
-    return instructors.find(
-        instructor =>
-            instructor.email &&
-            instructor.email.toLowerCase() === currentUserEmail
-    ) || null;
-}
-
-const currentInstructor = getCurrentInstructor();
-
-if (!currentInstructor) {
-    console.error('Current instructor was not found.');
-}
-
-
-// ==================================================
-// CURRENT INSTRUCTOR ID
-// ==================================================
-
-function getCurrentInstructorId() {
-
-    return currentInstructor
-        ? String(currentInstructor.id)
-        : null;
-}
-
-
-// ==================================================
-// STUDENTS
-// ==================================================
-
-async function getStudents() {
-
-    let students = getData('students');
-
-    // Use saved localStorage data first.
-    if (students.length) {
-        return students;
-    }
-
-    // If localStorage is empty, try json-server.
-    try {
-
-        const response = await fetch(
-            'http://localhost:3000/students'
-        );
-
-        if (!response.ok) {
-            throw new Error('Failed to fetch students');
-        }
-
-        students = await response.json();
-
-        saveData('students', students);
-
-        return students;
-
-    } catch (error) {
-
-        console.error(error);
-
-        showMessage('Could not load students');
-
-        return [];
-    }
+function refresh() {
+    showCourses();
+    showAssessments();
+    showStudents();
 }
 
 
 // ==================================================
 // COURSES
 // ==================================================
-//
-// Your data:
-//
-// {
-//     "id": "COURSE001",
-//     "name": "JavaScript",
-//     "instructorId": "INS001",
-//     "studentsCount": 10
-// }
-//
-// ==================================================
+$('addCourse').addEventListener('click', () => { $('courseForm').reset(); showModal($('courseModal')); });
+$('closeCourseModal').addEventListener('click', () => hideModal($('courseModal')));
 
-function getMyCourses() {
+$('courseForm').addEventListener('submit', event => {
+    event.preventDefault();
+    const name = $('courseName').value.trim();
 
-    const courses = getData('courses');
-    const instructorId = getCurrentInstructorId();
+    if (!name) return showMessage('Course name is required');
+    if (!me) return showMessage('Instructor not found');
+    if (courseExists(name)) return showMessage('This course already exists');
 
-    if (!instructorId) {
-        return [];
-    }
+    const courses = load('courses');
+    const course = { id: nextId('COURSE', courses), name, instructorId: me.id, studentsCount: 0 };
+    courses.push(course);
+    save('courses', courses);
 
-    return courses.filter(
-        course =>
-            String(course.instructorId) === instructorId
-    );
+    selectedCourseId = course.id;
+    selectedAssessmentId = null;
+    hideModal($('courseModal'));
+    refresh();
+    showMessage('Course added');
+});
+
+function updateCourse(id) {
+    const course = load('courses').find(c => same(c.id, id));
+    if (!course) return;
+    editingCourseId = id;
+    $('editCourseName').value = course.name;
+    showModal($('editCourseModal'));
+}
+
+$('closeEditCourseModal').addEventListener('click', () => hideModal($('editCourseModal')));
+
+$('editCourseForm').addEventListener('submit', event => {
+    event.preventDefault();
+    const name = $('editCourseName').value.trim();
+
+    if (!editingCourseId) return;
+    if (!name) return showMessage('Course name is required');
+    if (courseExists(name, editingCourseId)) return showMessage('This course already exists');
+
+    const courses = load('courses');
+    const course = courses.find(c => same(c.id, editingCourseId));
+    if (!course) return;
+
+    course.name = name;
+    save('courses', courses);
+    hideModal($('editCourseModal'));
+    refresh();
+    showMessage('Course updated');
+});
+
+async function deleteCourse(id) {
+    const course = load('courses').find(c => same(c.id, id));
+    if (!course || !confirm(`Delete "${course.name}" and all its assessments?`)) return;
+
+    const removed = load('lms_assessments').filter(a => same(a.courseId, id)).map(a => a.id);
+
+    save('courses', load('courses').filter(c => !same(c.id, id)));
+    save('lms_assessments', load('lms_assessments').filter(a => !same(a.courseId, id)));
+    await removeScores(removed);
+
+    if (same(selectedCourseId, id)) selectedCourseId = selectedAssessmentId = null;
+    refresh();
+    showMessage('Course deleted');
+}
+
+// removes marks of the given assessment ids (lms_scores and student.scores)
+async function removeScores(ids) {
+    const isRemoved = score => ids.some(id => same(id, score.assessmentId));
+
+    save('lms_scores', load('lms_scores').filter(s => !isRemoved(s)));
+
+    const students = await getStudents();
+    students.forEach(s => { s.scores = (s.scores || []).filter(score => !isRemoved(score)); });
+    save('students', students);
 }
 
 
 // ==================================================
 // ASSESSMENTS
 // ==================================================
-//
-// Your data:
-//
-// {
-//     "id": "AS001",
-//     "courseId": "COURSE001",
-//     "instructorId": "INS001",
-//     "name": "JavaScript Basics",
-//     "type": "assignment",
-//     "maxScore": 100
-// }
-//
-// ==================================================
-
-function getMyAssessments() {
-
-    const assessments = getData('lms_assessments');
-    const instructorId = getCurrentInstructorId();
-
-    if (!instructorId) {
-        return [];
-    }
-
-    return assessments.filter(
-        assessment =>
-            String(assessment.instructorId) === instructorId
-    );
-}
-
-
-// ==================================================
-// SELECTED COURSE
-// ==================================================
-
-function getSelectedCourse() {
-
-    const courses = getData('courses');
-
-    return courses.find(
-        course =>
-            String(course.id) ===
-            String(selectedCourseId)
-    ) || null;
-}
-
-
-// ==================================================
-// SELECTED ASSESSMENT
-// ==================================================
-
-function getSelectedAssessment() {
-
-    const assessments = getData('lms_assessments');
-
-    return assessments.find(
-        assessment =>
-            String(assessment.id) ===
-            String(selectedAssessmentId)
-    ) || null;
-}
-
-
-// ==================================================
-// GENERATE COURSE ID
-// ==================================================
-
-function generateCourseId() {
-
-    const courses = getData('courses');
-
-    const numbers = courses
-        .map(course => {
-            const match = String(course.id)
-                .match(/^COURSE(\d+)$/);
-
-            return match
-                ? Number(match[1])
-                : null;
-        })
-        .filter(number => number !== null);
-
-    const nextNumber = numbers.length
-        ? Math.max(...numbers) + 1
-        : 1;
-
-    return `COURSE${String(nextNumber).padStart(3, '0')}`;
-}
-
-
-// ==================================================
-// GENERATE ASSESSMENT ID
-// ==================================================
-
-function generateAssessmentId() {
-
-    const assessments = getData('lms_assessments');
-
-    const numbers = assessments
-        .map(assessment => {
-
-            const match = String(assessment.id)
-                .match(/^AS(\d+)$/);
-
-            return match
-                ? Number(match[1])
-                : null;
-        })
-        .filter(number => number !== null);
-
-    const nextNumber = numbers.length
-        ? Math.max(...numbers) + 1
-        : 1;
-
-    return `AS${String(nextNumber).padStart(3, '0')}`;
-}
-
-
-// ==================================================
-// CHECK DUPLICATE COURSE
-// ==================================================
-
-function courseExists(name, exceptId = null) {
-
-    const courses = getMyCourses();
-
-    return courses.some(course => {
-
-        const sameName =
-            course.name.trim().toLowerCase() ===
-            name.trim().toLowerCase();
-
-        const differentCourse =
-            String(course.id) !== String(exceptId);
-
-        return sameName && differentCourse;
-    });
-}
-
-
-// ==================================================
-// CHECK DUPLICATE ASSESSMENT
-// ==================================================
-
-function assessmentExists(
-    courseId,
-    name,
-    exceptId = null
-) {
-
-    const assessments = getMyAssessments();
-
-    return assessments.some(assessment => {
-
-        const sameCourse =
-            String(assessment.courseId) ===
-            String(courseId);
-
-        const sameName =
-            assessment.name.trim().toLowerCase() ===
-            name.trim().toLowerCase();
-
-        const differentAssessment =
-            String(assessment.id) !==
-            String(exceptId);
-
-        return (
-            sameCourse &&
-            sameName &&
-            differentAssessment
-        );
-    });
-}
-
-
-// ==================================================
-// ADD COURSE
-// ==================================================
-
-if (addCourse) {
-
-    addCourse.addEventListener('click', () => {
-
-        courseForm?.reset();
-
-        courseModal.style.display = 'flex';
-    });
-}
-
-
-// ==================================================
-// CLOSE ADD COURSE MODAL
-// ==================================================
-
-if (closeCourseModal) {
-
-    closeCourseModal.addEventListener('click', () => {
-
-        courseModal.style.display = 'none';
-    });
-}
-
-
-// ==================================================
-// ADD COURSE FORM
-// ==================================================
-
-if (courseForm) {
-
-    courseForm.addEventListener('submit', event => {
-
-        event.preventDefault();
-
-        const nameInput =
-            document.getElementById('courseName');
-
-        const name =
-            nameInput?.value.trim() || '';
-
-        if (!name) {
-
-            showMessage('Course name is required');
-
-            return;
-        }
-
-        if (!currentInstructor) {
-
-            showMessage('Instructor not found');
-
-            return;
-        }
-
-        if (courseExists(name)) {
-
-            showMessage(
-                'This course already exists'
-            );
-
-            return;
-        }
-
-        const courses = getData('courses');
-
-        const newCourse = {
-
-            id: generateCourseId(),
-
-            name: name,
-
-            instructorId:
-                currentInstructor.id,
-
-            studentsCount: 0
-        };
-
-        courses.push(newCourse);
-
-        saveData('courses', courses);
-
-        selectedCourseId = newCourse.id;
-        selectedAssessmentId = null;
-
-        courseForm.reset();
-
-        courseModal.style.display = 'none';
-
-        showCourses();
-        showAssessments();
-        showStudents();
-
-        showMessage('Course added');
-    });
-}
-
-
-// ==================================================
-// UPDATE COURSE
-// ==================================================
-
-function updateCourse(courseId) {
-
-    const course = getData('courses').find(
-        course =>
-            String(course.id) ===
-            String(courseId)
-    );
-
-    if (!course) {
-        return;
-    }
-
-    editingCourseId = courseId;
-
-    const input =
-        document.getElementById('editCourseName');
-
-    if (input) {
-        input.value = course.name;
-    }
-
-    editCourseModal.style.display = 'flex';
-}
-
-
-// ==================================================
-// CLOSE UPDATE COURSE
-// ==================================================
-
-if (closeEditCourseModal) {
-
-    closeEditCourseModal.addEventListener(
-        'click',
-        () => {
-
-            editCourseModal.style.display = 'none';
-
-            editingCourseId = null;
-        }
-    );
-}
-
-
-// ==================================================
-// UPDATE COURSE FORM
-// ==================================================
-
-if (editCourseForm) {
-
-    editCourseForm.addEventListener(
-        'submit',
-        event => {
-
-            event.preventDefault();
-
-            if (!editingCourseId) {
-                return;
-            }
-
-            const input =
-                document.getElementById(
-                    'editCourseName'
-                );
-
-            const newName =
-                input?.value.trim() || '';
-
-            if (!newName) {
-
-                showMessage(
-                    'Course name is required'
-                );
-
-                return;
-            }
-
-            if (
-                courseExists(
-                    newName,
-                    editingCourseId
-                )
-            ) {
-
-                showMessage(
-                    'This course already exists'
-                );
-
-                return;
-            }
-
-            const courses = getData('courses');
-
-            const course = courses.find(
-                course =>
-                    String(course.id) ===
-                    String(editingCourseId)
-            );
-
-            if (!course) {
-                return;
-            }
-
-            course.name = newName;
-
-            saveData('courses', courses);
-
-            selectedCourseId = editingCourseId;
-
-            editCourseModal.style.display = 'none';
-
-            editingCourseId = null;
-
-            showCourses();
-            showAssessments();
-            showStudents();
-
-            showMessage('Course updated');
-        }
-    );
-}
-
-
-// ==================================================
-// DELETE COURSE
-// ==================================================
-
-async function deleteCourse(courseId) {
-
-    const course = getData('courses').find(
-        course =>
-            String(course.id) ===
-            String(courseId)
-    );
-
-    if (!course) {
-        return;
-    }
-
-    const confirmed = confirm(
-        `Delete "${course.name}" and all its assessments?`
-    );
-
-    if (!confirmed) {
-        return;
-    }
-
-    // ----------------------------------------------
-    // Remove course
-    // ----------------------------------------------
-
-    let courses = getData('courses');
-
-    courses = courses.filter(
-        item =>
-            String(item.id) !==
-            String(courseId)
-    );
-
-    saveData('courses', courses);
-
-
-    // ----------------------------------------------
-    // Find assessments belonging to course
-    // ----------------------------------------------
-
-    let assessments =
-        getData('lms_assessments');
-
-    const removedAssessmentIds =
-        assessments
-            .filter(
-                assessment =>
-                    String(assessment.courseId) ===
-                    String(courseId)
-            )
-            .map(
-                assessment => assessment.id
-            );
-
-
-    // ----------------------------------------------
-    // Remove assessments
-    // ----------------------------------------------
-
-    assessments = assessments.filter(
-        assessment =>
-            String(assessment.courseId) !==
-            String(courseId)
-    );
-
-    saveData(
-        'lms_assessments',
-        assessments
-    );
-
-
-    // ----------------------------------------------
-    // Remove scores belonging to those assessments
-    // ----------------------------------------------
-
-    let scores = getData('lms_scores');
-
-    scores = scores.filter(
-        score =>
-            !removedAssessmentIds.some(
-                id =>
-                    String(id) ===
-                    String(score.assessmentId)
-            )
-    );
-
-    saveData('lms_scores', scores);
-
-
-    // ----------------------------------------------
-    // Remove matching scores from students too
-    // ----------------------------------------------
-    //
-    // We keep the students data structure.
-    // Only remove scores belonging to deleted assessments.
-    //
-
+$('addAssessment').addEventListener('click', () => {
+    if (!selectedCourseId) return showMessage('Please select a course first');
+    $('assessmentForm').reset();
+    showModal($('assessmentModal'));
+});
+
+$('closeModal').addEventListener('click', () => hideModal($('assessmentModal')));
+
+$('assessmentForm').addEventListener('submit', async event => {
+    event.preventDefault();
+    if (!selectedCourseId) return showMessage('Please select a course first');
+
+    const name = $('assessmentName').value.trim();
+    const type = $('type').value || 'assignment';
+    const maxScore = Number($('maxScore').value);
+
+    if (!name) return showMessage('Assessment name is required');
+    if (!maxScore || maxScore <= 0) return showMessage('Maximum score must be greater than 0');
+    if (assessmentExists(selectedCourseId, name)) return showMessage('This assessment already exists');
+
+    const assessments = load('lms_assessments');
+    const assessment = { id: nextId('AS', assessments), courseId: selectedCourseId, instructorId: me.id, name, type, maxScore };
+    assessments.push(assessment);
+    save('lms_assessments', assessments);
+
+    // an empty mark for every student in this course
     const students = await getStudents();
+    const scores = load('lms_scores');
+    students
+        .filter(s => (s.courses || []).some(id => same(id, selectedCourseId)))
+        .forEach(s => scores.push({ studentId: s.id, assessmentId: assessment.id, score: null }));
+    save('lms_scores', scores);
 
-    students.forEach(student => {
-
-        if (!Array.isArray(student.scores)) {
-            return;
-        }
-
-        student.scores =
-            student.scores.filter(
-                score =>
-                    !removedAssessmentIds.some(
-                        id =>
-                            String(id) ===
-                            String(score.assessmentId)
-                    )
-            );
-    });
-
-    saveData('students', students);
-
-
-    // ----------------------------------------------
-    // Reset selection
-    // ----------------------------------------------
-
-    if (
-        String(selectedCourseId) ===
-        String(courseId)
-    ) {
-
-        selectedCourseId = null;
-        selectedAssessmentId = null;
-    }
-
-
-    showCourses();
+    selectedAssessmentId = assessment.id;
+    hideModal($('assessmentModal'));
     showAssessments();
     showStudents();
+    showMessage('Assessment added');
+});
 
-    showMessage('Course deleted');
+function updateAssessment(id) {
+    const assessment = findAssessment(id);
+    if (!assessment) return;
+
+    editingAssessmentId = id;
+    $('editAssessmentName').value = assessment.name;
+    $('editAssessmentType').value = assessment.type;
+    $('editAssessmentMaxScore').value = assessment.maxScore;
+    showModal($('editAssessmentModal'));
 }
 
+$('closeEditAssessmentModal').addEventListener('click', () => hideModal($('editAssessmentModal')));
 
-// ==================================================
-// ADD ASSESSMENT
-// ==================================================
+$('editAssessmentForm').addEventListener('submit', event => {
+    event.preventDefault();
+    if (!editingAssessmentId) return;
 
-if (addAssessment) {
+    const name = $('editAssessmentName').value.trim();
+    const type = $('editAssessmentType').value || 'assignment';
+    const maxScore = Number($('editAssessmentMaxScore').value);
 
-    addAssessment.addEventListener(
-        'click',
-        () => {
+    if (!name) return showMessage('Assessment name is required');
+    if (!maxScore || maxScore <= 0) return showMessage('Maximum score must be greater than 0');
+    if (assessmentExists(selectedCourseId, name, editingAssessmentId)) return showMessage('This assessment already exists');
 
-            if (!selectedCourseId) {
+    const tooHigh = load('lms_scores').some(s =>
+        same(s.assessmentId, editingAssessmentId) && s.score !== null && Number(s.score) > maxScore);
+    if (tooHigh) return showMessage('Some students already have marks above this maximum');
 
-                showMessage(
-                    'Please select a course first'
-                );
+    const assessments = load('lms_assessments');
+    const assessment = assessments.find(a => same(a.id, editingAssessmentId));
+    if (!assessment) return;
 
-                return;
-            }
+    Object.assign(assessment, { name, type, maxScore });
+    save('lms_assessments', assessments);
 
-            assessmentForm?.reset();
-
-            assessmentModal.style.display = 'flex';
-        }
-    );
-}
-
-
-// ==================================================
-// CLOSE ADD ASSESSMENT MODAL
-// ==================================================
-
-if (closeModal) {
-
-    closeModal.addEventListener(
-        'click',
-        () => {
-
-            assessmentModal.style.display = 'none';
-        }
-    );
-}
-
-
-// ==================================================
-// ADD ASSESSMENT FORM
-// ==================================================
-
-if (assessmentForm) {
-
-    assessmentForm.addEventListener(
-        'submit',
-        async event => {
-
-            event.preventDefault();
-
-            if (!selectedCourseId) {
-
-                showMessage(
-                    'Please select a course first'
-                );
-
-                return;
-            }
-
-            const name =
-                document.getElementById(
-                    'assessmentName'
-                )?.value.trim() || '';
-
-            const type =
-                document.getElementById(
-                    'type'
-                )?.value || 'assignment';
-
-            const maxScore = Number(
-                document.getElementById(
-                    'maxScore'
-                )?.value
-            );
-
-
-            // ------------------------------------------
-            // Validation
-            // ------------------------------------------
-
-            if (!name) {
-
-                showMessage(
-                    'Assessment name is required'
-                );
-
-                return;
-            }
-
-            if (!maxScore || maxScore <= 0) {
-
-                showMessage(
-                    'Maximum score must be greater than 0'
-                );
-
-                return;
-            }
-
-
-            if (
-                assessmentExists(
-                    selectedCourseId,
-                    name
-                )
-            ) {
-
-                showMessage(
-                    'This assessment already exists'
-                );
-
-                return;
-            }
-
-
-            // ------------------------------------------
-            // Create assessment
-            // ------------------------------------------
-
-            const assessments =
-                getData('lms_assessments');
-
-            const newAssessment = {
-
-                id: generateAssessmentId(),
-
-                courseId: selectedCourseId,
-
-                instructorId:
-                    currentInstructor.id,
-
-                name: name,
-
-                type: type,
-
-                maxScore: maxScore
-            };
-
-            assessments.push(newAssessment);
-
-            saveData(
-                'lms_assessments',
-                assessments
-            );
-
-
-            // ------------------------------------------
-            // Add empty score for each student
-            // ------------------------------------------
-
-            const students = await getStudents();
-
-            let scores = getData('lms_scores');
-
-            students.forEach(student => {
-
-                // Only students registered in this course
-                if (
-                    !(student.courses || []).some(
-                        id =>
-                            String(id) ===
-                            String(selectedCourseId)
-                    )
-                ) {
-                    return;
-                }
-
-                scores.push({
-
-                    studentId: student.id,
-
-                    assessmentId:
-                        newAssessment.id,
-
-                    score: null
-                });
-
-            });
-
-            saveData('lms_scores', scores);
-
-
-            // ------------------------------------------
-            // Close and refresh
-            // ------------------------------------------
-
-            assessmentForm.reset();
-
-            assessmentModal.style.display = 'none';
-
-            selectedAssessmentId =
-                newAssessment.id;
-
-            showAssessments();
-            showStudents();
-
-            showMessage('Assessment added');
-        }
-    );
-}
-
-
-// ==================================================
-// UPDATE ASSESSMENT
-// ==================================================
-
-function updateAssessment(assessmentId) {
-
-    const assessment =
-        getData('lms_assessments').find(
-            assessment =>
-                String(assessment.id) ===
-                String(assessmentId)
-        );
-
-    if (!assessment) {
-        return;
-    }
-
-    editingAssessmentId = assessmentId;
-
-
-    const nameInput =
-        document.getElementById(
-            'editAssessmentName'
-        );
-
-    const typeInput =
-        document.getElementById(
-            'editAssessmentType'
-        );
-
-    const maxScoreInput =
-        document.getElementById(
-            'editAssessmentMaxScore'
-        );
-
-
-    if (nameInput) {
-        nameInput.value =
-            assessment.name;
-    }
-
-    if (typeInput) {
-        typeInput.value =
-            assessment.type;
-    }
-
-    if (maxScoreInput) {
-        maxScoreInput.value =
-            assessment.maxScore;
-    }
-
-
-    editAssessmentModal.style.display =
-        'flex';
-}
-
-
-// ==================================================
-// CLOSE UPDATE ASSESSMENT
-// ==================================================
-
-if (closeEditAssessmentModal) {
-
-    closeEditAssessmentModal.addEventListener(
-        'click',
-        () => {
-
-            editAssessmentModal.style.display =
-                'none';
-
-            editingAssessmentId = null;
-        }
-    );
-}
-
-
-// ==================================================
-// UPDATE ASSESSMENT FORM
-// ==================================================
-
-if (editAssessmentForm) {
-
-    editAssessmentForm.addEventListener(
-        'submit',
-        async event => {
-
-            event.preventDefault();
-
-            if (!editingAssessmentId) {
-                return;
-            }
-
-
-            const name =
-                document.getElementById(
-                    'editAssessmentName'
-                )?.value.trim() || '';
-
-            const type =
-                document.getElementById(
-                    'editAssessmentType'
-                )?.value || 'assignment';
-
-            const maxScore = Number(
-                document.getElementById(
-                    'editAssessmentMaxScore'
-                )?.value
-            );
-
-
-            // ------------------------------------------
-            // Validation
-            // ------------------------------------------
-
-            if (!name) {
-
-                showMessage(
-                    'Assessment name is required'
-                );
-
-                return;
-            }
-
-            if (!maxScore || maxScore <= 0) {
-
-                showMessage(
-                    'Maximum score must be greater than 0'
-                );
-
-                return;
-            }
-
-
-            if (
-                assessmentExists(
-                    selectedCourseId,
-                    name,
-                    editingAssessmentId
-                )
-            ) {
-
-                showMessage(
-                    'This assessment already exists'
-                );
-
-                return;
-            }
-
-
-            // ------------------------------------------
-            // Get assessment
-            // ------------------------------------------
-
-            const assessments =
-                getData('lms_assessments');
-
-            const assessment =
-                assessments.find(
-                    assessment =>
-                        String(assessment.id) ===
-                        String(editingAssessmentId)
-                );
-
-            if (!assessment) {
-                return;
-            }
-
-
-            // ------------------------------------------
-            // Check existing scores
-            // ------------------------------------------
-
-            const scores =
-                getData('lms_scores');
-
-            const tooHigh =
-                scores.some(score => {
-
-                    return (
-                        String(score.assessmentId) ===
-                        String(editingAssessmentId) &&
-                        score.score !== null &&
-                        Number(score.score) >
-                        maxScore
-                    );
-
-                });
-
-
-            if (tooHigh) {
-
-                showMessage(
-                    'Some students already have marks above this maximum'
-                );
-
-                return;
-            }
-
-
-            // ------------------------------------------
-            // Update
-            // ------------------------------------------
-
-            assessment.name = name;
-            assessment.type = type;
-            assessment.maxScore = maxScore;
-
-            saveData(
-                'lms_assessments',
-                assessments
-            );
-
-
-            editAssessmentModal.style.display =
-                'none';
-
-            editingAssessmentId = null;
-
-
-            showAssessments();
-            showStudents();
-
-            showMessage('Assessment updated');
-        }
-    );
-}
-
-
-// ==================================================
-// DELETE ASSESSMENT
-// ==================================================
-
-async function deleteAssessment(assessmentId) {
-
-    const assessment =
-        getData('lms_assessments').find(
-            assessment =>
-                String(assessment.id) ===
-                String(assessmentId)
-        );
-
-    if (!assessment) {
-        return;
-    }
-
-
-    const confirmed = confirm(
-        `Delete "${assessment.name}" and all its marks?`
-    );
-
-    if (!confirmed) {
-        return;
-    }
-
-
-    // ----------------------------------------------
-    // Remove assessment
-    // ----------------------------------------------
-
-    let assessments =
-        getData('lms_assessments');
-
-    assessments = assessments.filter(
-        item =>
-            String(item.id) !==
-            String(assessmentId)
-    );
-
-    saveData(
-        'lms_assessments',
-        assessments
-    );
-
-
-    // ----------------------------------------------
-    // Remove from lms_scores
-    // ----------------------------------------------
-
-    let scores = getData('lms_scores');
-
-    scores = scores.filter(
-        score =>
-            String(score.assessmentId) !==
-            String(assessmentId)
-    );
-
-    saveData('lms_scores', scores);
-
-
-    // ----------------------------------------------
-    // Remove from student scores
-    // ----------------------------------------------
-
-    const students = await getStudents();
-
-    students.forEach(student => {
-
-        if (!Array.isArray(student.scores)) {
-            return;
-        }
-
-        student.scores =
-            student.scores.filter(
-                score =>
-                    String(score.assessmentId) !==
-                    String(assessmentId)
-            );
-    });
-
-    saveData('students', students);
-
-
-    // ----------------------------------------------
-    // Reset selection
-    // ----------------------------------------------
-
-    if (
-        String(selectedAssessmentId) ===
-        String(assessmentId)
-    ) {
-        selectedAssessmentId = null;
-    }
-
-
+    hideModal($('editAssessmentModal'));
     showAssessments();
     showStudents();
+    showMessage('Assessment updated');
+});
 
+async function deleteAssessment(id) {
+    const assessment = findAssessment(id);
+    if (!assessment || !confirm(`Delete "${assessment.name}" and all its marks?`)) return;
+
+    save('lms_assessments', load('lms_assessments').filter(a => !same(a.id, id)));
+    await removeScores([id]);
+
+    if (same(selectedAssessmentId, id)) selectedAssessmentId = null;
+    showAssessments();
+    showStudents();
     showMessage('Assessment deleted');
 }
 
 
 // ==================================================
-// SHOW COURSES
+// SHOW COURSES / ASSESSMENTS
 // ==================================================
+// one card with a title, optional type badge, info line, Update and Delete
+function makeCard({ title, type, info, selected, onSelect, onUpdate, onDelete }) {
+    const card = document.createElement('div');
+    card.className = 'card' + (selected ? ' selected' : '');
+
+    const content = document.createElement('div');
+    content.className = 'card-content';
+
+    [['card-title', title], ['card-type', type], ['card-info', info]].forEach(([className, text]) => {
+        if (!text) return;
+        const line = document.createElement('div');
+        line.className = className;
+        line.innerText = text;
+        content.append(line);
+    });
+
+    const button = (label, action) => {
+        const b = document.createElement('button');
+        b.innerText = label;
+        b.addEventListener('click', event => { event.stopPropagation(); action(); });
+        return b;
+    };
+
+    card.addEventListener('click', onSelect);
+    card.append(content, button('Update', onUpdate), button('Delete', onDelete));
+    return card;
+}
 
 function showCourses() {
-
-    if (!coursesBox) {
-        return;
-    }
-
-    coursesBox.innerHTML = '';
-
-    const courses = getMyCourses();
-
-
-    // ----------------------------------------------
-    // No courses
-    // ----------------------------------------------
+    const courses = myCourses();
 
     if (!courses.length) {
-
-        coursesBox.innerHTML =
-            '<p>No courses found.</p>';
-
+        $('courses').innerHTML = '<p>No courses found.</p>';
         return;
     }
 
-
-    // ----------------------------------------------
-    // Create cards
-    // ----------------------------------------------
-
-    courses.forEach(course => {
-
-        const card =
-            document.createElement('div');
-
-        card.classList.add('card');
-
-
-        // Selected
-        if (
-            String(course.id) ===
-            String(selectedCourseId)
-        ) {
-            card.classList.add('selected');
-        }
-
-
-        // ------------------------------------------
-        // Content
-        // ------------------------------------------
-
-        const content =
-            document.createElement('div');
-
-        content.classList.add(
-            'card-content'
-        );
-
-
-        const title =
-            document.createElement('div');
-
-        title.classList.add(
-            'card-title'
-        );
-
-        title.innerText =
-            course.name;
-
-
-        const info =
-            document.createElement('div');
-
-        info.classList.add(
-            'card-info'
-        );
-
-        info.innerText =
-            `${course.studentsCount ?? 0} students`;
-
-
-        content.append(
-            title,
-            info
-        );
-
-
-        // ------------------------------------------
-        // Update button
-        // ------------------------------------------
-
-        const updateBtn =
-            document.createElement('button');
-
-        updateBtn.innerText =
-            'Update';
-
-        updateBtn.addEventListener(
-            'click',
-            event => {
-
-                event.stopPropagation();
-
-                updateCourse(course.id);
-            }
-        );
-
-
-        // ------------------------------------------
-        // Delete button
-        // ------------------------------------------
-
-        const deleteBtn =
-            document.createElement('button');
-
-        deleteBtn.innerText =
-            'Delete';
-
-        deleteBtn.addEventListener(
-            'click',
-            event => {
-
-                event.stopPropagation();
-
-                deleteCourse(course.id);
-            }
-        );
-
-
-        // ------------------------------------------
-        // Select course
-        // ------------------------------------------
-
-        card.addEventListener(
-            'click',
-            () => {
-
-                selectedCourseId =
-                    course.id;
-
-                selectedAssessmentId =
-                    null;
-
-                showCourses();
-                showAssessments();
-                showStudents();
-            }
-        );
-
-
-        card.append(
-            content,
-            updateBtn,
-            deleteBtn
-        );
-
-        coursesBox.appendChild(card);
-    });
+    $('courses').replaceChildren(...courses.map(course => makeCard({
+        title: course.name,
+        info: `${course.studentsCount ?? 0} students`,
+        selected: same(course.id, selectedCourseId),
+        onSelect: () => { selectedCourseId = course.id; selectedAssessmentId = null; refresh(); },
+        onUpdate: () => updateCourse(course.id),
+        onDelete: () => deleteCourse(course.id)
+    })));
 }
-
-
-// ==================================================
-// SHOW ASSESSMENTS
-// ==================================================
 
 function showAssessments() {
-
-    if (!assessmentsBox) {
-        return;
-    }
-
-    assessmentsBox.innerHTML = '';
-
-
     if (!selectedCourseId) {
-
-        assessmentsBox.innerHTML =
-            '<p>Select a course to see assessments.</p>';
-
+        $('assessments').innerHTML = '<p>Select a course to see assessments.</p>';
         return;
     }
 
+    const list = myAssessments().filter(a => same(a.courseId, selectedCourseId));
 
-    const assessments =
-        getMyAssessments().filter(
-            assessment =>
-                String(assessment.courseId) ===
-                String(selectedCourseId)
-        );
-
-
-    // ----------------------------------------------
-    // No assessments
-    // ----------------------------------------------
-
-    if (!assessments.length) {
-
-        assessmentsBox.innerHTML =
-            '<p>No assessments for this course.</p>';
-
+    if (!list.length) {
+        $('assessments').innerHTML = '<p>No assessments for this course.</p>';
         return;
     }
 
-
-    // ----------------------------------------------
-    // Create cards
-    // ----------------------------------------------
-
-    assessments.forEach(assessment => {
-
-        const card =
-            document.createElement('div');
-
-        card.classList.add('card');
-
-
-        if (
-            String(assessment.id) ===
-            String(selectedAssessmentId)
-        ) {
-            card.classList.add('selected');
-        }
-
-
-        // ------------------------------------------
-        // Content
-        // ------------------------------------------
-
-        const content =
-            document.createElement('div');
-
-        content.classList.add(
-            'card-content'
-        );
-
-
-        const title =
-            document.createElement('div');
-
-        title.classList.add(
-            'card-title'
-        );
-
-        title.innerText =
-            assessment.name;
-
-
-        const type =
-            document.createElement('div');
-
-        type.classList.add(
-            'card-type'
-        );
-
-        type.innerText =
-            assessment.type;
-
-
-        const maxScore =
-            document.createElement('div');
-
-        maxScore.classList.add(
-            'card-info'
-        );
-
-        maxScore.innerText =
-            `Maximum score: ${assessment.maxScore}`;
-
-
-        content.append(
-            title,
-            type,
-            maxScore
-        );
-
-
-        // ------------------------------------------
-        // Update
-        // ------------------------------------------
-
-        const updateBtn =
-            document.createElement('button');
-
-        updateBtn.innerText =
-            'Update';
-
-        updateBtn.addEventListener(
-            'click',
-            event => {
-
-                event.stopPropagation();
-
-                updateAssessment(
-                    assessment.id
-                );
-            }
-        );
-
-
-        // ------------------------------------------
-        // Delete
-        // ------------------------------------------
-
-        const deleteBtn =
-            document.createElement('button');
-
-        deleteBtn.innerText =
-            'Delete';
-
-        deleteBtn.addEventListener(
-            'click',
-            event => {
-
-                event.stopPropagation();
-
-                deleteAssessment(
-                    assessment.id
-                );
-            }
-        );
-
-
-        // ------------------------------------------
-        // Select
-        // ------------------------------------------
-
-        card.addEventListener(
-            'click',
-            () => {
-
-                selectedAssessmentId =
-                    assessment.id;
-
-                showAssessments();
-                showStudents();
-            }
-        );
-
-
-        card.append(
-            content,
-            updateBtn,
-            deleteBtn
-        );
-
-        assessmentsBox.appendChild(card);
-    });
+    $('assessments').replaceChildren(...list.map(assessment => makeCard({
+        title: assessment.name,
+        type: assessment.type,
+        info: `Maximum score: ${assessment.maxScore}`,
+        selected: same(assessment.id, selectedAssessmentId),
+        onSelect: () => { selectedAssessmentId = assessment.id; showAssessments(); showStudents(); },
+        onUpdate: () => updateAssessment(assessment.id),
+        onDelete: () => deleteAssessment(assessment.id)
+    })));
 }
 
 
 // ==================================================
-// GET SCORE
+// STUDENTS + MARKS
 // ==================================================
-
-function getStudentScore(
-    studentId,
-    assessmentId
-) {
-
-    const scores = getData('lms_scores');
-
-    const score = scores.find(
-        item =>
-            String(item.studentId) ===
-            String(studentId) &&
-            String(item.assessmentId) ===
-            String(assessmentId)
-    );
-
-    return score || null;
-}
-
-
-// ==================================================
-// SHOW STUDENTS + MARKS
-// ==================================================
-
 async function showStudents() {
+    const box = $('students');
+    const section = $('studentsSection');
 
-    if (!studentsBox || !studentsSection) {
-        return;
-    }
-
-
-    if (!selectedAssessmentId) {
-
-        studentsBox.replaceChildren();
-
-        studentsSection.style.display =
-            'none';
-
-        return;
-    }
-
-
-    studentsSection.style.display =
-        'block';
-
-
-    const assessment =
-        getSelectedAssessment();
+    const assessment = selectedAssessmentId && findAssessment(selectedAssessmentId);
 
     if (!assessment) {
+        box.replaceChildren();
+        section.style.display = 'none';
         return;
     }
 
+    section.style.display = 'block';
 
-    const students =
-        await getStudents();
+    const students = (await getStudents()).filter(s =>
+        !s.archived && (s.courses || []).some(id => same(id, assessment.courseId)));
 
-
-    // ----------------------------------------------
-    // Only students in selected course
-    // ----------------------------------------------
-
-    const courseStudents =
-        students.filter(student => {
-
-            if (student.archived) {
-                return false;
-            }
-
-            return (
-                student.courses || []
-            ).some(
-                courseId =>
-                    String(courseId) ===
-                    String(assessment.courseId)
-            );
-        });
-
-
-    // ----------------------------------------------
-    // No students
-    // ----------------------------------------------
-
-    if (!courseStudents.length) {
-
-        studentsBox.innerHTML =
-            '<p>No students found.</p>';
-
+    if (!students.length) {
+        box.innerHTML = '<p>No students found.</p>';
         return;
     }
 
+    const scores = load('lms_scores');
 
-    const rows = [];
+    box.replaceChildren(...students.map((student, index) => {
+        const record = scores.find(s => same(s.studentId, student.id) && same(s.assessmentId, assessment.id));
+        const row = document.createElement('div');
+        row.className = 'student';
 
+        row.innerHTML = `
+            <div class="student-info">
+                <div class="student-name"></div>
+                <div class="student-id"></div>
+            </div>
+            <div class="student-mark">
+                <input type="number" min="0" placeholder="0">
+                <span>/ ${assessment.maxScore}</span>
+            </div>`;
 
-    // ----------------------------------------------
-    // Create students
-    // ----------------------------------------------
+        row.querySelector('.student-name').innerText = student.name || `Student ${index + 1}`;
+        row.querySelector('.student-id').innerText = student.studentId || student.id;
 
-    courseStudents.forEach(
-        (student, index) => {
+        const input = row.querySelector('input');
+        input.max = assessment.maxScore;
+        input.dataset.studentId = student.id;
+        input.value = record && record.score != null ? record.score : '';
 
-            const row =
-                document.createElement('div');
+        return row;
+    }));
+}
 
-            row.classList.add(
-                'student'
-            );
+$('saveMarks').addEventListener('click', async () => {
+    const assessment = selectedAssessmentId && findAssessment(selectedAssessmentId);
+    if (!assessment) return showMessage('Please select an assessment');
 
+    const inputs = [...$('students').querySelectorAll('input')];
 
-            // --------------------------------------
-            // Student information
-            // --------------------------------------
-
-            const info =
-                document.createElement('div');
-
-            info.classList.add(
-                'student-info'
-            );
-
-
-            const name =
-                document.createElement('div');
-
-            name.classList.add(
-                'student-name'
-            );
-
-            name.innerText =
-                student.name ||
-                `Student ${index + 1}`;
-
-
-            const id =
-                document.createElement('div');
-
-            id.classList.add(
-                'student-id'
-            );
-
-            id.innerText =
-                student.studentId ||
-                student.id;
-
-
-            info.append(
-                name,
-                id
-            );
-
-
-            // --------------------------------------
-            // Mark
-            // --------------------------------------
-
-            const mark =
-                document.createElement('div');
-
-            mark.classList.add(
-                'student-mark'
-            );
-
-
-            const input =
-                document.createElement('input');
-
-            input.type =
-                'number';
-
-            input.min =
-                '0';
-
-            input.max =
-                assessment.maxScore;
-
-            input.placeholder =
-                '0';
-
-            input.dataset.studentId =
-                student.id;
-
-
-            const scoreRecord =
-                getStudentScore(
-                    student.id,
-                    assessment.id
-                );
-
-
-            if (
-                scoreRecord &&
-                scoreRecord.score !== null &&
-                scoreRecord.score !== undefined
-            ) {
-
-                input.value =
-                    scoreRecord.score;
-
-            } else {
-
-                input.value = '';
-            }
-
-
-            const max =
-                document.createElement('span');
-
-            max.innerText =
-                `/ ${assessment.maxScore}`;
-
-
-            mark.append(
-                input,
-                max
-            );
-
-
-            row.append(
-                info,
-                mark
-            );
-
-
-            rows.push(row);
+    for (const input of inputs) {
+        const score = Number(input.value);
+        if (input.value !== '' && (score < 0 || score > assessment.maxScore)) {
+            showMessage(`Score must be between 0 and ${assessment.maxScore}`);
+            input.focus();
+            return;
         }
-    );
+    }
 
+    const students = await getStudents();
+    const scores = load('lms_scores');
 
-    studentsBox.replaceChildren(
-        ...rows
-    );
-}
+    // finds a mark record in a list, or creates it
+    const getRecord = (list, match, create) => {
+        let record = list.find(match);
+        if (!record) list.push((record = create));
+        return record;
+    };
+
+    inputs.forEach(input => {
+        const id = input.dataset.studentId;
+        const value = input.value === '' ? null : Number(input.value);
+
+        getRecord(scores,
+            s => same(s.studentId, id) && same(s.assessmentId, assessment.id),
+            { studentId: id, assessmentId: assessment.id, score: null }
+        ).score = value;
+
+        const student = students.find(s => same(s.id, id));
+        if (!student) return;
+
+        student.scores = student.scores || [];
+        getRecord(student.scores,
+            s => same(s.assessmentId, assessment.id),
+            { assessmentId: assessment.id, score: null }
+        ).score = value;
+    });
+
+    save('lms_scores', scores);
+    save('students', students);
+    showMessage('Marks saved');
+});
 
 
 // ==================================================
-// SAVE MARKS
+// HEADER + MENUS
 // ==================================================
-
-if (saveMarks) {
-
-    saveMarks.addEventListener(
-        'click',
-        async () => {
-
-            if (!selectedAssessmentId) {
-
-                showMessage(
-                    'Please select an assessment'
-                );
-
-                return;
-            }
-
-
-            const assessment =
-                getSelectedAssessment();
-
-            if (!assessment) {
-                return;
-            }
-
-
-            const inputs =
-                studentsBox.querySelectorAll(
-                    'input'
-                );
-
-
-            // ------------------------------------------
-            // Validate
-            // ------------------------------------------
-
-            for (const input of inputs) {
-
-                if (input.value === '') {
-                    continue;
-                }
-
-                const score =
-                    Number(input.value);
-
-
-                if (
-                    score < 0 ||
-                    score > assessment.maxScore
-                ) {
-
-                    showMessage(
-                        `Score must be between 0 and ${assessment.maxScore}`
-                    );
-
-                    input.focus();
-
-                    return;
-                }
-            }
-
-
-            // ------------------------------------------
-            // Get current scores
-            // ------------------------------------------
-
-            const scores =
-                getData('lms_scores');
-
-
-            // ------------------------------------------
-            // Save each mark
-            // ------------------------------------------
-
-            inputs.forEach(input => {
-
-                const studentId =
-                    input.dataset.studentId;
-
-
-                let record =
-                    scores.find(
-                        score =>
-                            String(
-                                score.studentId
-                            ) ===
-                            String(studentId) &&
-
-                            String(
-                                score.assessmentId
-                            ) ===
-                            String(selectedAssessmentId)
-                    );
-
-
-                // --------------------------------------
-                // Create if missing
-                // --------------------------------------
-
-                if (!record) {
-
-                    record = {
-
-                        studentId:
-                            studentId,
-
-                        assessmentId:
-                            selectedAssessmentId,
-
-                        score: null
-                    };
-
-                    scores.push(record);
-                }
-
-
-                // --------------------------------------
-                // Save score
-                // --------------------------------------
-
-                record.score =
-                    input.value === ''
-                        ? null
-                        : Number(input.value);
-            });
-
-
-            saveData(
-                'lms_scores',
-                scores
-            );
-
-
-            // ------------------------------------------
-            // Also update student.scores
-            // ------------------------------------------
-            //
-            // Your existing data already contains
-            // student.scores, so we keep it synchronized.
-            //
-            // Existing IDs such as a1/a2 are NOT changed.
-            // Only records matching this assessment ID
-            // are updated.
-            //
-
-            const students =
-                await getStudents();
-
-
-            inputs.forEach(input => {
-
-                const student =
-                    students.find(
-                        item =>
-                            String(item.id) ===
-                            String(
-                                input.dataset.studentId
-                            )
-                    );
-
-                if (!student) {
-                    return;
-                }
-
-
-                if (!Array.isArray(student.scores)) {
-                    student.scores = [];
-                }
-
-
-                let studentScore =
-                    student.scores.find(
-                        score =>
-                            String(
-                                score.assessmentId
-                            ) ===
-                            String(
-                                selectedAssessmentId
-                            )
-                    );
-
-
-                if (!studentScore) {
-
-                    studentScore = {
-
-                        assessmentId:
-                            selectedAssessmentId,
-
-                        score: null
-                    };
-
-                    student.scores.push(
-                        studentScore
-                    );
-                }
-
-
-                studentScore.score =
-                    input.value === ''
-                        ? null
-                        : Number(input.value);
-            });
-
-
-            saveData(
-                'students',
-                students
-            );
-
-
-            showMessage(
-                'Marks saved'
-            );
-        }
-    );
-}
+(function setupHeader() {
+    const name = me ? (me.fullName || me.name || me.email || '') : '';
+    const setText = (ids, text) => ids.forEach(id => $(id) && ($(id).textContent = text));
+
+    // works with both id styles used on the pages
+    setText(['headerName', 'name'], name);
+    setText(['techName', 'sidebarName'], name);
+    setText(['logo'], name ? getInitials(name) : '');
+
+    const accountMenu = $('accountMinu');
+    const sideBar = $('sideBar');
+
+    $('account')?.addEventListener('click', e => { e.stopPropagation(); accountMenu.classList.toggle('activeAccount'); });
+    $('burgerMinu')?.addEventListener('click', e => { e.stopPropagation(); sideBar.classList.toggle('activeSide'); });
+    sideBar?.addEventListener('click', e => e.stopPropagation());
+
+    const closeMenus = () => {
+        accountMenu?.classList.remove('activeAccount');
+        sideBar?.classList.remove('activeSide');
+    };
+    document.addEventListener('click', closeMenus);
+    document.addEventListener('keydown', e => e.key === 'Escape' && closeMenus());
+
+    ($('logout') || $('logoutBtn'))?.addEventListener('click', () => {
+        document.cookie = 'currentUser=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/';
+        localStorage.removeItem('loggedInUser');
+        window.location.href = '../auth/login.html';
+    });
+})();
 
 
 // ==================================================
-// ACCOUNT / HEADER
+// START
 // ==================================================
-
-function getInitials(name) {
-
-    const words = String(name)
-        .split(/\s+/)
-        .filter(
-            word =>
-                word &&
-                !/^(dr|prof|mr|mrs|ms|eng)\.?$/i.test(word)
-        );
-
-    return (
-        words
-            .slice(0, 2)
-            .map(
-                word =>
-                    word[0].toUpperCase()
-            )
-            .join('') || '?'
-    );
-}
-
-
-function setupHeader() {
-
-    const account =
-        document.getElementById('account');
-
-    const accountMenu =
-        document.getElementById('accountMinu');
-
-    const burgerMenu =
-        document.getElementById('burgerMinu');
-
-    const sideBar =
-        document.getElementById('sideBar');
-
-    const logout =
-        document.getElementById('logout');
-
-    const headerName =
-        document.getElementById('headerName');
-
-    const techName =
-        document.getElementById('techName');
-
-    const logo =
-        document.getElementById('logo');
-
-
-    // ----------------------------------------------
-    // Instructor name
-    // ----------------------------------------------
-
-    const instructor =
-        getCurrentInstructor();
-
-    const name =
-        instructor
-            ? (
-                instructor.fullName ||
-                instructor.name ||
-                instructor.email ||
-                ''
-            )
-            : '';
-
-
-    if (headerName) {
-        headerName.textContent = name;
-    }
-
-    if (techName) {
-        techName.textContent = name;
-    }
-
-    if (logo) {
-        logo.textContent =
-            name
-                ? getInitials(name)
-                : '';
-    }
-
-
-    // ----------------------------------------------
-    // Account menu
-    // ----------------------------------------------
-
-    if (account && accountMenu) {
-
-        account.addEventListener(
-            'click',
-            event => {
-
-                event.stopPropagation();
-
-                accountMenu.classList.toggle(
-                    'activeAccount'
-                );
-            }
-        );
-    }
-
-
-    // ----------------------------------------------
-    // Burger menu
-    // ----------------------------------------------
-
-    if (burgerMenu && sideBar) {
-
-        burgerMenu.addEventListener(
-            'click',
-            event => {
-
-                event.stopPropagation();
-
-                sideBar.classList.toggle(
-                    'activeSide'
-                );
-            }
-        );
-
-
-        sideBar.addEventListener(
-            'click',
-            event => {
-
-                event.stopPropagation();
-            }
-        );
-    }
-
-
-    // ----------------------------------------------
-    // Logout
-    // ----------------------------------------------
-
-    if (logout) {
-
-        logout.addEventListener(
-            'click',
-            () => {
-
-                document.cookie =
-                    'currentUser=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/';
-
-                localStorage.removeItem(
-                    'loggedInUser'
-                );
-
-                window.location.href =
-                    '../auth/login.html';
-            }
-        );
-    }
-
-
-    // ----------------------------------------------
-    // Close menus
-    // ----------------------------------------------
-
-    document.addEventListener(
-        'click',
-        () => {
-
-            if (accountMenu) {
-
-                accountMenu.classList.remove(
-                    'activeAccount'
-                );
-            }
-
-            if (sideBar) {
-
-                sideBar.classList.remove(
-                    'activeSide'
-                );
-            }
-        }
-    );
-
-
-    document.addEventListener(
-        'keydown',
-        event => {
-
-            if (event.key === 'Escape') {
-
-                if (accountMenu) {
-
-                    accountMenu.classList.remove(
-                        'activeAccount'
-                    );
-                }
-
-                if (sideBar) {
-
-                    sideBar.classList.remove(
-                        'activeSide'
-                    );
-                }
-            }
-        }
-    );
-}
-
-
-// ==================================================
-// INITIAL LOAD
-// ==================================================
-
-setupHeader();
-
-if (studentsSection) {
-    studentsSection.style.display = 'none';
-}
-
-showCourses();
-
-showAssessments();
-
-showStudents();
+$('studentsSection').style.display = 'none';
+refresh();

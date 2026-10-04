@@ -1,404 +1,254 @@
-'use strict';
+'use strict'
+const accountMinu = document.getElementById("accountMinu");
+const account = document.getElementById("account");
+const burgerMinu = document.getElementById("burgerMinu");
+const sideBar = document.getElementById("sideBar");
+const attendanceChart = document.getElementById("attendanceChart");
+const headerName = document.getElementById("headerName");
+const techName = document.getElementById("techName");
+const logo = document.getElementById("logo");
+const searchInput = document.getElementById("searchInput");
+const searchBtn = document.getElementById("searchBtn");
+const studentsTotal = document.getElementById("studentsTotal");
+const presentToday = document.getElementById("presentToday");
+const absentToday = document.getElementById("absentToday");
+const attendanceRate = document.getElementById("attendanceRate");
+const settings = document.getElementById("settings");
+const logout = document.getElementById("logout");
+const attendanceBtn = document.getElementById("attendanceBtn");
+const dashboard = document.getElementById("dashboard");
+const assessments = document.getElementById("assessments");
+const students = document.getElementById("students");
+const reports = document.getElementById("reports");
 
-// ==================================================
-// HELPERS
-// ==================================================
 
-const $ = (id) => document.getElementById(id);
+
+// =====================cookies=====================
+// ===================== Current User =====================
 
 function getCookie(cookieName) {
     const match = document.cookie
-        .split('; ')
-        .find(row => row.startsWith(cookieName + '='));
+        .split("; ")
+        .find(row => row.startsWith(cookieName + "="));
 
     return match
         ? decodeURIComponent(match.slice(cookieName.length + 1))
         : null;
 }
 
-function readList(key) {
-    try {
-        return JSON.parse(localStorage.getItem(key)) || [];
-    } catch {
-        return [];
-    }
-}
-
-// Uses saved data first.
-// Only asks json-server when nothing is saved.
-async function loadList(key) {
-    let list = readList(key);
-
-    if (!list.length) {
-        try {
-            const response = await fetch(`http://localhost:3000/${key}`);
-
-            if (response.ok) {
-                list = await response.json();
-                localStorage.setItem(key, JSON.stringify(list));
-            }
-        } catch (err) {
-            console.error(`Could not load ${key}`, err);
-        }
-    }
-
-    return list;
-}
-
-// "Dr. Ahmad Ali" -> "AA"
-function getInitials(fullName) {
-    const words = fullName
-        .split(/\s+/)
-        .filter(
-            w => w && !/^(dr|prof|mr|mrs|ms|eng)\.?$/i.test(w)
-        );
-
-    return (
-        words
-            .slice(0, 2)
-            .map(w => w[0].toUpperCase())
-            .join('') || '?'
-    );
-}
-
-
-// ==================================================
-// LOGIN CHECK
-// Only a logged-in instructor can open this page
-// ==================================================
-
-const email = (getCookie('currentUser') || '').toLowerCase();
+const email = (getCookie("currentUser") || "").toLowerCase();
 
 const loggedIn = JSON.parse(
-    localStorage.getItem('loggedInUser') || 'null'
+    localStorage.getItem("loggedInUser") || "null"
 );
 
-if (
-    !email ||
-    !loggedIn ||
-    loggedIn.role !== 'instructor'
-) {
-    window.location.href = '../auth/login.html';
+const instructors = JSON.parse(
+    localStorage.getItem("instructors") || "[]"
+);
+
+const currentInstructor = instructors.find(
+    instructor =>
+        instructor.email &&
+        instructor.email.toLowerCase() === email
+);
+
+const name =
+    currentInstructor?.name ||
+    currentInstructor?.fullName ||
+    loggedIn?.name ||
+    "";
+
+headerName.textContent = name;
+techName.textContent = name;
+logo.textContent = name.slice(0, 2).toUpperCase();
+
+// ======================Account Minu=======================
+
+account.addEventListener("click", function (e) {
+    accountMinu.classList.toggle("activeAccount");
+})
+
+burgerMinu.addEventListener('click', function (e) {
+    sideBar.classList.toggle("activeSide");
+
+
+});
+
+//======================Sitting & Log out=============================
+settings.addEventListener("click", function (e) {
+    window.location.href = "../Setting/index.html"
+})
+logout.addEventListener("click", function (e) {
+    document.cookie = "currentUser=; max-age=0; path=/"
+    window.location.href = "../auth/login.html"
+})
+
+
+//=====================Side link=======================================
+
+dashboard.addEventListener("click", function (e) {
+    window.location.href = "index.html"
+})
+
+students.addEventListener("click", function (e) {
+    window.location.href = "../Student/students.html"
+})
+
+assessments.addEventListener("click", function (e) {
+    window.location.href = "../Assessments/index.html"
+})
+
+reports.addEventListener("click", function (e) {
+    window.location.href = "../Reports/index.html"
+})
+
+// ===================attendanceBtn=====================
+
+attendanceBtn.addEventListener("click", function (e) {
+    window.location.href = "../Student/update.html"
+})
+
+// ===================INFORMATION SECTION===================
+
+
+async function getData(info) {
+    const savedData = localStorage.getItem(info);
+
+    if (savedData) {
+        return JSON.parse(savedData);
+    }
+
+    const response = await fetch(`http://localhost:3000/${info}`);
+    const data = await response.json();
+
+    localStorage.setItem(info, JSON.stringify(data));
+
+    return data;
 }
 
 
-// ==================================================
-// HEADER, SIDEBAR AND MENUS
-// ==================================================
+// ===================instOfStudent===================
 
-const accountMinu = $('accountMinu');
-const sideBar = $('sideBar');
+async function getCourseID() {
 
-function currentInstructor() {
-    return (
-        readList('instructors').find(
-            i =>
-                i.email &&
-                i.email.toLowerCase() === email
-        ) || loggedIn
-    );
+    const instructors = await getData("instructors");
+    const courses = await getData("courses");
+    let instCourse;
+    for (const instructor of instructors) {
+        if (instructor.name === name) {
+
+            const instId = instructor.id;
+
+            for (const course of courses) {
+
+                if (course.instructorId === instId) {
+                    instCourse = course.id
+
+                }
+            }
+        }
+
+    }
+    return instCourse;
 }
 
-const instructor = currentInstructor();
 
-const instructorName =
-    (
-        (instructor &&
-            (instructor.fullName || instructor.name)) ||
-        ''
-    ).trim() ||
-    (instructor && instructor.email) ||
-    '';
-
-$('headerName').textContent = instructorName;
-$('techName').textContent = instructorName;
-$('logo').textContent = instructorName
-    ? getInitials(instructorName)
-    : '';
-
-
-// ==================================================
-// ACCOUNT MENU
-// ==================================================
-
-$('account').addEventListener('click', e => {
-    e.stopPropagation();
-
-    accountMinu.classList.toggle('activeAccount');
-});
-
-
-// ==================================================
-// BURGER MENU
-// ==================================================
-
-$('burgerMinu').addEventListener('click', e => {
-    e.stopPropagation();
-
-    sideBar.classList.toggle('activeSide');
-});
-
-
-// Prevent sidebar clicks from closing it
-sideBar.addEventListener('click', e => {
-    e.stopPropagation();
-});
-
-
-// Click outside -> close menus
-document.addEventListener('click', () => {
-    accountMinu.classList.remove('activeAccount');
-    sideBar.classList.remove('activeSide');
-});
-
-
-// ==================================================
-// NAVIGATION
-// ==================================================
-//
-// Dashboard, Students, Assessments, Reports and
-// Settings are handled by the HTML <a href="">.
-//
-// Example:
-//
-// <a href="../Reports/index.html">Reports</a>
-//
-// Therefore we DO NOT use JavaScript go() here.
-//
-
-
-// ==================================================
-// LOGOUT
-// ==================================================
-
-$('logout').addEventListener('click', () => {
-
-    // Remove current user cookie
-    document.cookie =
-        'currentUser=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/';
-
-    // Remove logged-in user
-    localStorage.removeItem('loggedInUser');
-
-    // Go back to login page
-    window.location.href = '../auth/login.html';
-});
-
-
-// ==================================================
-// ATTENDANCE BUTTON
-// ==================================================
-
-$('attendanceBtn').addEventListener('click', () => {
-    window.location.href = '../fuad/update.html';
-});
-
-
-// ==================================================
-// DASHBOARD NUMBERS AND CHARTS
-// ==================================================
+// ===================setStudentInfo===================
 
 async function setStudentInfo() {
 
-    const students = await loadList('students');
-    const courses = await loadList('courses');
+    const students = await getData("students");
+    const coursId = await getCourseID();
 
+    let attendcount = 0;
+    let absentcount = 0;
+    let totalAttendance = 0;
+    let totalpresentCount = 0;
 
-    // ==================================================
-    // INSTRUCTOR COURSES
-    // ==================================================
-
-    const myCourseIds = courses
-        .filter(
-            course =>
-                instructor &&
-                course.instructorId === instructor.id
-        )
-        .map(course => course.id);
-
-
-    // ==================================================
-    // INSTRUCTOR STUDENTS
-    // ==================================================
-
-    // A new instructor with no courses sees every student.
-    const myStudents = students.filter(student => {
-
-        return (
-            !student.archived &&
-            (
-                !myCourseIds.length ||
-                (student.courses || []).some(
-                    id => myCourseIds.includes(id)
-                )
-            )
-        );
-
-    });
-
-
-    // ==================================================
-    // ATTENDANCE RECORDS
-    // ==================================================
-
-    const records = myStudents.flatMap(
-        student => student.attendance || []
+    const myStudents = students.filter(student =>
+        student.courses.includes(coursId)
     );
 
 
-    // Get unique attendance dates
-    const dates = [
-        ...new Set(
-            records.map(record => record.date)
-        )
-    ].sort();
+    for (const student of myStudents) {
 
+        for (const attend of student.attendance) {
 
-    // ==================================================
-    // TODAY
-    // ==================================================
+            totalAttendance++;
 
-    // Today's date
-    const todayText = new Date()
-        .toISOString()
-        .slice(0, 10);
+            if (attend.status === "present") {
+                totalpresentCount++;
+            }
+        }
 
+        if (student.attendance.length === 0 || student.archived === true) {
+            continue;
+        }
 
-    // If today has records, use today.
-    // Otherwise use the latest recorded day.
-    const day = dates.includes(todayText)
-        ? todayText
-        : dates[dates.length - 1];
+        const lastAttendance =
+            student.attendance[student.attendance.length - 1];
 
-
-    // ==================================================
-    // ATTENDANCE STATUS
-    // ==================================================
-
-    const hasStatus = (student, status) => {
-
-        return (student.attendance || []).some(
-            record =>
-                record.date === day &&
-                record.status === status
-        );
-
-    };
-
-
-    // ==================================================
-    // PRESENT / ABSENT
-    // ==================================================
-
-    const present = day
-        ? myStudents.filter(
-            student => hasStatus(student, 'present')
-        ).length
-        : 0;
-
-
-    const absent = day
-        ? myStudents.filter(
-            student => hasStatus(student, 'absent')
-        ).length
-        : 0;
-
-
-    // ==================================================
-    // DASHBOARD CARDS
-    // ==================================================
-
-    $('studentsTotal').textContent =
-        myStudents.length;
-
-    $('presentToday').textContent =
-        present;
-
-    $('absentToday').textContent =
-        absent;
-
-
-    $('attendanceRate').textContent =
-        (present + absent)
-            ? (
-                (present / (present + absent)) * 100
-            ).toFixed(1) + '%'
-            : '-';
-
-
-    // ==================================================
-    // CHECK CHART.JS
-    // ==================================================
-
-    if (typeof Chart === 'undefined') {
-        return;
+        if (lastAttendance.status === "present") {
+            attendcount++;
+        } else {
+            absentcount++;
+        }
     }
 
+    const totalStudents = attendcount + absentcount;
+    studentsTotal.textContent = totalStudents;
+    presentToday.textContent = attendcount;
+    absentToday.textContent = absentcount;
 
-    // ==================================================
-    // ATTENDANCE DURING THE WEEK
-    // Last 7 recorded days
-    // ==================================================
-
-    const last7 = dates.slice(-7);
+    attendanceRate.textContent =
+        (attendcount) == 0 ?0+"%": ((attendcount / (attendcount + absentcount)) * 100).toFixed(1) + "%";
 
 
-    const labels = last7.map(date =>
-        new Date(date).toLocaleDateString(
-            'en-US',
-            {
-                weekday: 'short',
-                timeZone: 'UTC'
-            }
+
+    //========================= AttendanceChart Chart  =========================
+
+
+    const dates = [...new Set(
+        myStudents.flatMap(student =>
+            student.attendance.map(record => record.date)
         )
+    )].sort();
+
+    const presentStudents = dates.map(date =>
+        myStudents.filter(student =>
+            student.attendance.some(record =>
+                record.date === date &&
+                record.status === "present" &&
+                student.archived === false
+            )
+        ).length
     );
+    const last7Days = dates.slice(-7);
 
+    const labels = last7Days.map(date => {
+        const d = new Date(date);
 
-    const presentPerDay = last7.map(date => {
-
-        return myStudents.filter(student => {
-
-            return (student.attendance || []).some(
-                record =>
-                    record.date === date &&
-                    record.status === 'present'
-            );
-
-        }).length;
-
+        return d.toLocaleDateString("en-US", {
+            weekday: "short"
+        });
     });
 
-
-    // ==================================================
-    // ATTENDANCE LINE CHART
-    // ==================================================
-
-    new Chart($('attendanceChart'), {
-
-        type: 'line',
+    new Chart(attendanceChart, {
+        type: "line",
 
         data: {
+            labels: labels,
 
-            labels,
-
-            datasets: [
-                {
-                    label: 'Present Students',
-
-                    data: presentPerDay,
-
-                    borderWidth: 2,
-
-                    tension: 0.4,
-
-                    fill: false
-                }
-            ]
-
+            datasets: [{
+                label: "Present Students",
+                data: presentStudents,
+                borderWidth: 2,
+                tension: 0.4,
+                fill: false
+            }]
         },
 
         options: {
-
             responsive: true,
 
             plugins: {
@@ -408,73 +258,43 @@ async function setStudentInfo() {
             },
 
             scales: {
-
                 y: {
-                    beginAtZero: true,
-
-                    ticks: {
-                        precision: 0
-                    }
+                    beginAtZero: true
                 }
-
             }
-
         }
-
     });
 
 
-    // ==================================================
-    // COMMITMENT RATE
-    // ==================================================
-
-    if (!records.length) {
-        return;
-    }
 
 
-    const presentRecords = records.filter(
-        record => record.status === 'present'
-    ).length;
+    //==============================COMMITMENT CHART==============================
 
+    const commitmentReat = (totalpresentCount / totalAttendance * 100).toFixed(2)
+    console.log(commitmentReat)
+    const commitmentChart = document.getElementById("commitmentChart");
 
-    const committed = Number(
-        (
-            (presentRecords / records.length) * 100
-        ).toFixed(2)
-    );
+    new Chart(commitmentChart, {
 
-
-    const notCommitted = Number(
-        (100 - committed).toFixed(2)
-    );
-
-
-    // ==================================================
-    // COMMITMENT DOUGHNUT CHART
-    // ==================================================
-
-    new Chart($('commitmentChart'), {
-
-        type: 'doughnut',
+        type: "doughnut",
 
         data: {
 
             labels: [
-                `${committed}% Committed`,
-                `${notCommitted}% Not Committed`
+                commitmentReat + "% Committed ",
+                100 - commitmentReat + "% Not Committed"
             ],
 
-            datasets: [
-                {
-                    data: [
-                        committed,
-                        notCommitted
-                    ],
+            datasets: [{
 
-                    borderWidth: 1
-                }
-            ]
+                data: [
+                    commitmentReat,
+                    100 - commitmentReat
+                ],
+
+                borderWidth: 1
+
+            }]
 
         },
 
@@ -485,20 +305,15 @@ async function setStudentInfo() {
             plugins: {
 
                 legend: {
-                    position: 'bottom'
+
+                    position: "bottom"
+
                 }
 
             }
 
         }
 
-    });
-
+    })
 }
-
-
-// ==================================================
-// LOAD DASHBOARD
-// ==================================================
-
 setStudentInfo();
