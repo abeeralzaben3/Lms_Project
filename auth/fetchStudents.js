@@ -1,140 +1,524 @@
-// ===== LocalStorage =====
+'use strict';
 
-// قراءة البيانات
+
+// ======================================================
+// LOCAL STORAGE
+// ======================================================
+
 export function getData(key) {
-  const data = localStorage.getItem(key);
-  return data ? JSON.parse(data) : [];
-}
 
-// حفظ البيانات
-export function saveData(key, value) {
-  localStorage.setItem(key, JSON.stringify(value));
-}
-
-// ===== Cookies =====
-
-// حفظ Cookie
-export function setCookie(name, value, days) {
-  let expires = '';
-  if (days) {
-    const date = new Date();
-    date.setTime(date.getTime() + days * 24 * 60 * 60 * 1000);
-    expires = '; expires=' + date.toUTCString();
-  }
-  document.cookie = name + '=' + value + expires + '; path=/';
-}
-
-// قراءة Cookie
-export function getCookie(name) {
-  const cookies = document.cookie.split('; ');
-  for (let i = 0; i < cookies.length; i++) {
-    const parts = cookies[i].split('=');
-    if (parts[0] === name) return parts[1];
-  }
-  return null;
-}
-
-// المستخدم الحالي
-export function getCurrentUser() {
-  const value = getCookie('currentUser');
-  return value ? decodeURIComponent(value) : null;
-}
-
-// حفظ المستخدم بعد تسجيل الدخول (الإيميل بالكوكي، والبيانات بدون الباسورد بالـ localStorage)
-export function saveLoggedInUser(user, days) {
-  setCookie('currentUser', encodeURIComponent(user.email), days);
-
-  const safeUser = { ...user };
-  delete safeUser.password;
-  saveData('loggedInUser', safeUser);
-}
-
-// قراءة بيانات المستخدم المسجل (أو null إذا ما في أحد)
-export function getLoggedInUser() {
-  const raw = localStorage.getItem('loggedInUser');
-  return raw ? JSON.parse(raw) : null;
-}
-
-// تسجيل الخروج
-export function logout() {
-  setCookie('currentUser', '', -1);
-  localStorage.removeItem('loggedInUser');
-}
-
-// ===== المستخدمين =====
-
-// إضافة مستخدم جديد
-export async function addUser(fullName, email, phone, password) {
-  const users = getData('users');
-  const instructors = await getInstructors();
-  const students = await getStudents();
-
-  for (const person of users.concat(instructors, students)) {
-    if (person.email && person.email.toLowerCase() === email) {
-      throw new Error('This email address is already registered');
-    }
-  }
-
-  const newUser = { id: Date.now(), fullName, email, phone, password, role: 'instructor' };
-  instructors.push(newUser);
-  saveData('instructors', instructors);
-  return newUser;
-}
-
-// ===== جلب البيانات من db.json =====
-
-async function loadFromServer(key) {
-  let items = getData(key);
-
-  if (items.length === 0) {
     try {
-      const response = await fetch('http://localhost:3000/' + key);
-      items = await response.json();
-      saveData(key, items);
-    } catch (error) {
-      return [];
-    }
-  }
 
-  return items;
+        const data =
+            localStorage.getItem(key);
+
+        if (!data) {
+            return [];
+        }
+
+        return JSON.parse(data);
+
+    } catch (error) {
+
+        console.error(
+            `Error reading ${key}:`,
+            error
+        );
+
+        return [];
+    }
 }
+
+
+export function saveData(
+    key,
+    value
+) {
+
+    localStorage.setItem(
+        key,
+        JSON.stringify(value)
+    );
+}
+
+
+// ======================================================
+// COOKIE
+// ======================================================
+
+export function setCookie(
+    name,
+    value,
+    days = null
+) {
+
+    let cookie =
+        `${name}=${encodeURIComponent(value)}; path=/`;
+
+
+    if (days !== null) {
+
+        const date =
+            new Date();
+
+        date.setTime(
+            date.getTime() +
+            days * 24 * 60 * 60 * 1000
+        );
+
+        cookie +=
+            `; expires=${date.toUTCString()}`;
+    }
+
+
+    document.cookie =
+        cookie;
+}
+
+
+export function getCookie(name) {
+
+    const cookies =
+        document.cookie.split('; ');
+
+
+    const cookie =
+        cookies.find(
+            row =>
+                row.startsWith(
+                    name + '='
+                )
+        );
+
+
+    if (!cookie) {
+        return null;
+    }
+
+
+    return decodeURIComponent(
+        cookie.substring(
+            name.length + 1
+        )
+    );
+}
+
+
+export function deleteCookie(name) {
+
+    document.cookie =
+        `${name}=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/`;
+}
+
+
+// ======================================================
+// LOGIN USER
+// ======================================================
+
+export function saveLoggedInUser(
+    user,
+    days = null
+) {
+
+    const safeUser = {
+        ...user
+    };
+
+
+    delete safeUser.password;
+
+
+    setCookie(
+        'currentUser',
+        safeUser.email,
+        days
+    );
+
+
+    localStorage.setItem(
+        'loggedInUser',
+        JSON.stringify(safeUser)
+    );
+}
+
+
+export function getLoggedInUser() {
+
+    try {
+
+        const user =
+            localStorage.getItem(
+                'loggedInUser'
+            );
+
+
+        return user
+            ? JSON.parse(user)
+            : null;
+
+    } catch {
+
+        return null;
+    }
+}
+
+
+export function getCurrentUser() {
+
+    return getCookie(
+        'currentUser'
+    );
+}
+
+
+export function logout() {
+
+    deleteCookie(
+        'currentUser'
+    );
+
+    localStorage.removeItem(
+        'loggedInUser'
+    );
+}
+
+
+// ======================================================
+// SERVER DATA
+// ======================================================
+
+export async function loadFromServer(
+    key
+) {
+
+    const localData =
+        getData(key);
+
+
+    if (localData.length) {
+
+        return localData;
+    }
+
+
+    try {
+
+        const response =
+            await fetch(
+                `http://localhost:3000/${key}`
+            );
+
+
+        if (!response.ok) {
+
+            throw new Error(
+                `Failed to fetch ${key}`
+            );
+
+        }
+
+
+        const data =
+            await response.json();
+
+
+        saveData(
+            key,
+            data
+        );
+
+
+        return data;
+
+    } catch (error) {
+
+        console.error(
+            `Error loading ${key}:`,
+            error
+        );
+
+        return [];
+    }
+}
+
+
+// ======================================================
+// INSTRUCTORS
+// ======================================================
 
 export async function getInstructors() {
-  return loadFromServer('instructors');
+
+    return await loadFromServer(
+        'instructors'
+    );
 }
+
+
+// ======================================================
+// COURSES
+// ======================================================
 
 export async function getCourses() {
-  return loadFromServer('courses');
+
+    return await loadFromServer(
+        'courses'
+    );
 }
 
-export default async function getStudents() {
-  return loadFromServer('students');
+
+// ======================================================
+// STUDENTS
+// ======================================================
+
+export async function getStudents() {
+
+    return await loadFromServer(
+        'students'
+    );
 }
 
-// ===== تسجيل الدخول =====
-// بيفحص المستخدمين المسجلين + المدرسين + الطلاب، وبيرجع المستخدم مع role
-export async function loginUser(email, password) {
-  const users = getData('users');
-  const instructors = await getInstructors();
-  const students = await getStudents();
 
-  const groups = [
-    { list: users, role: 'instructor' },       // اللي سجلوا من صفحة التسجيل
+// ======================================================
+// LOGIN
+// ======================================================
 
-    { list: instructors, role: 'instructor' }, // من db.json
-    { list: students, role: 'student' }        // من db.json
-  ];
+export async function loginUser(
+    email,
+    password
+) {
 
-  for (const group of groups) {
-    for (const person of group.list) {
-      if (
-        person.email &&
-        person.email.toLowerCase() === email &&
-        person.password === password
-      ) {
-        return { ...person, role: group.role };
-      }
+    const cleanEmail =
+        email
+            .trim()
+            .toLowerCase();
+
+
+    // ------------------------------------------
+    // Local registered users
+    // ------------------------------------------
+
+    const users =
+        getData('users');
+
+
+    const localUser =
+        users.find(
+            user =>
+                user.email &&
+                user.email
+                    .toLowerCase() ===
+                    cleanEmail &&
+                String(user.password) ===
+                    String(password)
+        );
+
+
+    if (localUser) {
+
+        return {
+            ...localUser,
+            role: 'instructor'
+        };
     }
-  }
-  return null;
+
+
+    // ------------------------------------------
+    // Instructors
+    // ------------------------------------------
+
+    const instructors =
+        await getInstructors();
+
+
+    const instructor =
+        instructors.find(
+            user =>
+                user.email &&
+                user.email
+                    .toLowerCase() ===
+                    cleanEmail &&
+                String(user.password) ===
+                    String(password)
+        );
+
+
+    if (instructor) {
+
+        return {
+            ...instructor,
+            role: 'instructor'
+        };
+    }
+
+
+    // ------------------------------------------
+    // Students
+    // ------------------------------------------
+
+    const students =
+        await getStudents();
+
+
+    const student =
+        students.find(
+            user =>
+                user.email &&
+                user.email
+                    .toLowerCase() ===
+                    cleanEmail &&
+                String(user.password) ===
+                    String(password)
+        );
+
+
+    if (student) {
+
+        return {
+            ...student,
+            role: 'student'
+        };
+    }
+
+
+    return null;
 }
+
+
+// ======================================================
+// ADD USER / REGISTER INSTRUCTOR
+// ======================================================
+
+export async function addUser(user) {
+
+    const cleanEmail =
+        user.email
+            .trim()
+            .toLowerCase();
+
+
+    // ------------------------------------------
+    // Check users
+    // ------------------------------------------
+
+    const users =
+        getData('users');
+
+
+    const existingUser =
+        users.find(
+            item =>
+                item.email &&
+                item.email
+                    .toLowerCase() ===
+                    cleanEmail
+        );
+
+
+    if (existingUser) {
+
+        throw new Error(
+            'Email already exists'
+        );
+    }
+
+
+    // ------------------------------------------
+    // Check instructors
+    // ------------------------------------------
+
+    const instructors =
+        await getInstructors();
+
+
+    const existingInstructor =
+        instructors.find(
+            item =>
+                item.email &&
+                item.email
+                    .toLowerCase() ===
+                    cleanEmail
+        );
+
+
+    if (existingInstructor) {
+
+        throw new Error(
+            'Email already exists'
+        );
+    }
+
+
+    // ------------------------------------------
+    // Check students
+    // ------------------------------------------
+
+    const students =
+        await getStudents();
+
+
+    const existingStudent =
+        students.find(
+            item =>
+                item.email &&
+                item.email
+                    .toLowerCase() ===
+                    cleanEmail
+        );
+
+
+    if (existingStudent) {
+
+        throw new Error(
+            'Email already exists'
+        );
+    }
+
+
+    // ------------------------------------------
+    // New instructor
+    // ------------------------------------------
+
+    const newInstructor = {
+
+        id:
+            `INS${Date.now()}`,
+
+        name:
+            user.fullName,
+
+        fullName:
+            user.fullName,
+
+        email:
+            cleanEmail,
+
+        phone:
+            user.phone,
+
+        password:
+            user.password,
+
+        role:
+            'Instructor'
+
+    };
+
+
+    instructors.push(
+        newInstructor
+    );
+
+
+    saveData(
+        'instructors',
+        instructors
+    );
+
+
+    return newInstructor;
+}
+
+
+// Default export
+
+export default getStudents;

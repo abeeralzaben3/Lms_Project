@@ -81,3 +81,20 @@ document
     window.location.href = "students.html";
 
 });
+
+account.addEventListener("click", function (e) {
+    accountMinu.classList.toggle("activeAccount");
+})
+
+burgerMinu.addEventListener('click', function (e) {
+    sideBar.classList.toggle("activeSide");
+
+
+});
+settings.addEventListener("click",function(e){
+  window.location.href = "/Setting/index.html"
+})
+logout.addEventListener("click",function(e){
+    document.cookie= "name=; max-age=0;"
+    window.location.href = "/auth/login.html";
+})

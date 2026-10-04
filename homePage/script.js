@@ -1,319 +1,764 @@
-'use strict'
-const accountMinu = document.getElementById("accountMinu");
-const account = document.getElementById("account");
-const burgerMinu = document.getElementById("burgerMinu");
-const sideBar = document.getElementById("sideBar");
-const attendanceChart = document.getElementById("attendanceChart");
-const headerName = document.getElementById("headerName");
-const techName = document.getElementById("techName");
-const logo = document.getElementById("logo");
-const searchInput = document.getElementById("searchInput");
-const searchBtn = document.getElementById("searchBtn");
-const studentsTotal = document.getElementById("studentsTotal");
-const presentToday = document.getElementById("presentToday");
-const absentToday = document.getElementById("absentToday");
-const attendanceRate = document.getElementById("attendanceRate");
-const settings = document.getElementById("settings");
-const logout = document.getElementById("logout");
-const attendanceBtn = document.getElementById("attendanceBtn");
-const dashboard = document.getElementById("dashboard");
-const assessments = document.getElementById("assessments");
-const students = document.getElementById("students");
-const reports = document.getElementById("reports");
+'use strict';
 
 
+// ==================================================
+// IMPORT
+// ==================================================
 
-// =====================cookies=====================
-// ===================== Current User =====================
-
-function getCookie(cookieName) {
-    const match = document.cookie
-        .split("; ")
-        .find(row => row.startsWith(cookieName + "="));
-
-    return match
-        ? decodeURIComponent(match.slice(cookieName.length + 1))
-        : null;
-}
-
-const email = (getCookie("currentUser") || "").toLowerCase();
-
-const loggedIn = JSON.parse(
-    localStorage.getItem("loggedInUser") || "null"
-);
-
-const instructors = JSON.parse(
-    localStorage.getItem("instructors") || "[]"
-);
-
-const currentInstructor = instructors.find(
-    instructor =>
-        instructor.email &&
-        instructor.email.toLowerCase() === email
-);
-
-const name =
-    currentInstructor?.name ||
-    currentInstructor?.fullName ||
-    loggedIn?.name ||
-    "";
-
-headerName.textContent = name;
-techName.textContent = name;
-logo.textContent = name.slice(0, 2).toUpperCase();
-
-// ======================Account Minu=======================
-
-account.addEventListener("click", function (e) {
-    accountMinu.classList.toggle("activeAccount");
-})
-
-burgerMinu.addEventListener('click', function (e) {
-    sideBar.classList.toggle("activeSide");
+import {
+    getInstructors,
+    getCourses,
+    default as getStudents,
+    getCookie,
+    getLoggedInUser,
+    logout
+} from '../auth/fetchStudents.js';
 
 
-});
+// ==================================================
+// HELPERS
+// ==================================================
 
-//======================Sitting & Log out=============================
-settings.addEventListener("click", function (e) {
-    window.location.href = "../Setting/index.html"
-})
-logout.addEventListener("click", function (e) {
-    document.cookie = "currentUser=; max-age=0; path=/"
-    window.location.href = "../auth/login.html"
-})
+const $ = (id) =>
+    document.getElementById(id);
 
 
-//=====================Side link=======================================
+// ==================================================
+// INITIALS
+// ==================================================
 
-dashboard.addEventListener("click", function (e) {
-    window.location.href = "index.html"
-})
+function getInitials(fullName) {
 
-students.addEventListener("click", function (e) {
-    window.location.href = "../Student/students.html"
-})
-
-assessments.addEventListener("click", function (e) {
-    window.location.href = "../Assessments/index.html"
-})
-
-reports.addEventListener("click", function (e) {
-    window.location.href = "../Reports/index.html"
-})
-
-// ===================attendanceBtn=====================
-
-attendanceBtn.addEventListener("click", function (e) {
-    window.location.href = "../Student/update.html"
-})
-
-// ===================INFORMATION SECTION===================
-
-
-async function getData(info) {
-    const savedData = localStorage.getItem(info);
-
-    if (savedData) {
-        return JSON.parse(savedData);
+    if (!fullName) {
+        return '?';
     }
 
-    const response = await fetch(`http://localhost:3000/${info}`);
-    const data = await response.json();
 
-    localStorage.setItem(info, JSON.stringify(data));
+    const words =
+        fullName
+            .split(/\s+/)
+            .filter(Boolean);
 
-    return data;
+
+    return (
+        words
+            .slice(0, 2)
+            .map(
+                word =>
+                    word[0].toUpperCase()
+            )
+            .join('')
+            || '?'
+    );
 }
 
 
-// ===================instOfStudent===================
+// ==================================================
+// LOGIN CHECK
+// ==================================================
 
-async function getCourseID() {
+const email =
+    (getCookie('currentUser') || '')
+        .toLowerCase();
 
-    const instructors = await getData("instructors");
-    const courses = await getData("courses");
-    let instCourse;
-    for (const instructor of instructors) {
-        if (instructor.name === name) {
 
-            const instId = instructor.id;
+const loggedIn =
+    getLoggedInUser();
 
-            for (const course of courses) {
 
-                if (course.instructorId === instId) {
-                    instCourse = course.id
+if (
+    !email ||
+    !loggedIn ||
+    loggedIn.role !== 'instructor'
+) {
 
-                }
-            }
+    window.location.href =
+        '../auth/login.html';
+}
+
+
+// ==================================================
+// ACCOUNT MENU
+// ==================================================
+
+const account =
+    $('account');
+
+const accountMinu =
+    $('accountMinu');
+
+
+// فتح / إغلاق Account Menu
+
+account.addEventListener(
+    'click',
+    function (event) {
+
+        event.stopPropagation();
+
+        accountMinu.classList.toggle(
+            'activeAccount'
+        );
+    }
+);
+
+
+// ==================================================
+// BURGER MENU
+// ==================================================
+
+const burgerMinu =
+    $('burgerMinu');
+
+const sideBar =
+    $('sideBar');
+
+
+burgerMinu.addEventListener(
+    'click',
+    function (event) {
+
+        event.stopPropagation();
+
+        sideBar.classList.toggle(
+            'activeSide'
+        );
+    }
+);
+
+
+// منع إغلاق Sidebar عند الضغط داخله
+
+sideBar.addEventListener(
+    'click',
+    function (event) {
+
+        event.stopPropagation();
+    }
+);
+
+
+// الضغط خارج القوائم
+
+document.addEventListener(
+    'click',
+    function () {
+
+        accountMinu.classList.remove(
+            'activeAccount'
+        );
+
+        sideBar.classList.remove(
+            'activeSide'
+        );
+    }
+);
+
+
+// ==================================================
+// LOGOUT
+// ==================================================
+
+$('logout').addEventListener(
+    'click',
+    function (event) {
+
+        event.stopPropagation();
+
+        logout();
+
+        window.location.href =
+            '../auth/login.html';
+    }
+);
+
+
+// ==================================================
+// ATTENDANCE BUTTON
+// ==================================================
+
+$('attendanceBtn').addEventListener(
+    'click',
+    function () {
+
+        window.location.href =
+            '../Student/update.html';
+    }
+);
+
+
+// ==================================================
+// SEARCH
+// ==================================================
+
+const searchInput =
+    $('searchInput');
+
+
+searchInput.addEventListener(
+    'input',
+    async function () {
+
+        const search =
+            this.value
+                .trim()
+                .toLowerCase();
+
+
+        if (!search) {
+            return;
         }
 
+
+        const students =
+            await getStudents();
+
+
+        const results =
+            students.filter(
+                student => {
+
+                    const name =
+                        (
+                            student.name ||
+                            student.fullName ||
+                            ''
+                        ).toLowerCase();
+
+
+                    const studentId =
+                        String(
+                            student.studentId ||
+                            student.id ||
+                            ''
+                        ).toLowerCase();
+
+
+                    return (
+                        name.includes(search) ||
+                        studentId.includes(search)
+                    );
+                }
+            );
+
+
+        console.log(
+            'Search results:',
+            results
+        );
     }
-    return instCourse;
-}
+);
 
 
-// ===================setStudentInfo===================
+// ==================================================
+// DASHBOARD
+// ==================================================
 
 async function setStudentInfo() {
 
-    const students = await getData("students");
-    const coursId = await getCourseID();
+    try {
 
-    let attendcount = 0;
-    let absentcount = 0;
-    let totalAttendance = 0;
-    let totalpresentCount = 0;
+        // ==================================================
+        // LOAD DATA
+        // ==================================================
 
-    const myStudents = students.filter(student =>
-        student.courses.includes(coursId)
-    );
+        const students =
+            await getStudents();
 
 
-    for (const student of myStudents) {
-
-        for (const attend of student.attendance) {
-
-            totalAttendance++;
-
-            if (attend.status === "present") {
-                totalpresentCount++;
-            }
-        }
-
-        if (student.attendance.length === 0 || student.archived === true) {
-            continue;
-        }
-
-        const lastAttendance =
-            student.attendance[student.attendance.length - 1];
-
-        if (lastAttendance.status === "present") {
-            attendcount++;
-        } else {
-            absentcount++;
-        }
-    }
-
-    const totalStudents = attendcount + absentcount;
-    studentsTotal.textContent = totalStudents;
-    presentToday.textContent = attendcount;
-    absentToday.textContent = absentcount;
-
-    attendanceRate.textContent =
-        (attendcount) == 0 ?0+"%": ((attendcount / (attendcount + absentcount)) * 100).toFixed(1) + "%";
+        const courses =
+            await getCourses();
 
 
+        const instructors =
+            await getInstructors();
 
-    //========================= AttendanceChart Chart  =========================
+
+        // ==================================================
+        // CURRENT INSTRUCTOR
+        // ==================================================
+
+        const instructor =
+            instructors.find(
+                item =>
+                    item.email &&
+                    item.email.toLowerCase() === email
+            ) || loggedIn;
 
 
-    const dates = [...new Set(
-        myStudents.flatMap(student =>
-            student.attendance.map(record => record.date)
-        )
-    )].sort();
+        // ==================================================
+        // INSTRUCTOR NAME
+        // ==================================================
 
-    const presentStudents = dates.map(date =>
-        myStudents.filter(student =>
-            student.attendance.some(record =>
-                record.date === date &&
-                record.status === "present" &&
-                student.archived === false
+        const instructorName =
+            (
+                instructor.fullName ||
+                instructor.name ||
+                instructor.email ||
+                ''
+            ).trim();
+
+
+        // Header name
+
+        $('headerName').textContent =
+            instructorName || 'Instructor';
+
+
+        // Sidebar name
+
+        $('techName').textContent =
+            instructorName || 'Instructor';
+
+
+        // Initials
+
+        $('logo').textContent =
+            getInitials(instructorName);
+
+
+        // ==================================================
+        // INSTRUCTOR COURSES
+        // ==================================================
+
+        const myCourseIds =
+            courses
+                .filter(
+                    course =>
+                        instructor &&
+                        String(course.instructorId) ===
+                        String(instructor.id)
+                )
+                .map(
+                    course =>
+                        course.id
+                );
+
+
+        // ==================================================
+        // INSTRUCTOR STUDENTS
+        // ==================================================
+
+        const myStudents =
+            students.filter(
+                student => {
+
+                    if (student.archived) {
+                        return false;
+                    }
+
+
+                    // إذا المدرس عنده courses
+                    // نعرض فقط طلاب courses الخاصة به
+
+                    if (myCourseIds.length > 0) {
+
+                        return (
+                            Array.isArray(
+                                student.courses
+                            ) &&
+                            student.courses.some(
+                                courseId =>
+                                    myCourseIds.includes(
+                                        courseId
+                                    )
+                            )
+                        );
+                    }
+
+
+                    // مدرس جديد بدون courses
+                    // يشوف كل الطلاب
+
+                    return true;
+                }
+            );
+
+
+        // ==================================================
+        // ATTENDANCE RECORDS
+        // ==================================================
+
+        const records =
+            myStudents.flatMap(
+                student =>
+                    Array.isArray(
+                        student.attendance
+                    )
+                        ? student.attendance
+                        : []
+            );
+
+
+        // ==================================================
+        // DATES
+        // ==================================================
+
+        const dates = [
+            ...new Set(
+                records
+                    .map(
+                        record =>
+                            record.date
+                    )
+                    .filter(Boolean)
             )
-        ).length
-    );
-    const last7Days = dates.slice(-7);
-
-    const labels = last7Days.map(date => {
-        const d = new Date(date);
-
-        return d.toLocaleDateString("en-US", {
-            weekday: "short"
-        });
-    });
-
-    new Chart(attendanceChart, {
-        type: "line",
-
-        data: {
-            labels: labels,
-
-            datasets: [{
-                label: "Present Students",
-                data: presentStudents,
-                borderWidth: 2,
-                tension: 0.4,
-                fill: false
-            }]
-        },
-
-        options: {
-            responsive: true,
-
-            plugins: {
-                legend: {
-                    display: true
-                }
-            },
-
-            scales: {
-                y: {
-                    beginAtZero: true
-                }
-            }
-        }
-    });
+        ].sort();
 
 
+        // ==================================================
+        // TODAY
+        // ==================================================
+
+        const todayText =
+            new Date()
+                .toISOString()
+                .slice(0, 10);
 
 
-    //==============================COMMITMENT CHART==============================
+        // إذا في Attendance اليوم
+        // نستخدم اليوم
+        //
+        // وإذا ما في
+        // نستخدم آخر يوم مسجل
 
-    const commitmentReat = (totalpresentCount / totalAttendance * 100).toFixed(2)
-    console.log(commitmentReat)
-    const commitmentChart = document.getElementById("commitmentChart");
+        const day =
+            dates.includes(todayText)
+                ? todayText
+                : dates[dates.length - 1];
 
-    new Chart(commitmentChart, {
 
-        type: "doughnut",
+        // ==================================================
+        // STATUS FUNCTION
+        // ==================================================
 
-        data: {
+        function hasStatus(
+            student,
+            status
+        ) {
 
-            labels: [
-                commitmentReat + "% Committed ",
-                100 - commitmentReat + "% Not Committed"
-            ],
+            const attendance =
+                Array.isArray(
+                    student.attendance
+                )
+                    ? student.attendance
+                    : [];
 
-            datasets: [{
 
-                data: [
-                    commitmentReat,
-                    100 - commitmentReat
-                ],
-
-                borderWidth: 1
-
-            }]
-
-        },
-
-        options: {
-
-            responsive: true,
-
-            plugins: {
-
-                legend: {
-
-                    position: "bottom"
-
-                }
-
-            }
-
+            return attendance.some(
+                record =>
+                    record.date === day &&
+                    record.status === status
+            );
         }
 
-    })
+
+        // ==================================================
+        // PRESENT
+        // ==================================================
+
+        const present =
+            day
+                ? myStudents.filter(
+                    student =>
+                        hasStatus(
+                            student,
+                            'present'
+                        )
+                ).length
+                : 0;
+
+
+        // ==================================================
+        // ABSENT
+        // ==================================================
+
+        const absent =
+            day
+                ? myStudents.filter(
+                    student =>
+                        hasStatus(
+                            student,
+                            'absent'
+                        )
+                ).length
+                : 0;
+
+
+        // ==================================================
+        // DASHBOARD CARDS
+        // ==================================================
+
+        $('studentsTotal').textContent =
+            myStudents.length;
+
+
+        $('presentToday').textContent =
+            present;
+
+
+        $('absentToday').textContent =
+            absent;
+
+
+        const attendanceRate =
+            present + absent > 0
+                ? (
+                    present /
+                    (present + absent)
+                ) * 100
+                : null;
+
+
+        $('attendanceRate').textContent =
+            attendanceRate !== null
+                ? attendanceRate.toFixed(1) + '%'
+                : '-';
+
+
+        // ==================================================
+        // CHART.JS CHECK
+        // ==================================================
+
+        if (typeof Chart === 'undefined') {
+
+            console.error(
+                'Chart.js is not loaded'
+            );
+
+            return;
+        }
+
+
+        // ==================================================
+        // LAST 7 DAYS
+        // ==================================================
+
+        const last7 =
+            dates.slice(-7);
+
+
+        const labels =
+            last7.map(
+                date =>
+                    new Date(date)
+                        .toLocaleDateString(
+                            'en-US',
+                            {
+                                weekday: 'short',
+                                timeZone: 'UTC'
+                            }
+                        )
+            );
+
+
+        // ==================================================
+        // PRESENT PER DAY
+        // ==================================================
+
+        const presentPerDay =
+            last7.map(
+                date => {
+
+                    return myStudents.filter(
+                        student => {
+
+                            const attendance =
+                                Array.isArray(
+                                    student.attendance
+                                )
+                                    ? student.attendance
+                                    : [];
+
+
+                            return attendance.some(
+                                record =>
+                                    record.date === date &&
+                                    record.status === 'present'
+                            );
+                        }
+                    ).length;
+                }
+            );
+
+
+        // ==================================================
+        // ATTENDANCE LINE CHART
+        // ==================================================
+
+        const attendanceCanvas =
+            $('attendanceChart');
+
+
+        if (attendanceCanvas) {
+
+            new Chart(
+                attendanceCanvas,
+                {
+                    type: 'line',
+
+                    data: {
+
+                        labels: labels,
+
+                        datasets: [
+
+                            {
+                                label:
+                                    'Present Students',
+
+                                data:
+                                    presentPerDay,
+
+                                borderWidth: 2,
+
+                                tension: 0.4,
+
+                                fill: false
+                            }
+                        ]
+                    },
+
+                    options: {
+
+                        responsive: true,
+
+                        maintainAspectRatio: false,
+
+                        plugins: {
+
+                            legend: {
+                                display: true
+                            }
+                        },
+
+                        scales: {
+
+                            y: {
+
+                                beginAtZero: true,
+
+                                ticks: {
+                                    precision: 0
+                                }
+                            }
+                        }
+                    }
+                }
+            );
+        }
+
+
+        // ==================================================
+        // COMMITMENT RATE
+        // ==================================================
+
+        const commitmentCanvas =
+            $('commitmentChart');
+
+
+        if (!commitmentCanvas) {
+            return;
+        }
+
+
+        // لا يوجد attendance
+        if (!records.length) {
+
+            return;
+        }
+
+
+        // جميع سجلات الحضور
+        const presentRecords =
+            records.filter(
+                record =>
+                    record.status === 'present'
+            ).length;
+
+
+        const committed =
+            Number(
+                (
+                    presentRecords /
+                    records.length *
+                    100
+                ).toFixed(2)
+            );
+
+
+        const notCommitted =
+            Number(
+                (
+                    100 -
+                    committed
+                ).toFixed(2)
+            );
+
+
+        // ==================================================
+        // DOUGHNUT CHART
+        // ==================================================
+
+        new Chart(
+            commitmentCanvas,
+            {
+
+                type: 'doughnut',
+
+                data: {
+
+                    labels: [
+
+                        `${committed}% Committed`,
+
+                        `${notCommitted}% Not Committed`
+                    ],
+
+                    datasets: [
+
+                        {
+
+                            data: [
+                                committed,
+                                notCommitted
+                            ],
+
+                            borderWidth: 1
+                        }
+                    ]
+                },
+
+                options: {
+
+                    responsive: true,
+
+                    maintainAspectRatio: false,
+
+                    plugins: {
+
+                        legend: {
+
+                            position: 'bottom'
+                        }
+                    }
+                }
+            }
+        );
+
+
+    } catch (error) {
+
+        console.error(
+            'Dashboard loading error:',
+            error
+        );
+    }
 }
+
+
+// ==================================================
+// START DASHBOARD
+// ==================================================
+
 setStudentInfo();
