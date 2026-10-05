@@ -1,98 +1,384 @@
-// import { fetchApi } from "../Api/fetch.js";
-import { Cookie } from "../cookies/cookies.js";
+"use strict";
 
-const accountMinu = document.getElementById("accountMinu");
-const account = document.getElementById("account");
+// ================= ELEMENTS =================
 
-const burgerMinu = document.getElementById("burgerMinu");
-const sideBar = document.getElementById("sideBar");
+const registerForm = document.getElementById("registerForm");
 
-const headerName = document.getElementById("headerName");
-const techName = document.getElementById("techName");
-const logo = document.getElementById("logo");
+const fullName = document.getElementById("fullName");
 
-const searchInput = document.getElementById("searchInput");
-const searchBtn = document.getElementById("searchBtn");
+const email = document.getElementById("email");
 
-const settings = document.getElementById("settings");
-const logout = document.getElementById("logout");
+const phone = document.getElementById("phone");
 
-const dashboard = document.getElementById("dashboard");
-const assessments = document.getElementById("assessments");
-const studentsli = document.getElementById("students");
-const reports = document.getElementById("reports");
+const password = document.getElementById("password");
 
-// ==================get cookies=======================
-const userCookie = new Cookie()
-const currentUser = userCookie.getCookie("currentUser")
-const userEmail = userCookie.getCookie("userEmail")
-const userId = userCookie.getCookie("userId")
+const terms = document.getElementById("terms");
 
-headerName.textContent = currentUser;
-techName.textContent = currentUser;
-logo.textContent = currentUser.slice(0, 2).toUpperCase();
+const formError = document.getElementById("formError");
 
-// ================== ACCOUNT ==================
+const togglePass = document.getElementById("toggle-pass");
 
-account.addEventListener("click", function () {
-
-    accountMinu.classList.toggle("activeAccount");
-
-});
+const submitBtn = document.getElementById("submitBtn");
 
 
-// ================== BURGER ==================
+// ================= GET INSTRUCTORS =================
 
-burgerMinu.addEventListener("click", function () {
+function getInstructors() {
 
-    sideBar.classList.toggle("activeSide");
+    try {
 
-});
+        return JSON.parse(
+            localStorage.getItem("instructors")
+        ) || [];
 
+    } catch (error) {
 
-// =================== LINKS ===================
+        console.error(
+            "Error reading instructors:",
+            error
+        );
 
-dashboard.addEventListener("click", function () {
-
-    window.location.href = "../dashboard/dashboard.html";
-
-});
-
-
-studentsli.addEventListener("click", function () {
-
-    window.location.href = "../student/students.html";
-
-});
+        return [];
+    }
+}
 
 
-assessments.addEventListener("click", function () {
+// ================= SAVE INSTRUCTORS =================
 
-    window.location.href = "../assessments/assessments.html";
+function saveInstructors(instructors) {
 
-});
-
-
-reports.addEventListener("click", function () {
-
-    window.location.href = "../reports/reports.html";
-
-});
+    localStorage.setItem(
+        "instructors",
+        JSON.stringify(instructors)
+    );
+}
 
 
-// =================== SETTINGS ===================
+// ================= SHOW ERROR =================
 
-settings.addEventListener("click", function () {
+function showError(message) {
 
-    window.location.href = "../settings/settings.html";
+    formError.textContent = message;
 
-});
+    formError.classList.add("show");
+}
 
 
-// =================== LOGOUT ===================
+// ================= CLEAR ERROR =================
 
-logout.addEventListener("click", function () {
+function clearError() {
 
-    window.location.href = "../login/login.html";
+    formError.textContent = "";
+
+    formError.classList.remove("show");
+}
+
+
+// ================= TOGGLE PASSWORD =================
+
+togglePass.addEventListener("click", function () {
+
+    if (password.type === "password") {
+
+        password.type = "text";
+
+        togglePass.innerHTML =
+            '<i class="fa-regular fa-eye-slash"></i>';
+
+    } else {
+
+        password.type = "password";
+
+        togglePass.innerHTML =
+            '<i class="fa-regular fa-eye"></i>';
+    }
 
 });
+
+
+// ================= VALIDATION =================
+
+function validateForm() {
+
+    const nameValue =
+        fullName.value.trim();
+
+    const emailValue =
+        email.value.trim().toLowerCase();
+
+    const phoneValue =
+        phone.value.trim();
+
+    const passwordValue =
+        password.value;
+
+
+    // FULL NAME
+
+    if (nameValue === "") {
+
+        showError(
+            "Please enter your full name."
+        );
+
+        fullName.focus();
+
+        return false;
+    }
+
+
+    if (nameValue.length < 3) {
+
+        showError(
+            "Full name must be at least 3 characters."
+        );
+
+        fullName.focus();
+
+        return false;
+    }
+
+
+    // EMAIL
+
+    if (emailValue === "") {
+
+        showError(
+            "Please enter your email."
+        );
+
+        email.focus();
+
+        return false;
+    }
+
+
+    const emailPattern =
+        /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+
+    if (!emailPattern.test(emailValue)) {
+
+        showError(
+            "Please enter a valid email address."
+        );
+
+        email.focus();
+
+        return false;
+    }
+
+
+    // PHONE
+
+    if (phoneValue === "") {
+
+        showError(
+            "Please enter your phone number."
+        );
+
+        phone.focus();
+
+        return false;
+    }
+
+
+    const phonePattern =
+        /^[0-9]{9,15}$/;
+
+
+    if (!phonePattern.test(phoneValue)) {
+
+        showError(
+            "Please enter a valid phone number."
+        );
+
+        phone.focus();
+
+        return false;
+    }
+
+
+    // PASSWORD
+
+    if (passwordValue === "") {
+
+        showError(
+            "Please enter a password."
+        );
+
+        password.focus();
+
+        return false;
+    }
+
+
+    if (passwordValue.length < 8) {
+
+        showError(
+            "Password must be at least 8 characters."
+        );
+
+        password.focus();
+
+        return false;
+    }
+
+
+    // TERMS
+
+    if (!terms.checked) {
+
+        showError(
+            "You must agree to the terms and privacy policy."
+        );
+
+        terms.focus();
+
+        return false;
+    }
+
+
+    return true;
+}
+
+
+// ================= REGISTER =================
+
+registerForm.addEventListener(
+    "submit",
+    function (event) {
+
+        event.preventDefault();
+
+        clearError();
+
+
+        // VALIDATE
+
+        if (!validateForm()) {
+
+            return;
+        }
+
+
+        // VALUES
+
+        const nameValue =
+            fullName.value.trim();
+
+        const emailValue =
+            email.value.trim().toLowerCase();
+
+        const phoneValue =
+            phone.value.trim();
+
+        const passwordValue =
+            password.value;
+
+
+        // GET EXISTING INSTRUCTORS
+
+        const instructors =
+            getInstructors();
+
+
+        // CHECK EMAIL
+
+        const emailExists =
+            instructors.some(
+                function (instructor) {
+
+                    return String(
+                        instructor.email
+                    ).toLowerCase() === emailValue;
+
+                }
+            );
+
+
+        if (emailExists) {
+
+            showError(
+                "This email is already registered."
+            );
+
+            email.focus();
+
+            return;
+        }
+
+
+        // CREATE ID
+
+        const newId =
+            "INS" +
+            String(
+                instructors.length + 1
+            ).padStart(3, "0");
+
+
+        // CREATE INSTRUCTOR
+
+        const newInstructor = {
+
+            id: newId,
+
+            name: nameValue,
+
+            email: emailValue,
+
+            phone: phoneValue,
+
+            password: passwordValue,
+
+            role: "Instructor"
+        };
+
+
+        // ADD
+
+        instructors.push(
+            newInstructor
+        );
+
+
+        // SAVE
+
+        saveInstructors(
+            instructors
+        );
+
+
+        // SUCCESS
+
+        formError.textContent =
+            "Account created successfully. Redirecting to login...";
+
+        formError.classList.add("success");
+
+
+        // DISABLE BUTTON
+
+        submitBtn.disabled = true;
+
+
+        // RESET
+
+        registerForm.reset();
+
+
+        // REDIRECT
+
+        setTimeout(
+            function () {
+
+                window.location.href =
+                    "../login/login.html";
+
+            },
+            1500
+        );
+
+    }
+);
