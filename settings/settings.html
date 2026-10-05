@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Mudarris - Dashboard</title>
+
+    <link rel="stylesheet" href="settings.css">
+
+</head>
+
+
+<body>
+
+    <div class="mainCountainer"> 
+
+
+
+
+        <!-- ================= HEADER ================= -->
+
+        
+        <!-- ================= MAIN ================= -->
+
+                <!-- Main Content -->
+        <main class="main-content" id="main">
+
+            <div class="settings-container">
+
+                <!-- SETTINGS HEADER -->
+                <div class="settings-header">
+                    <h1 id="settingsTitle">Settings</h1>
+                    <p id="settingsDescription">Manage your account and preferences</p>
+                </div>
+
+
+                <!-- PROFILE -->
+                <section class="settings-section" id="profileSection">
+
+                    <h2 class="section-title">Profile</h2>
+
+                    <div class="form-group">
+                        <label for="teacherName">Name</label>
+                        <input type="text" id="teacherName" class="settings-input" placeholder="Enter your name">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="teacherEmail">Email</label>
+                        <input type="email" id="teacherEmail" class="settings-input" placeholder="Enter your email">
+                    </div>
+
+                    <button type="button" id="saveProfileBtn">Save Changes</button>
+
+                    <p id="profileMessage"></p>
+
+                </section>
+
+
+                <!-- NOTIFICATIONS -->
+                <section class="settings-section" id="notificationsSection">
+
+                    <h2 class="section-title">Notifications</h2>
+
+                    <div class="setting-row">
+                        <div class="setting-info">
+                            <h3>Email Notifications</h3>
+                            <p>Receive important notifications by email.</p>
+                        </div>
+
+                        <label class="switch">
+                            <input type="checkbox" id="emailNotifications">
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+
+                    <div class="setting-row">
+                        <div class="setting-info">
+                            <h3>Assignment Notifications</h3>
+                            <p>Get notified when students submit assignments.</p>
+                        </div>
+
+                        <label class="switch">
+                            <input type="checkbox" id="assignmentNotifications">
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+
+                </section>
+
+
+                <!-- SECURITY -->
+                <section class="settings-section" id="securitySection">
+
+                    <h2 class="section-title">Security</h2>
+
+                    <div class="setting-row">
+                        <div class="setting-info">
+                            <h3>Change Password</h3>
+                            <p>Update your account password.</p>
+                        </div>
+
+                        <button type="button" id="changePasswordBtn" class="secondary-btn">
+                            Change Password
+                        </button>
+                    </div>
+
+                    <!-- PASSWORD FORM (hidden until the button is clicked) -->
+                    <div id="passwordForm" style="display: none;">
+
+                        <div class="form-group">
+                            <label for="currentPassword">Current Password</label>
+                            <input type="password" id="currentPassword" class="settings-input"
+                                placeholder="Enter current password" autocomplete="current-password">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="newPassword">New Password</label>
+                            <input type="password" id="newPassword" class="settings-input"
+                                placeholder="Enter new password" autocomplete="new-password">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="confirmPassword">Confirm Password</label>
+                            <input type="password" id="confirmPassword" class="settings-input"
+                                placeholder="Confirm new password" autocomplete="new-password">
+                        </div>
+
+                        <button type="button" id="savePasswordBtn">Save Password</button>
+
+                        <p id="passwordMessage"></p>
+
+                    </div>
+
+                </section>
+
+
+                <!-- APPEARANCE -->
+                <section class="settings-section" id="appearanceSection">
+
+                    <h2 class="section-title">Appearance</h2>
+
+                    <div class="setting-row">
+                        <div class="setting-info">
+                            <h3>Dark Mode</h3>
+                            <p>Change the appearance of EduTrack.</p>
+                        </div>
+
+                        <label class="switch">
+                            <input type="checkbox" id="darkModeToggle">
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+
+                </section>
+
+            </div>
+
+        </main>
+
+       
+    </div>
+    <script type="module">
+    import { userId } from "../layout.js";
+</script>
+    <script type="module" src="settings.js">
+    </script>
+
+</body>
+
+</html>
