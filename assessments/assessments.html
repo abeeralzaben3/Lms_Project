@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Assessments</title>
+    <link rel="stylesheet" href="./assessments.css">
+</head>
+
+<body>
+
+    <div class="mainCountainer">
+
+       <!-- ================= HEADER ================= -->
+
+        <header class="header">
+
+            <div class="headerCountent">
+
+
+                <!-- ACCOUNT -->
+
+                <div class="account" id="account">
+
+                    <div class="logo size" id="logo">
+                        MH
+                    </div>
+
+
+                    <div class="headerName size" id="headerName">
+                        Muhammad
+                    </div>
+
+
+                    <div>
+
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+
+                            <path d="m6 9 6 6 6-6"></path>
+
+                        </svg>
+
+                    </div>
+
+
+                    <!-- ACCOUNT MENU -->
+
+                    <div class="accountMinu" id="accountMinu">
+
+
+                        <p class="options" id="settings" >
+
+                            Settings
+
+                        </p>
+
+
+                        <p class="options" id="logout">
+
+                            Log out
+
+                        </p>
+
+
+                    </div>
+
+                </div>
+
+
+                <!-- SEARCH -->
+
+                <div class="search">
+
+                    <button class="icons btn" id="searchBtn">
+               <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+
+                            <path d="m21 21-4.34-4.34"></path>
+
+                            <circle cx="11" cy="11" r="8">
+                            </circle>
+
+                        </svg>
+
+                    </button>
+
+
+                    <input type="text" class="searchInput" id="searchInput" placeholder="Students Search">
+
+                </div>
+
+
+                <!-- BURGER -->
+
+                <div class="burgerMinu" id="burgerMinu">
+
+                    <span class="borderMinu"></span>
+                    <span class="borderMinu"></span>
+                    <span class="borderMinu"></span>
+
+                </div>
+
+            </div>
+
+        </header>
+
+
+        <!-- ================= SIDEBAR ================= -->
+
+        <aside class="sideBar" id="sideBar">
+
+
+            <div class="sideHeader" id="sideHeader">
+
+
+                <div class="role">
+                    T
+                </div>
+
+
+                <p class="techName" id="techName">
+
+                    Muhammad Alshawabkeh
+
+                </p>
+
+            </div>
+
+
+            <nav class="nav">
+
+                <ul class="linksCount">
+
+
+                    <li class="liLinks" id="dashboard">
+
+                        <!-- href="./index.html"> -->
+                            Dashboard
+                        
+
+                    </li>
+
+
+                    <li class="liLinks" id="students">
+
+                        <!-- href="../Student/students.html"> -->
+                            Students
+                        
+
+                    </li>
+
+
+                    <li class="liLinks" id="assessments">
+
+                        <!-- href="../Assessments/index.html"> -->
+                            Assessments
+                        
+
+                    </li>
+
+
+                    <li class="liLinks" id="reports">
+
+                         <!-- href="../Reports/index.html"> -->
+                            Reports
+                       
+                    </li>
+
+                </ul>
+
+            </nav>
+
+        </aside>
+
+
+        <!-- ============== PAGE CONTENT ============== -->
+
+        <main>
+
+            <div class="pageHeader">
+                <h1>Assessments</h1>
+                <div>
+                    <button id="addCourse">+ Add Course</button>
+                    <button id="addAssessment">+ Add Assessment</button>
+                </div>
+            </div>
+
+           <section>
+    <h2>Courses</h2>
+    <div id="coursesList"></div>
+</section>
+
+<section>
+    <h2>Assessments</h2>
+    <div id="assessmentsList"></div>
+</section>
+
+<section id="studentsSection">
+    <h2>Students</h2>
+    <div id="studentsList"></div>
+    <button id="saveMarks">Save Marks</button>
+</section>
+
+        </main>
+
+    </div>
+
+
+    <div id="messagePopup" class="message-popup"></div>
+
+
+    <!-- Add Course -->
+    <div id="courseModal" style="display: none;">
+        <div>
+            <button id="closeCourseModal">X</button>
+            <h2>Add Course</h2>
+
+            <form id="courseForm">
+                <label for="courseName">Course Name</label>
+                <input type="text" id="courseName" placeholder="Course name">
+
+                <button type="submit">Add</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Add Assessment -->
+    <div id="assessmentModal" style="display: none;">
+        <div>
+            <button id="closeModal">X</button>
+            <h2>Add Assessment</h2>
+
+            <form id="assessmentForm">
+
+                <label for="assessmentName">Assessment Name</label>
+                <input type="text" id="assessmentName" placeholder="Assessment name">
+
+                <label for="type">Type</label>
+                <select id="type">
+                    <option value="task">Task</option>
+                    <option value="project">Project</option>
+                </select>
+
+                <label for="maxScore">Maximum Score</label>
+                <input type="number" id="maxScore" value="100">
+
+                <button type="submit">Add</button>
+
+            </form>
+        </div>
+    </div>
+
+    <!-- Update Course -->
+    <div id="editCourseModal" style="display: none;">
+        <div>
+            <button id="closeEditCourseModal">X</button>
+            <h2>Update Course</h2>
+
+            <form id="editCourseForm">
+                <label for="editCourseName">Course Name</label>
+                <input type="text" id="editCourseName" placeholder="Course name" required>
+
+                <button type="submit">Save</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Update Assessment -->
+    <div id="editAssessmentModal" style="display: none;">
+        <div>
+            <button id="closeEditAssessmentModal">X</button>
+            <h2>Update Assessment</h2>
+
+            <form id="editAssessmentForm">
+                <label for="editAssessmentName">Assessment Name</label>
+                <input type="text" id="editAssessmentName" placeholder="Assessment name" required>
+
+                <label for="editAssessmentType">Type</label>
+                <select id="editAssessmentType">
+                    <option value="task">Task</option>
+                    <option value="project">Project</option>
+                </select>
+
+                <label for="editAssessmentMaxScore">Maximum Score</label>
+                <input type="number" id="editAssessmentMaxScore" min="1" required>
+
+                <button type="submit">Save</button>
+            </form>
+        </div>
+    </div>
+
+
+    <script type="module" src="./assessments.js"></script>
+</body>
+
+</html>
