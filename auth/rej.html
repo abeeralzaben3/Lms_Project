@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1">
+
+    <title>
+        Create account — Mudarris
+    </title>
+
+
+    <link
+        rel="preconnect"
+        href="https://fonts.googleapis.com">
+
+
+    <link
+        rel="preconnect"
+        href="https://fonts.gstatic.com"
+        crossorigin>
+
+
+    <link
+        href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap"
+        rel="stylesheet">
+
+
+    <link
+        rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+
+    <link
+        rel="stylesheet"
+        href="style.css">
+
+</head>
+
+
+<body>
+
+
+    <main class="auth">
+
+
+        <!-- ================= PANEL ================= -->
+
+        <aside
+            class="auth__panel"
+            aria-hidden="true">
+
+
+            <div class="small-circle"></div>
+
+
+            <div class="auth__panel-content">
+
+
+                <div class="logo logo--white">
+
+                    <i class="fa-solid fa-graduation-cap"></i>
+
+                    <span class="logo__text">
+                        Mudarris
+                    </span>
+
+                </div>
+
+
+                <h2>
+                    Manage everything with ease
+                </h2>
+
+
+                <p>
+                    Create your account and start recording
+                    grades and attendance today.
+                </p>
+
+
+                <div class="panel-icons">
+
+                    <i class="fa-solid fa-book-open"></i>
+
+                    <i class="fa-solid fa-graduation-cap"></i>
+
+                </div>
+
+            </div>
+
+
+            <div class="info-card second-card">
+
+                <span>
+                    Attendance Rate
+                </span>
+
+
+                <strong>
+
+                    94%
+
+                    <i class="fa-solid fa-chart-line"></i>
+
+                </strong>
+
+            </div>
+
+        </aside>
+
+
+        <!-- ================= FORM ================= -->
+
+        <section class="auth__form-side">
+
+
+            <div class="auth__box">
+
+
+                <div class="logo logo--brand">
+
+                    <i class="fa-solid fa-graduation-cap"></i>
+
+                    <span class="logo__text">
+                        Mudarris
+                    </span>
+
+                </div>
+
+
+                <h1 class="auth__title">
+                    Create your account
+                </h1>
+
+
+                <p class="auth__subtitle">
+                    Get started in less than a minute
+                </p>
+
+
+                <div
+                    class="form-error"
+                    id="formError"
+                    role="alert">
+                </div>
+
+
+                <form
+                    id="registerForm"
+                    novalidate>
+
+
+                    <!-- FULL NAME -->
+
+                    <div class="field">
+
+                        <label for="fullName">
+                            Full name
+                        </label>
+
+
+                        <div class="input-wrap">
+
+                            <input
+                                type="text"
+                                id="fullName"
+                                name="fullName"
+                                class="input-field"
+                                placeholder="e.g. Ahmad Mohammad"
+                                autocomplete="name">
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- EMAIL + PHONE -->
+
+                    <div class="row">
+
+
+                        <div class="field">
+
+                            <label for="email">
+                                Email
+                            </label>
+
+
+                            <div class="input-wrap">
+
+                                <input
+                                    type="email"
+                                    id="email"
+                                    name="email"
+                                    class="input-field"
+                                    placeholder="name@example.com"
+                                    autocomplete="email">
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="field">
+
+                            <label for="phone">
+                                Phone number
+                            </label>
+
+
+                            <div class="input-wrap">
+
+                                <input
+                                    type="tel"
+                                    id="phone"
+                                    name="phone"
+                                    class="input-field"
+                                    placeholder="0790000000"
+                                    autocomplete="tel">
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- PASSWORD -->
+
+                    <div class="field">
+
+                        <label for="password">
+                            Password
+                        </label>
+
+
+                        <div class="input-wrap">
+
+                            <input
+                                type="password"
+                                id="password"
+                                name="password"
+                                class="input-field"
+                                placeholder="At least 8 characters"
+                                autocomplete="new-password">
+
+
+                            <button
+                                type="button"
+                                class="toggle-pass"
+                                aria-label="Toggle password visibility">
+
+                                <i class="fa-regular fa-eye"></i>
+
+                            </button>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- TERMS -->
+
+                    <div
+                        class="field"
+                        style="margin-bottom:12px">
+
+                        <label class="check">
+
+                            <input
+                                type="checkbox"
+                                id="terms"
+                                name="terms"
+                                class="check-input">
+
+                            <span>
+                                I agree to the terms and privacy policy
+                            </span>
+
+                        </label>
+
+                    </div>
+
+
+                    <!-- SUBMIT -->
+
+                    <button
+                        type="submit"
+                        class="btn btn-primary"
+                        id="submitBtn">
+
+                        <span class="btn-label">
+
+                            <i class="fa-solid fa-user-plus"></i>
+
+                            Create account
+
+                        </span>
+
+                    </button>
+
+                </form>
+
+
+                <p class="switch">
+
+                    Already have an account?
+
+                    <a
+                        href="login.html"
+                        class="login-link">
+
+                        Sign in
+
+                    </a>
+
+                </p>
+
+            </div>
+
+        </section>
+
+    </main>
+
+
+    <script
+        type="module"
+        src="rej.js">
+    </script>
+
+</body>
+
+</html>

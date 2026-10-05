@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Reports</title>
+
+    <link rel="stylesheet" href="reports.css">
+</head>
+
+<body>
+
+    <div class="mainCountainer">
+
+        <!-- ================= SIDEBAR ================= -->
+
+        <aside class="sideBar" id="sideBar">
+
+            <div class="sideHeader">
+
+                <div class="role">T</div>
+
+            </div>
+
+            <nav class="nav">
+
+                <ul class="linksCount">
+
+                    <li class="liLinks">
+                        <a href="../homePage/index.html">
+                            Dashboard
+                        </a>
+                    </li>
+
+                    <li class="liLinks">
+                        <a href="../Student/students.html">
+                            Students
+                        </a>
+                    </li>
+
+                    <li class="liLinks">
+                        <a href="../Assessments/index.html">
+                            Assessments
+                        </a>
+                    </li>
+
+                    <li class="liLinks active">
+                        <a href="./index.html">
+                            Reports
+                        </a>
+                    >
+
+                    <li class="liLinks">
+                        <a href="../Setting/index.html">
+                            Settings
+                        </a>
+                    </li>
+
+                </ul>
+
+            </nav>
+
+        </aside>
+
+
+        <!-- ================= HEADER ================= -->
+
+        <header class="header">
+
+            <div class="headerCountent">
+
+                <!-- ACCOUNT -->
+
+                <div class="account" id="account">
+
+                    <div class="logo" id="logo"></div>
+
+                    <div class="headerName" id="name"></div>
+
+                    <div>
+
+                        <svg xmlns="http://www.w3.org/2000/svg"
+                            width="24"
+                            height="24"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            stroke-width="2"
+                            stroke-linecap="round"
+                            stroke-linejoin="round">
+
+                            <path d="m6 9 6 6 6-6"></path>
+
+                        </svg>
+
+                    </div>
+
+
+                    <div class="accountMinu" id="accountMinu">
+
+                        <p class="options">
+
+                            <a href="../Setting/index.html">
+                                Settings
+                            </a>
+
+                        </p>
+
+                        <p class="options" id="logout">
+                            Logout
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <!-- SEARCH -->
+
+                <div class="search">
+
+                    <button
+                        class="searchBtn"
+                        id="searchBtn"
+                        type="button"
+                        aria-label="Search">
+
+                        <svg xmlns="http://www.w3.org/2000/svg"
+                            width="24"
+                            height="24"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            stroke-width="2"
+                            stroke-linecap="round"
+                            stroke-linejoin="round">
+
+                            <path d="m21 21-4.34-4.34"></path>
+
+                            <circle cx="11" cy="11" r="8"></circle>
+
+                        </svg>
+
+                    </button>
+
+                    <input
+                        type="text"
+                        class="searchInput"
+                        id="searchInput"
+                        placeholder="Search">
+
+                </div>
+
+
+                <!-- BURGER -->
+
+                <div class="burgerMinu" id="burgerMinu">
+
+                    <span class="borderMinu"></span>
+                    <span class="borderMinu"></span>
+                    <span class="borderMinu"></span>
+
+                </div>
+
+            </div>
+
+        </header>
+
+
+        <!-- ================= MAIN ================= -->
+
+        <main>
+
+            <!-- PAGE HEADER -->
+
+            <div class="pageHeader">
+
+                <div>
+
+                    <h1>Reports</h1>
+
+                    <p>
+                        View course performance and student results.
+                    </p>
+
+                </div>
+
+
+                <div class="courseSelectBox">
+
+                    <label for="courseSelect">
+                        Select Course
+                    </label>
+
+                    <select id="courseSelect">
+
+                        <option value="">
+                            Select a course
+                        </option>
+
+                    </select>
+
+                </div>
+
+            </div>
+
+
+            <!-- MESSAGE -->
+
+            <div id="reportMessage" class="reportMessage"></div>
+
+
+            <!-- ================= REPORT ================= -->
+
+            <div id="reportContent" style="display: none;">
+
+
+                <!-- ================= SUMMARY ================= -->
+
+                <section class="summary">
+
+                    <div class="summaryCard">
+
+                        <h3>Total Students</h3>
+
+                        <p id="sumStudents">
+                            0
+                        </p>
+
+                    </div>
+
+
+                    <div class="summaryCard">
+
+                        <h3>Class Average</h3>
+
+                        <p id="sumAverage">
+                            0%
+                        </p>
+
+                    </div>
+
+
+                    <div class="summaryCard">
+
+                        <h3>Highest</h3>
+
+                        <p id="sumHighest">
+                            0%
+                        </p>
+
+                    </div>
+
+
+                    <div class="summaryCard">
+
+                        <h3>Lowest</h3>
+
+                        <p id="sumLowest">
+                            0%
+                        </p>
+
+                    </div>
+
+
+                    <div class="summaryCard">
+
+                        <h3>Pass Rate</h3>
+
+                        <p id="sumPass">
+                            0%
+                        </p>
+
+                    </div>
+
+                </section>
+
+
+                <!-- ================= CHARTS ================= -->
+
+                <section class="charts">
+
+                    <div class="chartCard">
+
+                        <h2>
+                            Grade Distribution
+                        </h2>
+
+                        <canvas
+                            id="distributionChart">
+                        </canvas>
+
+                    </div>
+
+
+                    <div class="chartCard">
+
+                        <h2>
+                            Assessment Average
+                        </h2>
+
+                        <canvas
+                            id="assessmentChart">
+                        </canvas>
+
+                    </div>
+
+                </section>
+
+
+                <!-- ================= STUDENT TABLE ================= -->
+
+                <section class="tableSection">
+
+                    <h2>
+                        Student Performance
+                    </h2>
+
+
+                    <div class="tableContainer">
+
+                        <table>
+
+                            <thead>
+
+                                <tr>
+
+                                    <th>
+                                        Student
+                                    </th>
+
+                                    <th>
+                                        Student ID
+                                    </th>
+
+                                    <th>
+                                        Graded
+                                    </th>
+
+                                    <th>
+                                        Total Score
+                                    </th>
+
+                                    <th>
+                                        Percentage
+                                    </th>
+
+                                    <th>
+                                        Grade
+                                    </th>
+
+                                </tr>
+
+                            </thead>
+
+
+                            <tbody id="reportRows">
+
+                            </tbody>
+
+                        </table>
+
+                    </div>
+
+                </section>
+
+            </div>
+
+        </main>
+
+    </div>
+
+
+    <!-- CHART.JS -->
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <!-- REPORT JS -->
+
+    <script src="./reports.js"></script>
+
+</body>
+
+</html>
