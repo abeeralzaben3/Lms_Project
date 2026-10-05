@@ -37,7 +37,6 @@
       "name": "Sara Mohammad",
       "email": "saram@example.com",
       "phone":"0790855498",
-
       "password": "12348",
       "role": "Instructor"
     }
@@ -133,7 +132,8 @@
       "attendance": [
         { "date": "2026-10-01", "status": "present" },
         { "date": "2026-10-02", "status": "present" },
-        { "date": "2026-10-03", "status": "absent" }
+        { "date": "2026-10-03", "status": "absent" },
+        
       ],
       "archived": false
     },
