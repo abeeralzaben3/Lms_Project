@@ -34,49 +34,11 @@ const userEmail = userCookie.getCookie("userEmail")
 const userId = userCookie.getCookie("userId")
 
 
-headerName.textContent = currentUser;
-techName.textContent = currentUser;
-logo.textContent = currentUser.slice(0, 2).toUpperCase();
-
 // ==================minu and side=======================
 
-account.addEventListener("click", function (e) {
-    accountMinu.classList.toggle("activeAccount");
-})
-
-burgerMinu.addEventListener('click', function (e) {
-    sideBar.classList.toggle("activeSide");
 
 
-});
-// =================== LINKS ===================
 
-dashboard.addEventListener("click", function () {
-    window.location.href = "./dashboard.html";
-});
-
-
-studentsli.addEventListener("click", function () {
-    window.location.href = "../student/students.html";
-});
-
-
-assessments.addEventListener("click", function () {
-    window.location.href = "../assessments/assessments.html";
-});
-
-
-reports.addEventListener("click", function () {
-    window.location.href = "../reports/reports.html";
-});
-
-logout.addEventListener("click", function () {
-    window.location.href = "../login/login.html";
-});
-
-settings.addEventListener("click", function () {
-    window.location.href = "../settings/settings.html";
-});
 // =================== Get My Courses ===================
 
 async function myCourses(userId) {

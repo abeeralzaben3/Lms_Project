@@ -184,7 +184,7 @@
 
         <!-- ================= MAIN ================= -->
 
-        <main class="content" id="main">
+        <main class="content">
 
 
             <!-- MAIN HEADER -->
@@ -459,7 +459,9 @@
     <!-- IMPORTANT:
          module because script.js imports fetchStudents.js
     -->
-
+    <script type="module">
+    import { userId } from "../layout.js";
+</script>
     <script type="module" src="dashboard.js">
     </script>
 
