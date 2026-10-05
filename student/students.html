@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Mudarris - Students</title>
+
+    <link rel="stylesheet" href="./students.css">
+
+</head>
+
+
+<body>
+
+    <div class="mainCountainer">
+
+
+        <!-- ================= HEADER ================= -->
+
+        <header class="header">
+
+            <div class="headerCountent">
+
+
+                <!-- ACCOUNT -->
+
+                <div class="account" id="account">
+
+                    <div class="logo size" id="logo">
+                        MH
+                    </div>
+
+                    <div class="headerName size" id="headerName">
+                        Muhammad
+                    </div>
+
+                    <div>
+
+                        <svg xmlns="http://www.w3.org/2000/svg"
+                            width="24"
+                            height="24"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            stroke-width="2"
+                            stroke-linecap="round"
+                            stroke-linejoin="round">
+
+                            <path d="m6 9 6 6 6-6"></path>
+
+                        </svg>
+
+                    </div>
+
+
+                    <!-- ACCOUNT MENU -->
+
+                    <div class="accountMinu" id="accountMinu">
+
+                        <p class="options" id="settings">
+                            Settings
+                        </p>
+
+                        <p class="options" id="logout">
+                            Log out
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <!-- SEARCH -->
+
+                <div class="search">
+
+                    <button class="icons searchBtn" id="searchBtn" type="button">
+
+                        <svg xmlns="http://www.w3.org/2000/svg"
+                            width="24"
+                            height="24"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            stroke-width="2"
+                            stroke-linecap="round"
+                            stroke-linejoin="round">
+
+                            <path d="m21 21-4.34-4.34"></path>
+
+                            <circle cx="11" cy="11" r="8"></circle>
+
+                        </svg>
+
+                    </button>
+
+
+                    <input
+                        type="text"
+                        class="searchInput"
+                        id="searchInput"
+                        placeholder="Students Search">
+
+                </div>
+
+
+                <!-- BURGER -->
+
+                <div class="burgerMinu" id="burgerMinu">
+
+                    <span class="borderMinu"></span>
+                    <span class="borderMinu"></span>
+                    <span class="borderMinu"></span>
+
+                </div>
+
+            </div>
+
+        </header>
+
+
+        <!-- ================= SIDEBAR ================= -->
+
+        <aside class="sideBar" id="sideBar">
+
+            <div class="sideHeader" id="sideHeader">
+
+                <div class="role">
+                    T
+                </div>
+
+                <p class="techName" id="techName">
+                    Muhammad Alshawabkeh
+                </p>
+
+            </div>
+
+
+            <nav class="nav">
+
+                <ul class="linksCount">
+
+                    <li class="liLinks" id="dashboard">
+                        Dashboard
+                    </li>
+
+                    <li class="liLinks active" id="students">
+                        Students
+                    </li>
+
+                    <li class="liLinks" id="assessments">
+                        Assessments
+                    </li>
+
+                    <li class="liLinks" id="reports">
+                        Reports
+                    </li>
+
+                </ul>
+
+            </nav>
+
+        </aside>
+
+
+        <!-- ================= MAIN ================= -->
+
+        <main class="content" id="main">
+
+            <section>
+
+                <div class="Containner">
+
+
+                    <!-- PAGE HEADER -->
+
+                    <div class="MainHeader">
+
+                        <h2>
+                            <span>ALL</span> Students
+                        </h2>
+
+
+                        <div class="form-inline">
+
+                            <a
+                                class="btn btn-outline-success"
+                                id="addStudentBtn"
+                                href="./addnew.html">
+
+                                Add
+
+                            </a>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- STUDENTS -->
+
+                    <div
+                        class="StudentData"
+                        id="StudentData">
+
+                    </div>
+
+
+                </div>
+
+            </section>
+
+        </main>
+
+    </div>
+
+
+    <script
+        type="module"
+        src="./students.js">
+    </script>
+
+</body>
+
+</html>

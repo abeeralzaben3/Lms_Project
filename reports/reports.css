@@ -1,0 +1,220 @@
+:root {
+    --primary: #6366f1;
+    --violet: #8b5cf6;
+    --coral: #fb7185;
+    --success: #10b981;
+    --error: #f43f5e;
+
+    --bg: #f5f6ff;
+    --card: #ffffff;
+    --text: #1e1b4b;
+    --muted: #6b7280;
+    --border: #e2e4f6;
+
+    --radius: 14px;
+
+    --gradient: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+}
+
+a {
+    text-decoration: none;
+    color: #20204D;
+}
+
+
+/* =========================== layout ============================ */
+.mainCountainer {
+    min-height: 100vh;
+    display: grid;
+    grid-template-columns: 260px 1fr;
+    grid-template-rows: auto 1fr;
+    grid-template-areas:
+        "side header"
+        "side main";
+}
+
+.mainCountainer > main {
+    grid-area: main;
+    min-width: 0;
+    width: 100%;
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 30px 20px;
+}
+
+/* =========================== page sections ============================ */
+section {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 20px;
+    margin-bottom: 20px;
+}
+
+h2 {
+    margin-bottom: 15px;
+}
+
+
+/* =========================== reports ============================ */
+
+/* course picker */
+.report-controls {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.report-controls select {
+    padding: 10px 14px;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    background: var(--card);
+    color: var(--text);
+    min-width: 180px;
+}
+
+/* info message (no assessments, errors) */
+.report-message {
+    display: none;
+    padding: 14px 16px;
+    margin-bottom: 20px;
+    border-radius: var(--radius);
+    background: var(--card);
+    border: 1px solid var(--border);
+    color: var(--muted);
+}
+
+/* summary cards */
+.summary {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 14px;
+    margin-bottom: 20px;
+}
+
+.summary-card {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    padding: 16px;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    box-shadow: 0 2px 8px rgba(30, 27, 75, 0.05);
+}
+
+.summary-label {
+    font-size: 13px;
+    color: var(--muted);
+}
+
+.summary-card strong {
+    font-size: 24px;
+    color: var(--primary);
+}
+
+/* charts */
+.charts {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 20px;
+}
+
+.chart-wrap {
+    position: relative;
+    height: 280px;
+}
+
+/* table */
+.table-wrap {
+    overflow-x: auto;
+}
+
+.report-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 14px;
+}
+
+.report-table th,
+.report-table td {
+    padding: 12px 10px;
+    text-align: left;
+    border-bottom: 1px solid var(--border);
+    white-space: nowrap;
+}
+
+.report-table th {
+    font-size: 13px;
+    color: var(--muted);
+    font-weight: bold;
+}
+
+.report-table .muted {
+    color: var(--muted);
+}
+
+/* letter grade pills */
+.grade-pill {
+    display: inline-block;
+    min-width: 32px;
+    padding: 4px 10px;
+    border-radius: 999px;
+    text-align: center;
+    font-weight: bold;
+    font-size: 13px;
+    color: white;
+}
+
+.grade-A { background: #10b981; }
+.grade-B { background: #6366f1; }
+.grade-C { background: #8b5cf6; }
+.grade-D { background: #f59e0b; }
+.grade-F { background: #f43f5e; }
+
+
+/* =========================== tablet / phone ============================ */
+@media (max-width: 900px) {
+    .mainCountainer {
+        grid-template-columns: 1fr;
+        grid-template-areas:
+            "header"
+            "main";
+    }
+
+    .charts {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 500px) {
+    .mainCountainer > main {
+        padding: 20px 12px;
+    }
+
+    section {
+        padding: 15px;
+    }
+
+    .report-controls {
+        width: 100%;
+    }
+
+    .report-controls select {
+        flex: 1;
+        min-width: 0;
+    }
+}

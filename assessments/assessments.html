@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Assessments</title>
+    <link rel="stylesheet" href="./assessments.css">
+</head>
+
+<body>
+
+    <div class="mainCountainer">
+
+        <!-- header + sidebar are added automatically by layout.js -->
+
+        <!-- ============== PAGE CONTENT ============== -->
+
+        <main>
+
+            <div class="pageHeader">
+                <h1>Assessments</h1>
+                <div>
+                    <button id="addCourse">+ Add Course</button>
+                    <button id="addAssessment">+ Add Assessment</button>
+                </div>
+            </div>
+
+            <!-- Courses -->
+            <section>
+                <h2>Courses</h2>
+                <div id="courses"><!-- Courses will be added by JavaScript --></div>
+            </section>
+
+            <!-- Assessments -->
+            <section>
+                <h2>Assessments</h2>
+                <div id="assessments"><!-- Assessments will be added by JavaScript --></div>
+            </section>
+
+            <!-- Students -->
+            <section id="studentsSection">
+                <h2>Students</h2>
+                <div id="students"><!-- Students will be added by JavaScript --></div>
+                <button id="saveMarks">Save Marks</button>
+            </section>
+
+        </main>
+
+    </div>
+
+
+    <div id="messagePopup" class="message-popup"></div>
+
+
+    <!-- Add Course -->
+    <div id="courseModal" style="display: none;">
+        <div>
+            <button id="closeCourseModal">X</button>
+            <h2>Add Course</h2>
+
+            <form id="courseForm">
+                <label for="courseName">Course Name</label>
+                <input type="text" id="courseName" placeholder="Course name">
+
+                <button type="submit">Add</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Add Assessment -->
+    <div id="assessmentModal" style="display: none;">
+        <div>
+            <button id="closeModal">X</button>
+            <h2>Add Assessment</h2>
+
+            <form id="assessmentForm">
+
+                <label for="assessmentName">Assessment Name</label>
+                <input type="text" id="assessmentName" placeholder="Assessment name">
+
+                <label for="type">Type</label>
+                <select id="type">
+                    <option value="task">Task</option>
+                    <option value="project">Project</option>
+                </select>
+
+                <label for="maxScore">Maximum Score</label>
+                <input type="number" id="maxScore" value="100">
+
+                <button type="submit">Add</button>
+
+            </form>
+        </div>
+    </div>
+
+    <!-- Update Course -->
+    <div id="editCourseModal" style="display: none;">
+        <div>
+            <button id="closeEditCourseModal">X</button>
+            <h2>Update Course</h2>
+
+            <form id="editCourseForm">
+                <label for="editCourseName">Course Name</label>
+                <input type="text" id="editCourseName" placeholder="Course name" required>
+
+                <button type="submit">Save</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Update Assessment -->
+    <div id="editAssessmentModal" style="display: none;">
+        <div>
+            <button id="closeEditAssessmentModal">X</button>
+            <h2>Update Assessment</h2>
+
+            <form id="editAssessmentForm">
+                <label for="editAssessmentName">Assessment Name</label>
+                <input type="text" id="editAssessmentName" placeholder="Assessment name" required>
+
+                <label for="editAssessmentType">Type</label>
+                <select id="editAssessmentType">
+                    <option value="task">Task</option>
+                    <option value="project">Project</option>
+                </select>
+
+                <label for="editAssessmentMaxScore">Maximum Score</label>
+                <input type="number" id="editAssessmentMaxScore" min="1" required>
+
+                <button type="submit">Save</button>
+            </form>
+        </div>
+    </div>
+
+
+    <!-- layout.js builds the header, search, burger and sidebar -->
+       <script type="module">
+        import { userId } from "../layout.js";
+    </script>
+    <script type="module" src="./assessments.js"></script>
+</body>
+
+</html>
