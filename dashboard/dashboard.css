@@ -1,0 +1,405 @@
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    text-decoration: none;
+}
+
+body {
+    font-family:
+        'Lucida Sans',
+        'Lucida Sans Regular',
+        'Lucida Grande',
+        'Lucida Sans Unicode',
+        Geneva,
+        Verdana,
+        sans-serif;
+
+    line-height: 1.7;
+
+    background-color: #F5F6FF;
+
+    color: #20204D;
+}
+
+
+.btn {
+    border: none;
+}
+
+
+/* ==================================================
+   MAIN CONTAINER
+================================================== */
+
+.mainCountainer {
+
+    min-height: 100vh;
+
+    display: grid;
+
+    grid-template-columns: 1fr 4fr;
+
+    grid-template-rows: auto 1fr;
+
+    grid-template-areas:
+        "side header"
+        "side main";
+}
+
+
+
+
+/* ==================================================
+   MAIN
+================================================== */
+
+.mainHeader {
+
+    margin: 20px 10px;
+
+    display: flex;
+
+    justify-content: space-between;
+
+    color: #20204D;
+
+    gap: 20px;
+}
+
+
+.mainTitle h1 {
+
+    margin-bottom: 5px;
+}
+
+
+.mainTitle p {
+
+    color: #6b6b8a;
+}
+
+
+/* ==================================================
+   ATTENDANCE BUTTON
+================================================== */
+
+.attendanceBtn {
+
+    padding: 10px 18px;
+
+    background:
+        linear-gradient(
+            135deg,
+            #6558F5,
+            #9B3DF0
+        );
+
+    color: #FFFFFF;
+
+    height: 50px;
+
+    border-radius: 20px;
+
+    align-self: end;
+
+    transition: 0.3s;
+
+    cursor: pointer;
+
+    box-shadow:
+        0 6px 18px
+        rgba(101, 88, 245, 0.25);
+}
+
+
+.attendanceBtn:hover {
+
+    background:
+        linear-gradient(
+            135deg,
+            #584BEF,
+            #8D32E8
+        );
+
+    box-shadow:
+        0 8px 22px
+        rgba(101, 88, 245, 0.35);
+
+    transform:
+        translateY(-2px);
+}
+
+
+/* ==================================================
+   CARDS
+================================================== */
+
+.cards {
+
+    display: flex;
+
+    gap: 10px;
+
+    padding: 20px;
+
+    flex-wrap: wrap;
+
+    width: 100%;
+
+    justify-content: space-around;
+}
+
+
+.card {
+
+    width: calc(50% - 5px);
+
+    display: flex;
+
+    border:
+        1px solid #E1E3F0;
+
+    background-color: #FFFFFF;
+
+    border-radius: 18px;
+
+    box-shadow:
+        0 6px 20px
+        rgba(101, 88, 245, 0.08);
+
+    transition: 0.3s;
+}
+
+
+.card:hover {
+
+    transform:
+        translateY(-4px);
+
+    box-shadow:
+        0 10px 25px
+        rgba(101, 88, 245, 0.15);
+
+    border-color:
+        rgba(101, 88, 245, 0.30);
+}
+
+
+.cardInfo {
+
+    width: 100%;
+
+    padding: 20px;
+}
+
+
+.cardTitle {
+
+    font-weight: bold;
+}
+
+
+.info {
+
+    width: 100%;
+
+    display: flex;
+
+    justify-content: space-between;
+
+    align-items: center;
+}
+
+
+/* ==================================================
+   ICONS
+================================================== */
+
+.icons {
+
+    width: 40px;
+
+    height: 40px;
+
+    border-radius: 50%;
+
+    background:
+        linear-gradient(
+            135deg,
+            #EEEAFE,
+            #E4DDFD
+        );
+
+    color: #6558F5;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    box-shadow:
+        0 3px 10px
+        rgba(101, 88, 245, 0.12);
+}
+
+
+/* ==================================================
+   CHARTS
+================================================== */
+
+.charts {
+
+    display: flex;
+
+    flex-wrap: wrap;
+
+    gap: 20px;
+
+    padding: 20px;
+}
+
+
+.chartCard {
+
+    flex: 1;
+
+    min-width: 300px;
+
+    background-color: #FFFFFF;
+
+    border:
+        1px solid #E1E3F0;
+
+    border-radius: 20px;
+
+    padding: 20px;
+
+    box-shadow:
+        0 6px 20px
+        rgba(101, 88, 245, 0.08);
+
+    display: flex;
+
+    flex-direction: column;
+
+    justify-content: center;
+
+    align-items: center;
+}
+
+
+.chartCard h2 {
+
+    color: #20204D;
+
+    font-size: 20px;
+
+    margin-bottom: 20px;
+}
+
+
+.chartContainer {
+
+    position: relative;
+
+    width: 100%;
+
+    height: 300px;
+
+    display: flex;
+
+    justify-content: center;
+
+    align-items: center;
+}
+
+
+/* ==================================================
+   MOBILE
+================================================== */
+
+@media (max-width: 640px) {
+
+    .mainCountainer {
+
+        min-height: 100vh;
+
+        display: grid;
+
+        grid-template-columns: 1fr;
+
+        grid-template-rows: 70px 1fr;
+
+        grid-template-areas:
+            "header"
+            "main";
+    }
+
+    /* MAIN */
+
+
+
+
+    /* HEADER */
+
+    .mainHeader {
+
+        margin: 20px 10px;
+
+        gap: 15px;
+
+        flex-direction: column;
+    }
+
+
+    .attendanceBtn {
+
+        align-self: flex-start;
+    }
+
+
+    /* CARDS */
+
+    .cards {
+
+        padding: 10px;
+
+        flex-direction: column;
+
+        gap: 15px;
+    }
+
+
+    .card {
+
+        width: 100%;
+    }
+
+
+    /* CHARTS */
+
+    .charts {
+
+        padding: 10px;
+
+        flex-direction: column;
+
+        gap: 15px;
+    }
+
+
+    .chartCard {
+
+        width: 100%;
+
+        min-width: 0;
+    }
+
+
+    .chartContainer {
+
+        height: 250px;
+    }
+}

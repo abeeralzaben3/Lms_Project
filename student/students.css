@@ -1,0 +1,493 @@
+/* =========================================
+   STUDENT PAGE — CLEAN RESPONSIVE CSS
+   Purple / Violet theme
+   ========================================= */
+
+:root {
+    --primary: #6558F5;
+    --violet: #9B3DF0;
+    --bg: #F5F6FF;
+    --surface: #FFFFFF;
+    --text: #20204D;
+    --muted: #6B7280;
+    --border: #E2E4F6;
+    --success: #10B981;
+    --danger: #F43F5E;
+    --gradient: linear-gradient(135deg, #6558F5 0%, #9B3DF0 100%);
+    --shadow: 0 10px 35px rgba(101, 88, 245, 0.08);
+    --radius: 16px;
+}
+
+/* Reset */
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+}
+
+html {
+    min-width: 320px;
+    scroll-behavior: smooth;
+}
+
+body {
+    margin: 0;
+    min-height: 100vh;
+    background: var(--bg);
+    color: var(--text);
+    font-family: "Lucida Sans", "Lucida Sans Regular", "Lucida Grande",
+        "Lucida Sans Unicode", Geneva, Verdana, sans-serif;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+}
+
+button,
+input,
+select,
+textarea {
+    font: inherit;
+}
+
+img {
+    display: block;
+    max-width: 100%;
+}
+
+/* Page layout: don't redefine the existing sidebar/header grid */
+.mainCountainer,
+.main,
+.main > section {
+    min-width: 0;
+    max-width: 100%;
+}
+
+.mainCountainer {
+    min-height: 100vh;
+}
+
+.main {
+    width: 100%;
+    min-height: 100vh;
+    padding: 24px;
+}
+
+.main > section {
+    width: 100%;
+}
+
+/* Main white panel */
+.Containner {
+    width: 100%;
+    max-width: 1200px;
+    min-width: 0;
+    margin: 0 auto;
+    padding: 28px;
+    display: flex;
+    flex-direction: column;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    box-shadow: var(--shadow);
+}
+
+/* Heading */
+.MainHeader {
+    width: 100%;
+    min-width: 0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 16px;
+    margin: 0 0 22px;
+    padding: 0 0 20px;
+    border-bottom: 1px solid #ECEBFA;
+}
+
+.MainHeader h2 {
+    min-width: 0;
+    margin: 0;
+    color: var(--text);
+    font-size: clamp(22px, 2.2vw, 28px);
+    font-weight: 700;
+    line-height: 1.3;
+    letter-spacing: -0.5px;
+}
+
+.MainHeader h2 span {
+    background: var(--gradient);
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.form-inline {
+    display: flex;
+    align-items: center;
+    margin: 0;
+}
+
+/* Add button */
+#addStudentBtn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 7px;
+    min-height: 44px;
+    padding: 10px 22px;
+    border: 0;
+    border-radius: 999px;
+    background: var(--gradient);
+    color: #fff;
+    font-size: 14px;
+    font-weight: 600;
+    text-decoration: none;
+    white-space: nowrap;
+    box-shadow: 0 6px 16px rgba(101, 88, 245, 0.28);
+    transition: transform .2s ease, box-shadow .2s ease, filter .2s ease;
+}
+
+#addStudentBtn::before {
+    content: "+";
+    font-size: 20px;
+    line-height: 1;
+}
+
+#addStudentBtn:hover {
+    color: #fff;
+    filter: brightness(.97);
+    transform: translateY(-2px);
+    box-shadow: 0 9px 22px rgba(101, 88, 245, .34);
+}
+
+#addStudentBtn:focus-visible {
+    outline: 3px solid rgba(101, 88, 245, .35);
+    outline-offset: 3px;
+}
+
+/* Student list */
+.StudentData {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 14px;
+    width: 100%;
+    min-width: 0;
+}
+
+/*
+   Student card:
+   Each direct child gets a grid cell.
+   minmax(0, ...) is important: it lets columns shrink.
+*/
+.StudentData .carddiv {
+    display: grid;
+    grid-template-columns:
+        52px
+        minmax(68px, auto)
+        minmax(90px, 1.1fr)
+        minmax(120px, 1fr)
+        minmax(0, auto);
+    align-items: center;
+    gap: 12px;
+    width: 100%;
+    min-width: 0;
+    max-width: 100%;
+    padding: 16px;
+    background: var(--surface);
+    border: 1px solid #E8E9F7;
+    border-left: 4px solid var(--primary);
+    border-radius: var(--radius);
+    box-shadow: 0 2px 8px rgba(101, 88, 245, .05);
+    transition: background .2s ease, box-shadow .2s ease, transform .2s ease;
+    animation: student-card-in .3s ease both;
+}
+
+.StudentData .carddiv:hover {
+    background: #FCFBFF;
+    box-shadow: 0 8px 22px rgba(101, 88, 245, .12);
+    transform: translateY(-1px);
+}
+
+@keyframes student-card-in {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* Avatar */
+.StudentData .carddiv img {
+    width: 48px;
+    height: 48px;
+    padding: 3px;
+    border-radius: 50%;
+    object-fit: cover;
+    background: var(--gradient);
+}
+
+/* Text must be allowed to shrink */
+.StudentData .carddiv > * {
+    min-width: 0;
+    max-width: 100%;
+}
+
+.StudentData .carddiv p {
+    margin: 0;
+    min-width: 0;
+    color: var(--text);
+    font-size: 14px;
+    line-height: 1.5;
+    overflow-wrap: anywhere;
+}
+
+.StudentData .carddiv p:nth-of-type(1) {
+    justify-self: start;
+    padding: 5px 9px;
+    border-radius: 8px;
+    background: #F1EFFF;
+    color: var(--primary);
+    font-family: Consolas, monospace;
+    font-size: 12px;
+    font-weight: 700;
+}
+
+.StudentData .carddiv p:nth-of-type(2) {
+    font-size: 15px;
+    font-weight: 700;
+}
+
+.StudentData .carddiv p:nth-of-type(3) {
+    color: var(--muted);
+    font-size: 13px;
+}
+
+.StudentData .carddiv p:nth-of-type(4) {
+    justify-self: start;
+    padding: 5px 10px;
+    border-radius: 999px;
+    background: rgba(16, 185, 129, .12);
+    color: #059669;
+    font-size: 12px;
+    font-weight: 600;
+    text-align: center;
+}
+
+/* Attendance states */
+.StudentData .carddiv.absent-card {
+    border-left-color: var(--danger);
+}
+
+.StudentData .carddiv.absent-card p:nth-of-type(4) {
+    background: rgba(244, 63, 94, .12);
+    color: var(--danger);
+}
+
+/* Buttons: wrapping is permitted rather than overflowing */
+.StudentData .carddiv .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 0;
+    max-width: 100%;
+    min-height: 38px;
+    padding: 7px 12px;
+    border: 1px solid currentColor;
+    border-radius: 12px;
+    background: transparent;
+    font-size: 13px;
+    font-weight: 600;
+    line-height: 1.35;
+    white-space: normal;
+    overflow-wrap: anywhere;
+    cursor: pointer;
+    transition: background .2s ease, color .2s ease, box-shadow .2s ease;
+}
+
+.StudentData .carddiv .btn-outline-danger {
+    color: var(--danger);
+    border-color: var(--danger);
+}
+
+.StudentData .carddiv .btn-outline-danger:hover {
+    color: #fff;
+    background: var(--danger);
+    box-shadow: 0 5px 14px rgba(244, 63, 94, .2);
+}
+
+.StudentData .carddiv .btn-outline-primary {
+    color: var(--primary);
+    border-color: var(--primary);
+}
+
+.StudentData .carddiv .btn-outline-primary:hover {
+    color: #fff;
+    background: var(--primary);
+    box-shadow: 0 5px 14px rgba(101, 88, 245, .2);
+}
+
+/* Empty state */
+.StudentData .noResults {
+    width: 100%;
+    padding: 40px 18px;
+    border: 2px dashed #E1E3F0;
+    border-radius: var(--radius);
+    background: #FAFAFF;
+    color: #9CA3AF;
+    text-align: center;
+}
+
+/* Laptop / narrow desktop */
+@media (max-width: 1200px) {
+    .main {
+        padding: 18px;
+    }
+
+    .Containner {
+        padding: 22px;
+    }
+
+    .StudentData .carddiv {
+        grid-template-columns:
+            46px
+            minmax(65px, auto)
+            minmax(80px, 1fr)
+            minmax(100px, 1fr);
+        gap: 10px;
+    }
+
+    /* Put action controls on a full-width row */
+    .StudentData .carddiv .btn {
+        justify-self: stretch;
+    }
+}
+
+/* Tablet */
+@media (max-width: 850px) {
+    .main {
+        padding: 14px;
+    }
+
+    .Containner {
+        padding: 20px;
+        border-radius: 16px;
+    }
+
+    .StudentData .carddiv {
+        grid-template-columns: 48px minmax(0, 1fr) minmax(0, 1fr);
+        gap: 12px;
+        padding: 15px;
+    }
+
+    .StudentData .carddiv img {
+        grid-row: span 2;
+    }
+
+    .StudentData .carddiv .btn {
+        width: 100%;
+    }
+}
+
+/* Phone */
+@media (max-width: 600px) {
+    .main {
+        padding: 10px;
+    }
+
+    .Containner {
+        padding: 15px;
+        border-radius: 14px;
+    }
+
+    .MainHeader {
+        align-items: stretch;
+        flex-direction: column;
+        gap: 12px;
+        margin-bottom: 18px;
+        padding-bottom: 16px;
+    }
+
+    .MainHeader h2 {
+        font-size: 22px;
+    }
+
+    .form-inline,
+    #addStudentBtn {
+        width: 100%;
+    }
+
+    .StudentData {
+        gap: 12px;
+    }
+
+    .StudentData .carddiv {
+        display: flex;
+        flex-direction: column;
+        align-items: stretch;
+        gap: 10px;
+        padding: 15px;
+    }
+
+    .StudentData .carddiv img {
+        flex: 0 0 auto;
+        align-self: center;
+        width: 58px;
+        height: 58px;
+    }
+
+    .StudentData .carddiv p {
+        width: 100%;
+        font-size: 14px;
+    }
+
+    .StudentData .carddiv p:nth-of-type(1),
+    .StudentData .carddiv p:nth-of-type(4) {
+        width: fit-content;
+        max-width: 100%;
+    }
+
+    .StudentData .carddiv p:nth-of-type(2),
+    .StudentData .carddiv p:nth-of-type(3) {
+        text-align: center;
+    }
+
+    .StudentData .carddiv .btn {
+        width: 100%;
+        min-height: 42px;
+    }
+}
+
+/* Small phone */
+@media (max-width: 380px) {
+    .main {
+        padding: 7px;
+    }
+
+    .Containner {
+        padding: 11px;
+    }
+
+    .MainHeader h2 {
+        font-size: 20px;
+    }
+
+    .StudentData .carddiv {
+        padding: 12px;
+        gap: 9px;
+    }
+
+    .StudentData .carddiv .btn {
+        padding: 9px 10px;
+        font-size: 12px;
+    }
+}
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: .01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: .01ms !important;
+        scroll-behavior: auto !important;
+    }
+}

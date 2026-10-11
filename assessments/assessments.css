@@ -1,0 +1,333 @@
+:root {
+    --primary: #6366f1;
+    --violet: #8b5cf6;
+    --coral: #fb7185;
+    --success: #10b981;
+    --error: #f43f5e;
+
+    --bg: #f5f6ff;
+    --card: #ffffff;
+    --text: #1e1b4b;
+    --muted: #6b7280;
+    --border: #e2e4f6;
+
+    --radius: 14px;
+
+    --gradient: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+}
+
+a {
+    text-decoration: none;
+    color: #20204D;
+}
+
+
+/* ===========================layout============================ */
+
+/* page content goes in the "main" area (grid comes from layout.js) */
+.mainCountainer > main {
+    grid-area: main;
+    min-width: 0;
+    width: 100%;
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 30px 20px;
+}
+
+
+/* ===========================page title row (inside main)============================ */
+.pageHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 15px;
+    margin-bottom: 20px;
+}
+
+.pageHeader > div {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.pageHeader button,
+#saveMarks,
+form button {
+    border: none;
+    padding: 10px 16px;
+    border-radius: 8px;
+    background: var(--gradient);
+    color: white;
+    cursor: pointer;
+}
+
+
+/* ===========================page sections============================ */
+section {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 20px;
+    margin-bottom: 20px;
+}
+
+h2 {
+    margin-bottom: 15px;
+}
+
+/* JavaScript containers */
+#courses,
+#assessments,
+#students {
+    display: grid;
+    gap: 12px;
+}
+
+.card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 16px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 20px;
+    box-shadow: 0 2px 8px rgba(30, 27, 75, 0.05);
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.card:hover {
+    transform: translateY(-2px);
+    border-color: var(--primary);
+    box-shadow: 0 6px 18px rgba(99, 102, 241, 0.12);
+}
+
+.card.selected {
+    border-color: var(--primary);
+    background: #f8f7ff;
+    box-shadow: 0 4px 14px rgba(99, 102, 241, 0.12);
+}
+
+.card-content {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    min-width: 0;
+    margin-right: auto; /* keeps Update/Delete together on the right */
+}
+
+.card-title {
+    font-size: 16px;
+    font-weight: bold;
+    color: var(--text);
+}
+
+.card-info {
+    font-size: 13px;
+    color: var(--muted);
+}
+
+.card-type {
+    display: inline-block;
+    width: fit-content;
+    padding: 4px 8px;
+    border-radius: 6px;
+    background: #eef2ff;
+    color: var(--primary);
+    font-size: 12px;
+    font-weight: bold;
+}
+
+/* Card buttons: first = Update (blue), second = Delete (red) */
+.card button {
+    flex-shrink: 0;
+    border: none;
+    border-radius: 8px;
+    padding: 8px 12px;
+    background: #fff1f2;
+    color: var(--error);
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.card button:hover {
+    background: var(--error);
+    color: white;
+}
+
+.card button:nth-of-type(1) {
+    background: #eef2ff;
+    color: var(--primary);
+}
+
+.card button:nth-of-type(1):hover {
+    background: var(--primary);
+    color: white;
+}
+
+.card button + button {
+    margin-left: -10px;
+}
+
+/* Students */
+.student {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 14px 16px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 15px;
+    box-shadow: 0 2px 8px rgba(30, 27, 75, 0.05);
+}
+
+.student-info {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.student-name {
+    font-size: 15px;
+    font-weight: bold;
+}
+
+.student-id {
+    font-size: 13px;
+    color: var(--muted);
+}
+
+.student-mark {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.student-mark input {
+    width: 70px;
+    padding: 9px;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    text-align: center;
+    font-size: 15px;
+    font-weight: bold;
+    color: var(--text);
+    outline: none;
+}
+
+.student-mark input:focus {
+    border-color: var(--primary);
+}
+
+.student-mark span {
+    color: var(--muted);
+    font-size: 14px;
+}
+
+#saveMarks {
+    margin-top: 10px;
+}
+
+
+/* ===========================modals (add + update)============================ */
+#assessmentModal,
+#courseModal,
+#editCourseModal,
+#editAssessmentModal {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(30, 27, 75, 0.4);
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    z-index: 100;
+}
+
+#assessmentModal > div,
+#courseModal > div,
+#editCourseModal > div,
+#editAssessmentModal > div {
+    width: 100%;
+    max-width: 450px;
+    background: var(--card);
+    border-radius: var(--radius);
+    padding: 25px;
+}
+
+#closeModal,
+#closeCourseModal,
+#closeEditCourseModal,
+#closeEditAssessmentModal {
+    float: right;
+    border: none;
+    background: none;
+    cursor: pointer;
+    font-size: 18px;
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+form input,
+form select {
+    padding: 10px;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    margin-bottom: 10px;
+}
+
+.message-popup {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    background: #222;
+    color: white;
+    padding: 14px 20px;
+    border-radius: 8px;
+    display: none;
+    z-index: 1000;
+}
+
+
+/* ===========================phone============================ */
+@media (max-width: 500px) {
+    .mainCountainer > main {
+        padding: 20px 12px;
+    }
+
+    .pageHeader {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .pageHeader > div {
+        flex-direction: column;
+    }
+
+    section {
+        padding: 15px;
+    }
+
+    .student {
+        gap: 10px;
+    }
+}
