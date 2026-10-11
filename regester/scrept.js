@@ -374,7 +374,7 @@ registerForm.addEventListener(
             function () {
 
                 window.location.href =
-                    "../login/login.html";
+                    "../login/index.html";
 
             },
             1500

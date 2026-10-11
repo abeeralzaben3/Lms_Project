@@ -4,7 +4,7 @@
       "id": "INS001",
       "name": "Ahmad Ali",
       "email": "ahmad@example.com",
-      "phone":"0790865498",
+      "phone": "0790865498",
       "password": "1234",
       "role": "Instructor"
     },
@@ -12,7 +12,7 @@
       "id": "INS002",
       "name": "Sara Ahmad",
       "email": "sara@example.com",
-      "phone":"0790866498",
+      "phone": "0790866498",
       "password": "12345",
       "role": "Instructor"
     },
@@ -20,7 +20,7 @@
       "id": "INS003",
       "name": "Mohammad Khaled",
       "email": "mohammad@example.com",
-      "phone":"0799865498",
+      "phone": "0799865498",
       "password": "12346",
       "role": "Instructor"
     },
@@ -28,7 +28,7 @@
       "id": "INS004",
       "name": "Mahmod Ali",
       "email": "mahmod@example.com",
-      "phone":"0797865498",
+      "phone": "0797865498",
       "password": "12347",
       "role": "Instructor"
     },
@@ -36,12 +36,33 @@
       "id": "INS005",
       "name": "Sara Mohammad",
       "email": "saram@example.com",
-      "phone":"0790855498",
+      "phone": "0790855498",
       "password": "12348",
+      "role": "Instructor"
+    },
+    {
+      "name": "Salah Qaraeen",
+      "email": "salahqaraeen744@gmail.com",
+      "phone": "0788231334",
+      "password": "pyBXAtP@X3EBANk",
+      "id": "AZaotLlRNwo"
+    },
+    {
+      "name": "Salah Qaraeen",
+      "email": "salahqaraeen7444@gmail.com",
+      "phone": "0788231334",
+      "password": "pyBXAtP@X3EBANk",
+      "id": "wf6KlD2Yb40"
+    },
+    {
+      "id": "bG051asdcZo",
+      "name": "Salah Qaraeen",
+      "email": "salahqaraeen111@gmail.com",
+      "phone": "0788231334",
+      "password": "pyBXAtP@X3EBANk",
       "role": "Instructor"
     }
   ],
-
   "courses": [
     {
       "id": "COURSE001",
@@ -74,7 +95,6 @@
       "studentsCount": 10
     }
   ],
-
   "students": [
     {
       "id": "stu_001",
@@ -82,17 +102,40 @@
       "name": "Lina Omar",
       "email": "lina.omar@example.com",
       "password": "12345678",
-      "courses": ["COURSE001"],
+      "courses": [
+        "COURSE001"
+      ],
       "scores": [
-        { "assessmentId": "a1", "score": 9 },
-        { "assessmentId": "a2", "score": 8 },
-        { "assessmentId": "a3", "score": 36 },
-        { "assessmentId": "a4", "score": 45 }
+        {
+          "assessmentId": "a1",
+          "score": 9
+        },
+        {
+          "assessmentId": "a2",
+          "score": 8
+        },
+        {
+          "assessmentId": "a3",
+          "score": 36
+        },
+        {
+          "assessmentId": "a4",
+          "score": 45
+        }
       ],
       "attendance": [
-        { "date": "2026-10-01", "status": "present" },
-        { "date": "2026-10-02", "status": "present" },
-        { "date": "2026-10-03", "status": "present" }
+        {
+          "date": "2026-10-01",
+          "status": "present"
+        },
+        {
+          "date": "2026-10-02",
+          "status": "present"
+        },
+        {
+          "date": "2026-10-03",
+          "status": "present"
+        }
       ],
       "archived": false
     },
@@ -102,17 +145,40 @@
       "name": "Omar Khalil",
       "email": "omar.khalil@example.com",
       "password": "12345678",
-      "courses": ["COURSE001"],
+      "courses": [
+        "COURSE001"
+      ],
       "scores": [
-        { "assessmentId": "a1", "score": 7 },
-        { "assessmentId": "a2", "score": 6 },
-        { "assessmentId": "a3", "score": 28 },
-        { "assessmentId": "a4", "score": 38 }
+        {
+          "assessmentId": "a1",
+          "score": 7
+        },
+        {
+          "assessmentId": "a2",
+          "score": 6
+        },
+        {
+          "assessmentId": "a3",
+          "score": 28
+        },
+        {
+          "assessmentId": "a4",
+          "score": 38
+        }
       ],
       "attendance": [
-        { "date": "2026-10-01", "status": "present" },
-        { "date": "2026-10-02", "status": "absent" },
-        { "date": "2026-10-03", "status": "present" }
+        {
+          "date": "2026-10-01",
+          "status": "present"
+        },
+        {
+          "date": "2026-10-02",
+          "status": "absent"
+        },
+        {
+          "date": "2026-10-03",
+          "status": "present"
+        }
       ],
       "archived": false
     },
@@ -122,18 +188,40 @@
       "name": "Sara Nasser",
       "email": "sara.nasser@example.com",
       "password": "12345678",
-      "courses": ["COURSE001"],
+      "courses": [
+        "COURSE001"
+      ],
       "scores": [
-        { "assessmentId": "a1", "score": 10 },
-        { "assessmentId": "a2", "score": 10 },
-        { "assessmentId": "a3", "score": 39 },
-        { "assessmentId": "a4", "score": 49 }
+        {
+          "assessmentId": "a1",
+          "score": 10
+        },
+        {
+          "assessmentId": "a2",
+          "score": 10
+        },
+        {
+          "assessmentId": "a3",
+          "score": 39
+        },
+        {
+          "assessmentId": "a4",
+          "score": 49
+        }
       ],
       "attendance": [
-        { "date": "2026-10-01", "status": "present" },
-        { "date": "2026-10-02", "status": "present" },
-        { "date": "2026-10-03", "status": "absent" }
-        
+        {
+          "date": "2026-10-01",
+          "status": "present"
+        },
+        {
+          "date": "2026-10-02",
+          "status": "present"
+        },
+        {
+          "date": "2026-10-03",
+          "status": "absent"
+        }
       ],
       "archived": false
     },
@@ -143,17 +231,40 @@
       "name": "Yousef Haddad",
       "email": "yousef.haddad@example.com",
       "password": "12345678",
-      "courses": ["COURSE001"],
+      "courses": [
+        "COURSE001"
+      ],
       "scores": [
-        { "assessmentId": "a1", "score": 5 },
-        { "assessmentId": "a2", "score": 4 },
-        { "assessmentId": "a3", "score": 20 },
-        { "assessmentId": "a4", "score": 27 }
+        {
+          "assessmentId": "a1",
+          "score": 5
+        },
+        {
+          "assessmentId": "a2",
+          "score": 4
+        },
+        {
+          "assessmentId": "a3",
+          "score": 20
+        },
+        {
+          "assessmentId": "a4",
+          "score": 27
+        }
       ],
       "attendance": [
-        { "date": "2026-10-01", "status": "absent" },
-        { "date": "2026-10-02", "status": "present" },
-        { "date": "2026-10-03", "status": "absent" }
+        {
+          "date": "2026-10-01",
+          "status": "absent"
+        },
+        {
+          "date": "2026-10-02",
+          "status": "present"
+        },
+        {
+          "date": "2026-10-03",
+          "status": "absent"
+        }
       ],
       "archived": false
     },
@@ -163,17 +274,40 @@
       "name": "Ahmad Hassan",
       "email": "ahmad.hassan@example.com",
       "password": "12345678",
-      "courses": ["COURSE001"],
+      "courses": [
+        "COURSE001"
+      ],
       "scores": [
-        { "assessmentId": "a1", "score": 8 },
-        { "assessmentId": "a2", "score": 9 },
-        { "assessmentId": "a3", "score": 33 },
-        { "assessmentId": "a4", "score": 42 }
+        {
+          "assessmentId": "a1",
+          "score": 8
+        },
+        {
+          "assessmentId": "a2",
+          "score": 9
+        },
+        {
+          "assessmentId": "a3",
+          "score": 33
+        },
+        {
+          "assessmentId": "a4",
+          "score": 42
+        }
       ],
       "attendance": [
-        { "date": "2026-10-01", "status": "present" },
-        { "date": "2026-10-02", "status": "absent" },
-        { "date": "2026-10-03", "status": "present" }
+        {
+          "date": "2026-10-01",
+          "status": "present"
+        },
+        {
+          "date": "2026-10-02",
+          "status": "absent"
+        },
+        {
+          "date": "2026-10-03",
+          "status": "present"
+        }
       ],
       "archived": false
     },
@@ -183,17 +317,40 @@
       "name": "Hassan Mansour",
       "email": "hassan.mansour@example.com",
       "password": "12345678",
-      "courses": ["COURSE001"],
+      "courses": [
+        "COURSE001"
+      ],
       "scores": [
-        { "assessmentId": "a1", "score": 3 },
-        { "assessmentId": "a2", "score": 5 },
-        { "assessmentId": "a3", "score": 15 },
-        { "assessmentId": "a4", "score": 22 }
+        {
+          "assessmentId": "a1",
+          "score": 3
+        },
+        {
+          "assessmentId": "a2",
+          "score": 5
+        },
+        {
+          "assessmentId": "a3",
+          "score": 15
+        },
+        {
+          "assessmentId": "a4",
+          "score": 22
+        }
       ],
       "attendance": [
-        { "date": "2026-10-01", "status": "absent" },
-        { "date": "2026-10-02", "status": "absent" },
-        { "date": "2026-10-03", "status": "present" }
+        {
+          "date": "2026-10-01",
+          "status": "absent"
+        },
+        {
+          "date": "2026-10-02",
+          "status": "absent"
+        },
+        {
+          "date": "2026-10-03",
+          "status": "present"
+        }
       ],
       "archived": false
     },
@@ -203,17 +360,40 @@
       "name": "Khaled Ali",
       "email": "khaled.ali@example.com",
       "password": "12345678",
-      "courses": ["COURSE001"],
+      "courses": [
+        "COURSE001"
+      ],
       "scores": [
-        { "assessmentId": "a1", "score": 9 },
-        { "assessmentId": "a2", "score": 7 },
-        { "assessmentId": "a3", "score": 31 },
-        { "assessmentId": "a4", "score": 41 }
+        {
+          "assessmentId": "a1",
+          "score": 9
+        },
+        {
+          "assessmentId": "a2",
+          "score": 7
+        },
+        {
+          "assessmentId": "a3",
+          "score": 31
+        },
+        {
+          "assessmentId": "a4",
+          "score": 41
+        }
       ],
       "attendance": [
-        { "date": "2026-10-01", "status": "present" },
-        { "date": "2026-10-02", "status": "present" },
-        { "date": "2026-10-03", "status": "present" }
+        {
+          "date": "2026-10-01",
+          "status": "present"
+        },
+        {
+          "date": "2026-10-02",
+          "status": "present"
+        },
+        {
+          "date": "2026-10-03",
+          "status": "present"
+        }
       ],
       "archived": false
     },
@@ -223,12 +403,23 @@
       "name": "Rami Saleh",
       "email": "rami.saleh@example.com",
       "password": "12345678",
-      "courses": ["COURSE001"],
+      "courses": [
+        "COURSE001"
+      ],
       "scores": [],
       "attendance": [
-        { "date": "2026-10-01", "status": "absent" },
-        { "date": "2026-10-02", "status": "present" },
-        { "date": "2026-10-03", "status": "absent" }
+        {
+          "date": "2026-10-01",
+          "status": "absent"
+        },
+        {
+          "date": "2026-10-02",
+          "status": "present"
+        },
+        {
+          "date": "2026-10-03",
+          "status": "absent"
+        }
       ],
       "archived": false
     },
@@ -238,12 +429,23 @@
       "name": "Zaid Ahmad",
       "email": "zaid.ahmad@example.com",
       "password": "12345678",
-      "courses": ["COURSE001"],
+      "courses": [
+        "COURSE001"
+      ],
       "scores": [],
       "attendance": [
-        { "date": "2026-10-01", "status": "present" },
-        { "date": "2026-10-02", "status": "absent" },
-        { "date": "2026-10-03", "status": "absent" }
+        {
+          "date": "2026-10-01",
+          "status": "present"
+        },
+        {
+          "date": "2026-10-02",
+          "status": "absent"
+        },
+        {
+          "date": "2026-10-03",
+          "status": "absent"
+        }
       ],
       "archived": false
     },
@@ -253,28 +455,49 @@
       "name": "Tareq Sami",
       "email": "tareq.sami@example.com",
       "password": "12345678",
-      "courses": ["COURSE001"],
+      "courses": [
+        "COURSE001"
+      ],
       "scores": [],
       "attendance": [
-        { "date": "2026-10-01", "status": "present" },
-        { "date": "2026-10-02", "status": "present" },
-        { "date": "2026-10-03", "status": "absent" }
+        {
+          "date": "2026-10-01",
+          "status": "present"
+        },
+        {
+          "date": "2026-10-02",
+          "status": "present"
+        },
+        {
+          "date": "2026-10-03",
+          "status": "absent"
+        }
       ],
       "archived": false
     },
-
     {
       "id": "stu_011",
       "studentId": "20260011",
       "name": "Maya Ahmad",
       "email": "maya.ahmad@example.com",
       "password": "12345678",
-      "courses": ["COURSE002"],
+      "courses": [
+        "COURSE002"
+      ],
       "scores": [],
       "attendance": [
-        { "date": "2026-10-01", "status": "absent" },
-        { "date": "2026-10-02", "status": "present" },
-        { "date": "2026-10-03", "status": "present" }
+        {
+          "date": "2026-10-01",
+          "status": "absent"
+        },
+        {
+          "date": "2026-10-02",
+          "status": "present"
+        },
+        {
+          "date": "2026-10-03",
+          "status": "present"
+        }
       ],
       "archived": false
     },
@@ -284,12 +507,23 @@
       "name": "Noor Khaled",
       "email": "noor.khaled@example.com",
       "password": "12345678",
-      "courses": ["COURSE002"],
+      "courses": [
+        "COURSE002"
+      ],
       "scores": [],
       "attendance": [
-        { "date": "2026-10-01", "status": "present" },
-        { "date": "2026-10-02", "status": "absent" },
-        { "date": "2026-10-03", "status": "present" }
+        {
+          "date": "2026-10-01",
+          "status": "present"
+        },
+        {
+          "date": "2026-10-02",
+          "status": "absent"
+        },
+        {
+          "date": "2026-10-03",
+          "status": "present"
+        }
       ],
       "archived": false
     },
@@ -299,12 +533,23 @@
       "name": "Layan Omar",
       "email": "layan.omar@example.com",
       "password": "12345678",
-      "courses": ["COURSE002"],
+      "courses": [
+        "COURSE002"
+      ],
       "scores": [],
       "attendance": [
-        { "date": "2026-10-01", "status": "present" },
-        { "date": "2026-10-02", "status": "present" },
-        { "date": "2026-10-03", "status": "absent" }
+        {
+          "date": "2026-10-01",
+          "status": "present"
+        },
+        {
+          "date": "2026-10-02",
+          "status": "present"
+        },
+        {
+          "date": "2026-10-03",
+          "status": "absent"
+        }
       ],
       "archived": false
     },
@@ -314,12 +559,23 @@
       "name": "Adam Nasser",
       "email": "adam.nasser@example.com",
       "password": "12345678",
-      "courses": ["COURSE002"],
+      "courses": [
+        "COURSE002"
+      ],
       "scores": [],
       "attendance": [
-        { "date": "2026-10-01", "status": "absent" },
-        { "date": "2026-10-02", "status": "present" },
-        { "date": "2026-10-03", "status": "absent" }
+        {
+          "date": "2026-10-01",
+          "status": "absent"
+        },
+        {
+          "date": "2026-10-02",
+          "status": "present"
+        },
+        {
+          "date": "2026-10-03",
+          "status": "absent"
+        }
       ],
       "archived": false
     },
@@ -329,12 +585,23 @@
       "name": "Yara Saleh",
       "email": "yara.saleh@example.com",
       "password": "12345678",
-      "courses": ["COURSE002"],
+      "courses": [
+        "COURSE002"
+      ],
       "scores": [],
       "attendance": [
-        { "date": "2026-10-01", "status": "present" },
-        { "date": "2026-10-02", "status": "absent" },
-        { "date": "2026-10-03", "status": "absent" }
+        {
+          "date": "2026-10-01",
+          "status": "present"
+        },
+        {
+          "date": "2026-10-02",
+          "status": "absent"
+        },
+        {
+          "date": "2026-10-03",
+          "status": "absent"
+        }
       ],
       "archived": false
     },
@@ -344,12 +611,23 @@
       "name": "Laith Hassan",
       "email": "laith.hassan@example.com",
       "password": "12345678",
-      "courses": ["COURSE002"],
+      "courses": [
+        "COURSE002"
+      ],
       "scores": [],
       "attendance": [
-        { "date": "2026-10-01", "status": "absent" },
-        { "date": "2026-10-02", "status": "absent" },
-        { "date": "2026-10-03", "status": "present" }
+        {
+          "date": "2026-10-01",
+          "status": "absent"
+        },
+        {
+          "date": "2026-10-02",
+          "status": "absent"
+        },
+        {
+          "date": "2026-10-03",
+          "status": "present"
+        }
       ],
       "archived": false
     },
@@ -359,12 +637,23 @@
       "name": "Malak Sami",
       "email": "malak.sami@example.com",
       "password": "12345678",
-      "courses": ["COURSE002"],
+      "courses": [
+        "COURSE002"
+      ],
       "scores": [],
       "attendance": [
-        { "date": "2026-10-01", "status": "present" },
-        { "date": "2026-10-02", "status": "absent" },
-        { "date": "2026-10-03", "status": "present" }
+        {
+          "date": "2026-10-01",
+          "status": "present"
+        },
+        {
+          "date": "2026-10-02",
+          "status": "absent"
+        },
+        {
+          "date": "2026-10-03",
+          "status": "present"
+        }
       ],
       "archived": false
     },
@@ -374,12 +663,23 @@
       "name": "Omar Saeed",
       "email": "omar.saeed@example.com",
       "password": "12345678",
-      "courses": ["COURSE002"],
+      "courses": [
+        "COURSE002"
+      ],
       "scores": [],
       "attendance": [
-        { "date": "2026-10-01", "status": "present" },
-        { "date": "2026-10-02", "status": "present" },
-        { "date": "2026-10-03", "status": "absent" }
+        {
+          "date": "2026-10-01",
+          "status": "present"
+        },
+        {
+          "date": "2026-10-02",
+          "status": "present"
+        },
+        {
+          "date": "2026-10-03",
+          "status": "absent"
+        }
       ],
       "archived": false
     },
@@ -389,12 +689,23 @@
       "name": "Hala Mahmoud",
       "email": "hala.mahmoud@example.com",
       "password": "12345678",
-      "courses": ["COURSE002"],
+      "courses": [
+        "COURSE002"
+      ],
       "scores": [],
       "attendance": [
-        { "date": "2026-10-01", "status": "absent" },
-        { "date": "2026-10-02", "status": "present" },
-        { "date": "2026-10-03", "status": "present" }
+        {
+          "date": "2026-10-01",
+          "status": "absent"
+        },
+        {
+          "date": "2026-10-02",
+          "status": "present"
+        },
+        {
+          "date": "2026-10-03",
+          "status": "present"
+        }
       ],
       "archived": true
     },
@@ -404,28 +715,49 @@
       "name": "Sami Ibrahim",
       "email": "sami.ibrahim@example.com",
       "password": "12345678",
-      "courses": ["COURSE002"],
+      "courses": [
+        "COURSE002"
+      ],
       "scores": [],
       "attendance": [
-        { "date": "2026-10-01", "status": "present" },
-        { "date": "2026-10-02", "status": "absent" },
-        { "date": "2026-10-03", "status": "present" }
+        {
+          "date": "2026-10-01",
+          "status": "present"
+        },
+        {
+          "date": "2026-10-02",
+          "status": "absent"
+        },
+        {
+          "date": "2026-10-03",
+          "status": "present"
+        }
       ],
       "archived": false
     },
-
     {
       "id": "stu_021",
       "studentId": "20260021",
       "name": "Rana Ali",
       "email": "rana.ali@example.com",
       "password": "12345678",
-      "courses": ["COURSE003"],
+      "courses": [
+        "COURSE003"
+      ],
       "scores": [],
       "attendance": [
-        { "date": "2026-10-01", "status": "present" },
-        { "date": "2026-10-02", "status": "present" },
-        { "date": "2026-10-03", "status": "absent" }
+        {
+          "date": "2026-10-01",
+          "status": "present"
+        },
+        {
+          "date": "2026-10-02",
+          "status": "present"
+        },
+        {
+          "date": "2026-10-03",
+          "status": "absent"
+        }
       ],
       "archived": false
     },
@@ -435,12 +767,23 @@
       "name": "Bilal Ahmad",
       "email": "bilal.ahmad@example.com",
       "password": "12345678",
-      "courses": ["COURSE003"],
+      "courses": [
+        "COURSE003"
+      ],
       "scores": [],
       "attendance": [
-        { "date": "2026-10-01", "status": "absent" },
-        { "date": "2026-10-02", "status": "present" },
-        { "date": "2026-10-03", "status": "present" }
+        {
+          "date": "2026-10-01",
+          "status": "absent"
+        },
+        {
+          "date": "2026-10-02",
+          "status": "present"
+        },
+        {
+          "date": "2026-10-03",
+          "status": "present"
+        }
       ],
       "archived": false
     },
@@ -450,12 +793,23 @@
       "name": "Dana Khalil",
       "email": "dana.khalil@example.com",
       "password": "12345678",
-      "courses": ["COURSE003"],
+      "courses": [
+        "COURSE003"
+      ],
       "scores": [],
       "attendance": [
-        { "date": "2026-10-01", "status": "present" },
-        { "date": "2026-10-02", "status": "absent" },
-        { "date": "2026-10-03", "status": "present" }
+        {
+          "date": "2026-10-01",
+          "status": "present"
+        },
+        {
+          "date": "2026-10-02",
+          "status": "absent"
+        },
+        {
+          "date": "2026-10-03",
+          "status": "present"
+        }
       ],
       "archived": false
     },
@@ -465,12 +819,23 @@
       "name": "Fadi Omar",
       "email": "fadi.omar@example.com",
       "password": "12345678",
-      "courses": ["COURSE003"],
+      "courses": [
+        "COURSE003"
+      ],
       "scores": [],
       "attendance": [
-        { "date": "2026-10-01", "status": "absent" },
-        { "date": "2026-10-02", "status": "absent" },
-        { "date": "2026-10-03", "status": "present" }
+        {
+          "date": "2026-10-01",
+          "status": "absent"
+        },
+        {
+          "date": "2026-10-02",
+          "status": "absent"
+        },
+        {
+          "date": "2026-10-03",
+          "status": "present"
+        }
       ],
       "archived": false
     },
@@ -480,12 +845,23 @@
       "name": "Jana Hassan",
       "email": "jana.hassan@example.com",
       "password": "12345678",
-      "courses": ["COURSE003"],
+      "courses": [
+        "COURSE003"
+      ],
       "scores": [],
       "attendance": [
-        { "date": "2026-10-01", "status": "present" },
-        { "date": "2026-10-02", "status": "present" },
-        { "date": "2026-10-03", "status": "present" }
+        {
+          "date": "2026-10-01",
+          "status": "present"
+        },
+        {
+          "date": "2026-10-02",
+          "status": "present"
+        },
+        {
+          "date": "2026-10-03",
+          "status": "present"
+        }
       ],
       "archived": false
     },
@@ -495,12 +871,23 @@
       "name": "Mariam Saleh",
       "email": "mariam.saleh@example.com",
       "password": "12345678",
-      "courses": ["COURSE003"],
+      "courses": [
+        "COURSE003"
+      ],
       "scores": [],
       "attendance": [
-        { "date": "2026-10-01", "status": "present" },
-        { "date": "2026-10-02", "status": "absent" },
-        { "date": "2026-10-03", "status": "absent" }
+        {
+          "date": "2026-10-01",
+          "status": "present"
+        },
+        {
+          "date": "2026-10-02",
+          "status": "absent"
+        },
+        {
+          "date": "2026-10-03",
+          "status": "absent"
+        }
       ],
       "archived": false
     },
@@ -510,12 +897,23 @@
       "name": "Zainab Ahmad",
       "email": "zainab.ahmad@example.com",
       "password": "12345678",
-      "courses": ["COURSE003"],
+      "courses": [
+        "COURSE003"
+      ],
       "scores": [],
       "attendance": [
-        { "date": "2026-10-01", "status": "absent" },
-        { "date": "2026-10-02", "status": "present" },
-        { "date": "2026-10-03", "status": "absent" }
+        {
+          "date": "2026-10-01",
+          "status": "absent"
+        },
+        {
+          "date": "2026-10-02",
+          "status": "present"
+        },
+        {
+          "date": "2026-10-03",
+          "status": "absent"
+        }
       ],
       "archived": false
     },
@@ -525,12 +923,23 @@
       "name": "Tala Nasser",
       "email": "tala.nasser@example.com",
       "password": "12345678",
-      "courses": ["COURSE003"],
+      "courses": [
+        "COURSE003"
+      ],
       "scores": [],
       "attendance": [
-        { "date": "2026-10-01", "status": "present" },
-        { "date": "2026-10-02", "status": "present" },
-        { "date": "2026-10-03", "status": "absent" }
+        {
+          "date": "2026-10-01",
+          "status": "present"
+        },
+        {
+          "date": "2026-10-02",
+          "status": "present"
+        },
+        {
+          "date": "2026-10-03",
+          "status": "absent"
+        }
       ],
       "archived": false
     },
@@ -540,12 +949,23 @@
       "name": "Kareem Sami",
       "email": "kareem.sami@example.com",
       "password": "12345678",
-      "courses": ["COURSE003"],
+      "courses": [
+        "COURSE003"
+      ],
       "scores": [],
       "attendance": [
-        { "date": "2026-10-01", "status": "absent" },
-        { "date": "2026-10-02", "status": "present" },
-        { "date": "2026-10-03", "status": "present" }
+        {
+          "date": "2026-10-01",
+          "status": "absent"
+        },
+        {
+          "date": "2026-10-02",
+          "status": "present"
+        },
+        {
+          "date": "2026-10-03",
+          "status": "present"
+        }
       ],
       "archived": false
     },
@@ -555,28 +975,49 @@
       "name": "Salma Ibrahim",
       "email": "salma.ibrahim@example.com",
       "password": "12345678",
-      "courses": ["COURSE003"],
+      "courses": [
+        "COURSE003"
+      ],
       "scores": [],
       "attendance": [
-        { "date": "2026-10-01", "status": "present" },
-        { "date": "2026-10-02", "status": "absent" },
-        { "date": "2026-10-03", "status": "present" }
+        {
+          "date": "2026-10-01",
+          "status": "present"
+        },
+        {
+          "date": "2026-10-02",
+          "status": "absent"
+        },
+        {
+          "date": "2026-10-03",
+          "status": "present"
+        }
       ],
       "archived": false
     },
-
     {
       "id": "stu_031",
       "studentId": "20260031",
       "name": "Alaa Mohammad",
       "email": "alaa.mohammad@example.com",
       "password": "12345678",
-      "courses": ["COURSE004"],
+      "courses": [
+        "COURSE004"
+      ],
       "scores": [],
       "attendance": [
-        { "date": "2026-10-01", "status": "present" },
-        { "date": "2026-10-02", "status": "absent" },
-        { "date": "2026-10-03", "status": "present" }
+        {
+          "date": "2026-10-01",
+          "status": "present"
+        },
+        {
+          "date": "2026-10-02",
+          "status": "absent"
+        },
+        {
+          "date": "2026-10-03",
+          "status": "present"
+        }
       ],
       "archived": false
     },
@@ -586,12 +1027,23 @@
       "name": "Iyad Khaled",
       "email": "iyad.khaled@example.com",
       "password": "12345678",
-      "courses": ["COURSE004"],
+      "courses": [
+        "COURSE004"
+      ],
       "scores": [],
       "attendance": [
-        { "date": "2026-10-01", "status": "absent" },
-        { "date": "2026-10-02", "status": "present" },
-        { "date": "2026-10-03", "status": "present" }
+        {
+          "date": "2026-10-01",
+          "status": "absent"
+        },
+        {
+          "date": "2026-10-02",
+          "status": "present"
+        },
+        {
+          "date": "2026-10-03",
+          "status": "present"
+        }
       ],
       "archived": false
     },
@@ -601,12 +1053,23 @@
       "name": "Rayan Ahmad",
       "email": "rayan.ahmad@example.com",
       "password": "12345678",
-      "courses": ["COURSE004"],
+      "courses": [
+        "COURSE004"
+      ],
       "scores": [],
       "attendance": [
-        { "date": "2026-10-01", "status": "present" },
-        { "date": "2026-10-02", "status": "present" },
-        { "date": "2026-10-03", "status": "absent" }
+        {
+          "date": "2026-10-01",
+          "status": "present"
+        },
+        {
+          "date": "2026-10-02",
+          "status": "present"
+        },
+        {
+          "date": "2026-10-03",
+          "status": "absent"
+        }
       ],
       "archived": false
     },
@@ -616,12 +1079,23 @@
       "name": "Hiba Omar",
       "email": "hiba.omar@example.com",
       "password": "12345678",
-      "courses": ["COURSE004"],
+      "courses": [
+        "COURSE004"
+      ],
       "scores": [],
       "attendance": [
-        { "date": "2026-10-01", "status": "absent" },
-        { "date": "2026-10-02", "status": "absent" },
-        { "date": "2026-10-03", "status": "present" }
+        {
+          "date": "2026-10-01",
+          "status": "absent"
+        },
+        {
+          "date": "2026-10-02",
+          "status": "absent"
+        },
+        {
+          "date": "2026-10-03",
+          "status": "present"
+        }
       ],
       "archived": false
     },
@@ -631,12 +1105,23 @@
       "name": "Faris Hassan",
       "email": "faris.hassan@example.com",
       "password": "12345678",
-      "courses": ["COURSE004"],
+      "courses": [
+        "COURSE004"
+      ],
       "scores": [],
       "attendance": [
-        { "date": "2026-10-01", "status": "present" },
-        { "date": "2026-10-02", "status": "absent" },
-        { "date": "2026-10-03", "status": "absent" }
+        {
+          "date": "2026-10-01",
+          "status": "present"
+        },
+        {
+          "date": "2026-10-02",
+          "status": "absent"
+        },
+        {
+          "date": "2026-10-03",
+          "status": "absent"
+        }
       ],
       "archived": false
     },
@@ -646,12 +1131,23 @@
       "name": "Leen Sami",
       "email": "leen.sami@example.com",
       "password": "12345678",
-      "courses": ["COURSE004"],
+      "courses": [
+        "COURSE004"
+      ],
       "scores": [],
       "attendance": [
-        { "date": "2026-10-01", "status": "present" },
-        { "date": "2026-10-02", "status": "present" },
-        { "date": "2026-10-03", "status": "present" }
+        {
+          "date": "2026-10-01",
+          "status": "present"
+        },
+        {
+          "date": "2026-10-02",
+          "status": "present"
+        },
+        {
+          "date": "2026-10-03",
+          "status": "present"
+        }
       ],
       "archived": false
     },
@@ -661,12 +1157,23 @@
       "name": "Qais Ali",
       "email": "qais.ali@example.com",
       "password": "12345678",
-      "courses": ["COURSE004"],
+      "courses": [
+        "COURSE004"
+      ],
       "scores": [],
       "attendance": [
-        { "date": "2026-10-01", "status": "absent" },
-        { "date": "2026-10-02", "status": "present" },
-        { "date": "2026-10-03", "status": "absent" }
+        {
+          "date": "2026-10-01",
+          "status": "absent"
+        },
+        {
+          "date": "2026-10-02",
+          "status": "present"
+        },
+        {
+          "date": "2026-10-03",
+          "status": "absent"
+        }
       ],
       "archived": false
     },
@@ -676,12 +1183,23 @@
       "name": "Reem Khalil",
       "email": "reem.khalil@example.com",
       "password": "12345678",
-      "courses": ["COURSE004"],
+      "courses": [
+        "COURSE004"
+      ],
       "scores": [],
       "attendance": [
-        { "date": "2026-10-01", "status": "present" },
-        { "date": "2026-10-02", "status": "absent" },
-        { "date": "2026-10-03", "status": "present" }
+        {
+          "date": "2026-10-01",
+          "status": "present"
+        },
+        {
+          "date": "2026-10-02",
+          "status": "absent"
+        },
+        {
+          "date": "2026-10-03",
+          "status": "present"
+        }
       ],
       "archived": false
     },
@@ -691,12 +1209,23 @@
       "name": "Nouran Saleh",
       "email": "nouran.saleh@example.com",
       "password": "12345678",
-      "courses": ["COURSE004"],
+      "courses": [
+        "COURSE004"
+      ],
       "scores": [],
       "attendance": [
-        { "date": "2026-10-01", "status": "absent" },
-        { "date": "2026-10-02", "status": "present" },
-        { "date": "2026-10-03", "status": "present" }
+        {
+          "date": "2026-10-01",
+          "status": "absent"
+        },
+        {
+          "date": "2026-10-02",
+          "status": "present"
+        },
+        {
+          "date": "2026-10-03",
+          "status": "present"
+        }
       ],
       "archived": false
     },
@@ -706,28 +1235,49 @@
       "name": "Majd Ahmad",
       "email": "majd.ahmad@example.com",
       "password": "12345678",
-      "courses": ["COURSE004"],
+      "courses": [
+        "COURSE004"
+      ],
       "scores": [],
       "attendance": [
-        { "date": "2026-10-01", "status": "present" },
-        { "date": "2026-10-02", "status": "present" },
-        { "date": "2026-10-03", "status": "absent" }
+        {
+          "date": "2026-10-01",
+          "status": "present"
+        },
+        {
+          "date": "2026-10-02",
+          "status": "present"
+        },
+        {
+          "date": "2026-10-03",
+          "status": "absent"
+        }
       ],
       "archived": false
     },
-
     {
       "id": "stu_041",
       "studentId": "20260041",
       "name": "Dima Omar",
       "email": "dima.omar@example.com",
       "password": "12345678",
-      "courses": ["COURSE005"],
+      "courses": [
+        "COURSE005"
+      ],
       "scores": [],
       "attendance": [
-        { "date": "2026-10-01", "status": "absent" },
-        { "date": "2026-10-02", "status": "present" },
-        { "date": "2026-10-03", "status": "present" }
+        {
+          "date": "2026-10-01",
+          "status": "absent"
+        },
+        {
+          "date": "2026-10-02",
+          "status": "present"
+        },
+        {
+          "date": "2026-10-03",
+          "status": "present"
+        }
       ],
       "archived": false
     },
@@ -737,12 +1287,23 @@
       "name": "Ameer Khaled",
       "email": "ameer.khaled@example.com",
       "password": "12345678",
-      "courses": ["COURSE005"],
+      "courses": [
+        "COURSE005"
+      ],
       "scores": [],
       "attendance": [
-        { "date": "2026-10-01", "status": "present" },
-        { "date": "2026-10-02", "status": "absent" },
-        { "date": "2026-10-03", "status": "present" }
+        {
+          "date": "2026-10-01",
+          "status": "present"
+        },
+        {
+          "date": "2026-10-02",
+          "status": "absent"
+        },
+        {
+          "date": "2026-10-03",
+          "status": "present"
+        }
       ],
       "archived": false
     },
@@ -752,12 +1313,23 @@
       "name": "Razan Hassan",
       "email": "razan.hassan@example.com",
       "password": "12345678",
-      "courses": ["COURSE005"],
+      "courses": [
+        "COURSE005"
+      ],
       "scores": [],
       "attendance": [
-        { "date": "2026-10-01", "status": "present" },
-        { "date": "2026-10-02", "status": "present" },
-        { "date": "2026-10-03", "status": "absent" }
+        {
+          "date": "2026-10-01",
+          "status": "present"
+        },
+        {
+          "date": "2026-10-02",
+          "status": "present"
+        },
+        {
+          "date": "2026-10-03",
+          "status": "absent"
+        }
       ],
       "archived": false
     },
@@ -767,12 +1339,23 @@
       "name": "Sultan Ali",
       "email": "sultan.ali@example.com",
       "password": "12345678",
-      "courses": ["COURSE005"],
+      "courses": [
+        "COURSE005"
+      ],
       "scores": [],
       "attendance": [
-        { "date": "2026-10-01", "status": "absent" },
-        { "date": "2026-10-02", "status": "absent" },
-        { "date": "2026-10-03", "status": "present" }
+        {
+          "date": "2026-10-01",
+          "status": "absent"
+        },
+        {
+          "date": "2026-10-02",
+          "status": "absent"
+        },
+        {
+          "date": "2026-10-03",
+          "status": "present"
+        }
       ],
       "archived": false
     },
@@ -782,12 +1365,23 @@
       "name": "Mira Ahmad",
       "email": "mira.ahmad@example.com",
       "password": "12345678",
-      "courses": ["COURSE005"],
+      "courses": [
+        "COURSE005"
+      ],
       "scores": [],
       "attendance": [
-        { "date": "2026-10-01", "status": "present" },
-        { "date": "2026-10-02", "status": "absent" },
-        { "date": "2026-10-03", "status": "absent" }
+        {
+          "date": "2026-10-01",
+          "status": "present"
+        },
+        {
+          "date": "2026-10-02",
+          "status": "absent"
+        },
+        {
+          "date": "2026-10-03",
+          "status": "absent"
+        }
       ],
       "archived": false
     },
@@ -797,12 +1391,23 @@
       "name": "Firas Mohammad",
       "email": "firas.mohammad@example.com",
       "password": "12345678",
-      "courses": ["COURSE005"],
+      "courses": [
+        "COURSE005"
+      ],
       "scores": [],
       "attendance": [
-        { "date": "2026-10-01", "status": "present" },
-        { "date": "2026-10-02", "status": "present" },
-        { "date": "2026-10-03", "status": "present" }
+        {
+          "date": "2026-10-01",
+          "status": "present"
+        },
+        {
+          "date": "2026-10-02",
+          "status": "present"
+        },
+        {
+          "date": "2026-10-03",
+          "status": "present"
+        }
       ],
       "archived": false
     },
@@ -812,12 +1417,23 @@
       "name": "Ruba Sami",
       "email": "ruba.sami@example.com",
       "password": "12345678",
-      "courses": ["COURSE005"],
+      "courses": [
+        "COURSE005"
+      ],
       "scores": [],
       "attendance": [
-        { "date": "2026-10-01", "status": "absent" },
-        { "date": "2026-10-02", "status": "present" },
-        { "date": "2026-10-03", "status": "absent" }
+        {
+          "date": "2026-10-01",
+          "status": "absent"
+        },
+        {
+          "date": "2026-10-02",
+          "status": "present"
+        },
+        {
+          "date": "2026-10-03",
+          "status": "absent"
+        }
       ],
       "archived": false
     },
@@ -827,12 +1443,23 @@
       "name": "Yazan Saleh",
       "email": "yazan.saleh@example.com",
       "password": "12345678",
-      "courses": ["COURSE005"],
+      "courses": [
+        "COURSE005"
+      ],
       "scores": [],
       "attendance": [
-        { "date": "2026-10-01", "status": "present" },
-        { "date": "2026-10-02", "status": "absent" },
-        { "date": "2026-10-03", "status": "present" }
+        {
+          "date": "2026-10-01",
+          "status": "present"
+        },
+        {
+          "date": "2026-10-02",
+          "status": "absent"
+        },
+        {
+          "date": "2026-10-03",
+          "status": "present"
+        }
       ],
       "archived": false
     },
@@ -842,12 +1469,23 @@
       "name": "Joud Ahmad",
       "email": "joud.ahmad@example.com",
       "password": "12345678",
-      "courses": ["COURSE005"],
+      "courses": [
+        "COURSE005"
+      ],
       "scores": [],
       "attendance": [
-        { "date": "2026-10-01", "status": "present" },
-        { "date": "2026-10-02", "status": "present" },
-        { "date": "2026-10-03", "status": "absent" }
+        {
+          "date": "2026-10-01",
+          "status": "present"
+        },
+        {
+          "date": "2026-10-02",
+          "status": "present"
+        },
+        {
+          "date": "2026-10-03",
+          "status": "absent"
+        }
       ],
       "archived": false
     },
@@ -857,17 +1495,27 @@
       "name": "Amal Hassan",
       "email": "amal.hassan@example.com",
       "password": "12345678",
-      "courses": ["COURSE005"],
+      "courses": [
+        "COURSE005"
+      ],
       "scores": [],
       "attendance": [
-        { "date": "2026-10-01", "status": "absent" },
-        { "date": "2026-10-02", "status": "present" },
-        { "date": "2026-10-03", "status": "present" }
+        {
+          "date": "2026-10-01",
+          "status": "absent"
+        },
+        {
+          "date": "2026-10-02",
+          "status": "present"
+        },
+        {
+          "date": "2026-10-03",
+          "status": "present"
+        }
       ],
       "archived": false
     }
   ],
-
   "notifications": [
     {
       "id": "NOT001",
@@ -900,7 +1548,6 @@
       "date": "2026-10-03"
     }
   ],
-
   "reports": [
     {
       "id": "REP001",
@@ -930,19 +1577,18 @@
       "performanceLevel": "Excellent"
     }
   ],
-
   "gradeWeights": {
     "assignments": 20,
     "quizzes": 20,
     "midterm": 20,
     "finalExam": 40
   },
-
   "settings": {
     "passingGrade": 60,
     "excellentGrade": 85,
     "goodGrade": 70,
     "lowAttendanceThreshold": 75,
     "lowGradeThreshold": 60
-  }
+  },
+  "$schema": "./node_modules/json-server/schema.json"
 }

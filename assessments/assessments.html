@@ -12,168 +12,7 @@
 
     <div class="mainCountainer">
 
-       <!-- ================= HEADER ================= -->
-
-        <header class="header">
-
-            <div class="headerCountent">
-
-
-                <!-- ACCOUNT -->
-
-                <div class="account" id="account">
-
-                    <div class="logo size" id="logo">
-                        MH
-                    </div>
-
-
-                    <div class="headerName size" id="headerName">
-                        Muhammad
-                    </div>
-
-
-                    <div>
-
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
-                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-
-                            <path d="m6 9 6 6 6-6"></path>
-
-                        </svg>
-
-                    </div>
-
-
-                    <!-- ACCOUNT MENU -->
-
-                    <div class="accountMinu" id="accountMinu">
-
-
-                        <p class="options" id="settings" >
-
-                            Settings
-
-                        </p>
-
-
-                        <p class="options" id="logout">
-
-                            Log out
-
-                        </p>
-
-
-                    </div>
-
-                </div>
-
-
-                <!-- SEARCH -->
-
-                <div class="search">
-
-                    <button class="icons btn" id="searchBtn">
-               <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
-                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-
-                            <path d="m21 21-4.34-4.34"></path>
-
-                            <circle cx="11" cy="11" r="8">
-                            </circle>
-
-                        </svg>
-
-                    </button>
-
-
-                    <input type="text" class="searchInput" id="searchInput" placeholder="Students Search">
-
-                </div>
-
-
-                <!-- BURGER -->
-
-                <div class="burgerMinu" id="burgerMinu">
-
-                    <span class="borderMinu"></span>
-                    <span class="borderMinu"></span>
-                    <span class="borderMinu"></span>
-
-                </div>
-
-            </div>
-
-        </header>
-
-
-        <!-- ================= SIDEBAR ================= -->
-
-        <aside class="sideBar" id="sideBar">
-
-
-            <div class="sideHeader" id="sideHeader">
-
-
-                <div class="role">
-                    T
-                </div>
-
-
-                <p class="techName" id="techName">
-
-                    Muhammad Alshawabkeh
-
-                </p>
-
-            </div>
-
-
-            <nav class="nav">
-
-                <ul class="linksCount">
-
-
-                    <li class="liLinks" id="dashboard">
-
-                        <!-- href="./index.html"> -->
-                            Dashboard
-                        
-
-                    </li>
-
-
-                    <li class="liLinks" id="students">
-
-                        <!-- href="../Student/students.html"> -->
-                            Students
-                        
-
-                    </li>
-
-
-                    <li class="liLinks" id="assessments">
-
-                        <!-- href="../Assessments/index.html"> -->
-                            Assessments
-                        
-
-                    </li>
-
-
-                    <li class="liLinks" id="reports">
-
-                         <!-- href="../Reports/index.html"> -->
-                            Reports
-                       
-                    </li>
-
-                </ul>
-
-            </nav>
-
-        </aside>
-
+        <!-- header + sidebar are added automatically by layout.js -->
 
         <!-- ============== PAGE CONTENT ============== -->
 
@@ -187,21 +26,24 @@
                 </div>
             </div>
 
-           <section>
-    <h2>Courses</h2>
-    <div id="coursesList"></div>
-</section>
+            <!-- Courses -->
+            <section>
+                <h2>Courses</h2>
+                <div id="courses"><!-- Courses will be added by JavaScript --></div>
+            </section>
 
-<section>
-    <h2>Assessments</h2>
-    <div id="assessmentsList"></div>
-</section>
+            <!-- Assessments -->
+            <section>
+                <h2>Assessments</h2>
+                <div id="assessments"><!-- Assessments will be added by JavaScript --></div>
+            </section>
 
-<section id="studentsSection">
-    <h2>Students</h2>
-    <div id="studentsList"></div>
-    <button id="saveMarks">Save Marks</button>
-</section>
+            <!-- Students -->
+            <section id="studentsSection">
+                <h2>Students</h2>
+                <div id="students"><!-- Students will be added by JavaScript --></div>
+                <button id="saveMarks">Save Marks</button>
+            </section>
 
         </main>
 
@@ -292,6 +134,10 @@
     </div>
 
 
+    <!-- layout.js builds the header, search, burger and sidebar -->
+       <script type="module">
+        import { userId } from "../layout.js";
+    </script>
     <script type="module" src="./assessments.js"></script>
 </body>
 

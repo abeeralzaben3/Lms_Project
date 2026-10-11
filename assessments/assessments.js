@@ -1,1471 +1,446 @@
-import { fetchApi } from "../Api/fetch.js";
+'use strict';
+
 import { Cookie } from "../cookies/cookies.js";
 
+// ---------- helpers ----------
+const $ = id => document.getElementById(id);
+const load = key => { try { return JSON.parse(localStorage.getItem(key)) || []; } catch { return []; } };
+const save = (key, value) => localStorage.setItem(key, JSON.stringify(value));
+const same = (a, b) => String(a) === String(b);
+const lower = text => String(text).trim().toLowerCase();
 
-// ======================================================
-// ELEMENTS
-// ======================================================
+function showMessage(text) {
+    const popup = $('messagePopup');
+    if (!popup) return console.log(text);
+    popup.innerText = text;
+    popup.style.display = 'block';
+    setTimeout(() => (popup.style.display = 'none'), 2000);
+}
 
-const accountMinu = document.getElementById("accountMinu");
-const account = document.getElementById("account");
+// next id like COURSE004 / AS003
+function nextId(prefix, list) {
+    const numbers = list.map(item => String(item.id).match(new RegExp(`^${prefix}(\\d+)$`))).filter(Boolean).map(m => +m[1]);
+    return prefix + String((numbers.length ? Math.max(...numbers) : 0) + 1).padStart(3, '0');
+}
 
-const burgerMinu = document.getElementById("burgerMinu");
-const sideBar = document.getElementById("sideBar");
+async function getStudents() {
+    let students = load('students');
+    if (students.length) return students;
 
-const headerName = document.getElementById("headerName");
-const techName = document.getElementById("techName");
-const logo = document.getElementById("logo");
+    try {
+        const response = await fetch('http://localhost:3000/students');
+        if (!response.ok) throw new Error('Failed to fetch students');
+        students = await response.json();
+        save('students', students);
+    } catch (error) {
+        console.error(error);
+        showMessage('Could not load students');
+    }
+    return students;
+}
 
-const searchInput = document.getElementById("searchInput");
-const searchBtn = document.getElementById("searchBtn");
-
-const settings = document.getElementById("settings");
-const logout = document.getElementById("logout");
-
-const dashboard = document.getElementById("dashboard");
-const studentsli = document.getElementById("students");
-const assessmentsli = document.getElementById("assessments");
-const reports = document.getElementById("reports");
-
-
-// ======================================================
-// COURSES / ASSESSMENTS / STUDENTS ELEMENTS
-// ======================================================
-
-const coursesList = document.getElementById("coursesList");
-const assessmentsList = document.getElementById("assessmentsList");
-const studentsList = document.getElementById("studentsList");
-
-const addCourse = document.getElementById("addCourse");
-const addAssessment = document.getElementById("addAssessment");
-
-const saveMarks = document.getElementById("saveMarks");
-
-const messagePopup = document.getElementById("messagePopup");
+const showModal = modal => (modal.style.display = 'flex');
+const hideModal = modal => (modal.style.display = 'none');
 
 
-// ======================================================
-// COURSE MODAL
-// ======================================================
-
-const courseModal = document.getElementById("courseModal");
-const closeCourseModal = document.getElementById("closeCourseModal");
-const courseForm = document.getElementById("courseForm");
-const courseName = document.getElementById("courseName");
-
-
-// ======================================================
-// ASSESSMENT MODAL
-// ======================================================
-
-const assessmentModal = document.getElementById("assessmentModal");
-const closeModal = document.getElementById("closeModal");
-const assessmentForm = document.getElementById("assessmentForm");
-
-const assessmentName = document.getElementById("assessmentName");
-const type = document.getElementById("type");
-const maxScore = document.getElementById("maxScore");
-
-
-// ======================================================
-// EDIT COURSE MODAL
-// ======================================================
-
-const editCourseModal = document.getElementById("editCourseModal");
-const closeEditCourseModal =
-    document.getElementById("closeEditCourseModal");
-
-const editCourseForm = document.getElementById("editCourseForm");
-const editCourseName = document.getElementById("editCourseName");
-
-
-// ======================================================
-// EDIT ASSESSMENT MODAL
-// ======================================================
-
-const editAssessmentModal =
-    document.getElementById("editAssessmentModal");
-
-const closeEditAssessmentModal =
-    document.getElementById("closeEditAssessmentModal");
-
-const editAssessmentForm =
-    document.getElementById("editAssessmentForm");
-
-const editAssessmentName =
-    document.getElementById("editAssessmentName");
-
-const editAssessmentType =
-    document.getElementById("editAssessmentType");
-
-const editAssessmentMaxScore =
-    document.getElementById("editAssessmentMaxScore");
-
-
-// ======================================================
-// COOKIE
-// ======================================================
-
+// ---------- login check + current instructor (cookies only) ----------
 const userCookie = new Cookie();
-
 const currentUser = userCookie.getCookie("currentUser");
 const userEmail = userCookie.getCookie("userEmail");
 const userId = userCookie.getCookie("userId");
 
+const instructors = load('instructors');
+const me = instructors.find(i => same(i.id, userId))
+    || instructors.find(i => i.email && lower(i.email) === lower(userEmail || ''))
+    || null;
 
-// ======================================================
-// SHOW CURRENT USER
-// ======================================================
+// not logged in, or the cookie user isn't an instructor
+// (use the same login path as LINKS.login in layout.js)
+if (!currentUser || !userId || !me) {
+    window.location.href = '../login/login.html';
+}
 
-headerName.textContent = currentUser;
-techName.textContent = currentUser;
-logo.textContent = currentUser.slice(0, 2).toUpperCase();
-
-
-// ======================================================
-// DATA
-// ======================================================
-
-let instructors =
-    JSON.parse(localStorage.getItem("instructors")) || [];
-
-let students =
-    JSON.parse(localStorage.getItem("students")) || [];
-
-let courses =
-    JSON.parse(localStorage.getItem("courses")) || [];
-
-let assessments =
-    JSON.parse(localStorage.getItem("assessments")) || [];
-
-
-// ======================================================
-// CURRENT DATA
-// ======================================================
-
-let selectedCourse = null;
-let selectedAssessment = null;
-
+// ---------- state + data getters ----------
+let selectedCourseId = null;
+let selectedAssessmentId = null;
 let editingCourseId = null;
 let editingAssessmentId = null;
 
+const myCourses = () => load('courses').filter(c => me && same(c.instructorId, me.id));
+const myAssessments = () => load('lms_assessments').filter(a => me && same(a.instructorId, me.id));
+const findAssessment = id => load('lms_assessments').find(a => same(a.id, id));
+const courseExists = (name, exceptId) => myCourses().some(c => lower(c.name) === lower(name) && !same(c.id, exceptId));
+const assessmentExists = (courseId, name, exceptId) =>
+    myAssessments().some(a => same(a.courseId, courseId) && lower(a.name) === lower(name) && !same(a.id, exceptId));
 
-// ======================================================
-// ACCOUNT MENU
-// ======================================================
-
-account.addEventListener("click", function () {
-
-    accountMinu.classList.toggle("activeAccount");
-
-});
-
-
-// ======================================================
-// MOBILE MENU
-// ======================================================
-
-burgerMinu.addEventListener("click", function () {
-
-    sideBar.classList.toggle("activeSide");
-
-});
-
-
-// ======================================================
-// NAVIGATION
-// ======================================================
-
-dashboard.addEventListener("click", function () {
-
-    window.location.href = "../dashboard/dashboard.html";
-
-});
-
-
-studentsli.addEventListener("click", function () {
-
-    window.location.href = "../student/students.html";
-
-});
-
-
-assessmentsli.addEventListener("click", function () {
-
-    window.location.href = "./assessments.html";
-
-});
-
-
-reports.addEventListener("click", function () {
-
-    window.location.href = "../reports/reports.html";
-
-});
-
-
-settings.addEventListener("click", function () {
-
-    window.location.href = "../settings/settings.html";
-
-});
-
-
-logout.addEventListener("click", function () {
-
-    window.location.href = "../login/login.html";
-
-});
-
-
-// ======================================================
-// LOAD COURSES
-// ======================================================
-
-async function loadCourses() {
-
-    if (!courses.length) {
-
-        courses = await fetchApi("courses");
-
-    }
-
-    return courses;
-
+function refresh() {
+    showCourses();
+    showAssessments();
+    showStudents();
 }
 
 
-// ======================================================
-// LOAD STUDENTS
-// ======================================================
-
-async function loadStudents() {
-
-    if (!students.length) {
-
-        students = await fetchApi("students");
-
-    }
-
-    return students;
-
-}
-
-
-// ======================================================
-// LOAD ASSESSMENTS
-// ======================================================
-
-async function loadAssessments() {
-
-    if (!assessments.length) {
-
-        assessments =
-            JSON.parse(localStorage.getItem("assessments")) || [];
-
-    }
-
-    return assessments;
-
-}
-
-
-// ======================================================
-// GET MY COURSES
-// ======================================================
-
-async function myCourses() {
-
-    await loadCourses();
-
-    const myCourses = courses.filter(function (course) {
-
-        return course.instructorId === userId;
-
-    });
-
-    return myCourses;
-
-}
-
-
-// ======================================================
-// GET STUDENTS FOR COURSE
-// ======================================================
-
-async function myStudents(courseData) {
-
-    await loadStudents();
-
-    const myStudents = students.filter(function (student) {
-
-        return student.courses.includes(courseData.id);
-
-    });
-
-    return myStudents;
-
-}
-
-
-// ======================================================
-// SHOW MESSAGE
-// ======================================================
-
-function showMessage(message) {
-
-    messagePopup.textContent = message;
-
-    messagePopup.classList.add("show");
-
-    setTimeout(function () {
-
-        messagePopup.classList.remove("show");
-
-    }, 2500);
-
-}
-
-
-// ======================================================
-// SHOW COURSES
-// ======================================================
-
-async function showCourses() {
-
-    const myCoursesData = await myCourses();
-
-    coursesList.innerHTML = "";
-
-    if (!myCoursesData.length) {
-
-        coursesList.innerHTML = `
-            <p class="empty">
-                No courses found.
-            </p>
-        `;
-
-        return;
-    }
-
-
-    myCoursesData.forEach(function (course) {
-
-        const card = document.createElement("div");
-
-        card.className = "card";
-
-        card.innerHTML = `
-            <div>
-                <h3>${course.name}</h3>
-                <p>Course ID: ${course.id}</p>
-            </div>
-
-            <div class="cardButtons">
-
-                <button 
-                    class="selectCourse"
-                    data-id="${course.id}">
-                    Select
-                </button>
-
-                <button 
-                    class="editCourse"
-                    data-id="${course.id}">
-                    Edit
-                </button>
-
-                <button 
-                    class="deleteCourse"
-                    data-id="${course.id}">
-                    Delete
-                </button>
-
-            </div>
-        `;
-
-        coursesList.appendChild(card);
-
-    });
-
-
-    // SELECT COURSE
-
-    const selectButtons =
-        document.querySelectorAll(".selectCourse");
-
-    selectButtons.forEach(function (button) {
-
-        button.addEventListener("click", async function () {
-
-            const courseId = button.dataset.id;
-
-            selectedCourse =
-                myCoursesData.find(function (course) {
-
-                    return course.id === courseId;
-
-                });
-
-
-            showMessage(
-                `Selected course: ${selectedCourse.name}`
-            );
-
-
-            await showAssessments();
-
-            await showStudents();
-
-        });
-
-    });
-
-
-    // EDIT COURSE
-
-    const editButtons =
-        document.querySelectorAll(".editCourse");
-
-    editButtons.forEach(function (button) {
-
-        button.addEventListener("click", function () {
-
-            const courseId = button.dataset.id;
-
-            const course =
-                myCoursesData.find(function (course) {
-
-                    return course.id === courseId;
-
-                });
-
-            editingCourseId = course.id;
-
-            editCourseName.value = course.name;
-
-            editCourseModal.style.display = "flex";
-
-        });
-
-    });
-
-
-    // DELETE COURSE
-
-    const deleteButtons =
-        document.querySelectorAll(".deleteCourse");
-
-    deleteButtons.forEach(function (button) {
-
-        button.addEventListener("click", async function () {
-
-            const courseId = button.dataset.id;
-
-            const confirmDelete =
-                confirm("Are you sure you want to delete this course?");
-
-            if (!confirmDelete) {
-
-                return;
-
-            }
-
-
-            courses = courses.filter(function (course) {
-
-                return course.id !== courseId;
-
-            });
-
-
-            localStorage.setItem(
-                "courses",
-                JSON.stringify(courses)
-            );
-
-
-            showMessage("Course deleted successfully.");
-
-            await showCourses();
-
-        });
-
-    });
-
-}
-
-
-// ======================================================
-// SHOW ASSESSMENTS
-// ======================================================
-
-async function showAssessments() {
-
-    await loadAssessments();
-
-    assessmentsList.innerHTML = "";
-
-    if (!selectedCourse) {
-
-        assessmentsList.innerHTML = `
-            <p class="empty">
-                Select a course first.
-            </p>
-        `;
-
-        return;
-
-    }
-
-
-    const courseAssessments =
-        assessments.filter(function (assessment) {
-
-            return assessment.courseId === selectedCourse.id;
-
-        });
-
-
-    if (!courseAssessments.length) {
-
-        assessmentsList.innerHTML = `
-            <p class="empty">
-                No assessments found for this course.
-            </p>
-        `;
-
-        return;
-
-    }
-
-
-    courseAssessments.forEach(function (assessment) {
-
-        const card = document.createElement("div");
-
-        card.className = "card";
-
-        card.innerHTML = `
-            <div>
-
-                <h3>${assessment.name}</h3>
-
-                <p>
-                    Type: ${assessment.type}
-                </p>
-
-                <p>
-                    Maximum Score: ${assessment.maxScore}
-                </p>
-
-            </div>
-
-            <div class="cardButtons">
-
-                <button
-                    class="selectAssessment"
-                    data-id="${assessment.id}">
-                    Select
-                </button>
-
-                <button
-                    class="editAssessment"
-                    data-id="${assessment.id}">
-                    Edit
-                </button>
-
-                <button
-                    class="deleteAssessment"
-                    data-id="${assessment.id}">
-                    Delete
-                </button>
-
-            </div>
-        `;
-
-        assessmentsList.appendChild(card);
-
-    });
-
-
-    // SELECT ASSESSMENT
-
-    const selectButtons =
-        document.querySelectorAll(".selectAssessment");
-
-    selectButtons.forEach(function (button) {
-
-        button.addEventListener("click", async function () {
-
-            const assessmentId = button.dataset.id;
-
-            selectedAssessment =
-                courseAssessments.find(function (assessment) {
-
-                    return assessment.id === assessmentId;
-
-                });
-
-
-            showMessage(
-                `Selected assessment: ${selectedAssessment.name}`
-            );
-
-            await showStudents();
-
-        });
-
-    });
-
-
-    // EDIT ASSESSMENT
-
-    const editButtons =
-        document.querySelectorAll(".editAssessment");
-
-    editButtons.forEach(function (button) {
-
-        button.addEventListener("click", function () {
-
-            const assessmentId = button.dataset.id;
-
-            const assessment =
-                courseAssessments.find(function (assessment) {
-
-                    return assessment.id === assessmentId;
-
-                });
-
-
-            editingAssessmentId = assessment.id;
-
-            editAssessmentName.value =
-                assessment.name;
-
-            editAssessmentType.value =
-                assessment.type;
-
-            editAssessmentMaxScore.value =
-                assessment.maxScore;
-
-
-            editAssessmentModal.style.display = "flex";
-
-        });
-
-    });
-
-
-    // DELETE ASSESSMENT
-
-    const deleteButtons =
-        document.querySelectorAll(".deleteAssessment");
-
-    deleteButtons.forEach(function (button) {
-
-        button.addEventListener("click", async function () {
-
-            const assessmentId = button.dataset.id;
-
-            const confirmDelete =
-                confirm(
-                    "Are you sure you want to delete this assessment?"
-                );
-
-            if (!confirmDelete) {
-
-                return;
-
-            }
-
-
-            assessments =
-                assessments.filter(function (assessment) {
-
-                    return assessment.id !== assessmentId;
-
-                });
-
-
-            localStorage.setItem(
-                "assessments",
-                JSON.stringify(assessments)
-            );
-
-
-            showMessage(
-                "Assessment deleted successfully."
-            );
-
-
-            await showAssessments();
-
-        });
-
-    });
-
-}
-
-
-// ======================================================
-// SHOW STUDENTS
-// ======================================================
-
-async function showStudents() {
-
-    studentsList.innerHTML = "";
-
-    if (!selectedCourse) {
-
-        studentsList.innerHTML = `
-            <p class="empty">
-                Select a course first.
-            </p>
-        `;
-
-        return;
-
-    }
-
-
-    if (!selectedAssessment) {
-
-        studentsList.innerHTML = `
-            <p class="empty">
-                Select an assessment first.
-            </p>
-        `;
-
-        return;
-
-    }
-
-
-    const courseStudents =
-        await myStudents(selectedCourse);
-
-
-    if (!courseStudents.length) {
-
-        studentsList.innerHTML = `
-            <p class="empty">
-                No students found for this course.
-            </p>
-        `;
-
-        return;
-
-    }
-
-
-    courseStudents.forEach(function (student) {
-
-        const scoreObject =
-            student.scores?.find(function (score) {
-
-                return score.assessmentId ===
-                    selectedAssessment.id;
-
-            });
-
-
-        const currentScore =
-            scoreObject ? scoreObject.score : "";
-
-
-        const studentElement =
-            document.createElement("div");
-
-        studentElement.className = "student";
-
-
-        studentElement.innerHTML = `
-
-            <div class="studentInfo">
-
-                <h3>${student.name}</h3>
-
-                <p>
-                    Student ID: ${student.studentId}
-                </p>
-
-            </div>
-
-
-            <div class="studentMark">
-
-                <input
-                    type="number"
-                    class="studentScore"
-                    data-student-id="${student.id}"
-                    value="${currentScore}"
-                    min="0"
-                    max="${selectedAssessment.maxScore}"
-                    placeholder="Score"
-                >
-
-                <span>
-                    / ${selectedAssessment.maxScore}
-                </span>
-
-            </div>
-
-        `;
-
-
-        studentsList.appendChild(studentElement);
-
-    });
-
-}
-
-
-// ======================================================
-// ADD COURSE BUTTON
-// ======================================================
-
-addCourse.addEventListener("click", function () {
-
-    courseModal.style.display = "flex";
-
+// ==================================================
+// COURSES
+// ==================================================
+$('addCourse').addEventListener('click', () => { $('courseForm').reset(); showModal($('courseModal')); });
+$('closeCourseModal').addEventListener('click', () => hideModal($('courseModal')));
+
+$('courseForm').addEventListener('submit', event => {
+    event.preventDefault();
+    const name = $('courseName').value.trim();
+
+    if (!name) return showMessage('Course name is required');
+    if (!me) return showMessage('Instructor not found');
+    if (courseExists(name)) return showMessage('This course already exists');
+
+    const courses = load('courses');
+    const course = { id: nextId('COURSE', courses), name, instructorId: me.id, studentsCount: 0 };
+    courses.push(course);
+    save('courses', courses);
+
+    selectedCourseId = course.id;
+    selectedAssessmentId = null;
+    hideModal($('courseModal'));
+    refresh();
+    showMessage('Course added');
 });
 
+function updateCourse(id) {
+    const course = load('courses').find(c => same(c.id, id));
+    if (!course) return;
+    editingCourseId = id;
+    $('editCourseName').value = course.name;
+    showModal($('editCourseModal'));
+}
 
-// ======================================================
-// CLOSE COURSE MODAL
-// ======================================================
+$('closeEditCourseModal').addEventListener('click', () => hideModal($('editCourseModal')));
 
-closeCourseModal.addEventListener("click", function () {
+$('editCourseForm').addEventListener('submit', event => {
+    event.preventDefault();
+    const name = $('editCourseName').value.trim();
 
-    courseModal.style.display = "none";
+    if (!editingCourseId) return;
+    if (!name) return showMessage('Course name is required');
+    if (courseExists(name, editingCourseId)) return showMessage('This course already exists');
 
-    courseForm.reset();
+    const courses = load('courses');
+    const course = courses.find(c => same(c.id, editingCourseId));
+    if (!course) return;
 
+    course.name = name;
+    save('courses', courses);
+    hideModal($('editCourseModal'));
+    refresh();
+    showMessage('Course updated');
 });
 
+async function deleteCourse(id) {
+    const course = load('courses').find(c => same(c.id, id));
+    if (!course || !confirm(`Delete "${course.name}" and all its assessments?`)) return;
 
-// ======================================================
-// ADD COURSE
-// ======================================================
+    const removed = load('lms_assessments').filter(a => same(a.courseId, id)).map(a => a.id);
 
-courseForm.addEventListener("submit", async function (e) {
+    save('courses', load('courses').filter(c => !same(c.id, id)));
+    save('lms_assessments', load('lms_assessments').filter(a => !same(a.courseId, id)));
+    await removeScores(removed);
 
-    e.preventDefault();
+    if (same(selectedCourseId, id)) selectedCourseId = selectedAssessmentId = null;
+    refresh();
+    showMessage('Course deleted');
+}
 
+// removes marks of the given assessment ids (lms_scores and student.scores)
+async function removeScores(ids) {
+    const isRemoved = score => ids.some(id => same(id, score.assessmentId));
 
-    const name =
-        courseName.value.trim();
+    save('lms_scores', load('lms_scores').filter(s => !isRemoved(s)));
 
-
-    if (!name) {
-
-        showMessage("Please enter course name.");
-
-        return;
-
-    }
-
-
-    await loadCourses();
+    const students = await getStudents();
+    students.forEach(s => { s.scores = (s.scores || []).filter(score => !isRemoved(score)); });
+    save('students', students);
+}
 
 
-    const newCourse = {
+// ==================================================
+// ASSESSMENTS
+// ==================================================
+$('addAssessment').addEventListener('click', () => {
+    if (!selectedCourseId) return showMessage('Please select a course first');
+    $('assessmentForm').reset();
+    showModal($('assessmentModal'));
+});
 
-        id:
-            "COURSE" +
-            String(courses.length + 1).padStart(3, "0"),
+$('closeModal').addEventListener('click', () => hideModal($('assessmentModal')));
 
-        name: name,
+$('assessmentForm').addEventListener('submit', async event => {
+    event.preventDefault();
+    if (!selectedCourseId) return showMessage('Please select a course first');
 
-        instructorId: userId
+    const name = $('assessmentName').value.trim();
+    const type = $('type').value || 'assignment';
+    const maxScore = Number($('maxScore').value);
 
+    if (!name) return showMessage('Assessment name is required');
+    if (!maxScore || maxScore <= 0) return showMessage('Maximum score must be greater than 0');
+    if (assessmentExists(selectedCourseId, name)) return showMessage('This assessment already exists');
+
+    const assessments = load('lms_assessments');
+    const assessment = { id: nextId('AS', assessments), courseId: selectedCourseId, instructorId: me.id, name, type, maxScore };
+    assessments.push(assessment);
+    save('lms_assessments', assessments);
+
+    // an empty mark for every student in this course
+    const students = await getStudents();
+    const scores = load('lms_scores');
+    students
+        .filter(s => (s.courses || []).some(id => same(id, selectedCourseId)))
+        .forEach(s => scores.push({ studentId: s.id, assessmentId: assessment.id, score: null }));
+    save('lms_scores', scores);
+
+    selectedAssessmentId = assessment.id;
+    hideModal($('assessmentModal'));
+    showAssessments();
+    showStudents();
+    showMessage('Assessment added');
+});
+
+function updateAssessment(id) {
+    const assessment = findAssessment(id);
+    if (!assessment) return;
+
+    editingAssessmentId = id;
+    $('editAssessmentName').value = assessment.name;
+    $('editAssessmentType').value = assessment.type;
+    $('editAssessmentMaxScore').value = assessment.maxScore;
+    showModal($('editAssessmentModal'));
+}
+
+$('closeEditAssessmentModal').addEventListener('click', () => hideModal($('editAssessmentModal')));
+
+$('editAssessmentForm').addEventListener('submit', event => {
+    event.preventDefault();
+    if (!editingAssessmentId) return;
+
+    const name = $('editAssessmentName').value.trim();
+    const type = $('editAssessmentType').value || 'assignment';
+    const maxScore = Number($('editAssessmentMaxScore').value);
+
+    if (!name) return showMessage('Assessment name is required');
+    if (!maxScore || maxScore <= 0) return showMessage('Maximum score must be greater than 0');
+    if (assessmentExists(selectedCourseId, name, editingAssessmentId)) return showMessage('This assessment already exists');
+
+    const tooHigh = load('lms_scores').some(s =>
+        same(s.assessmentId, editingAssessmentId) && s.score !== null && Number(s.score) > maxScore);
+    if (tooHigh) return showMessage('Some students already have marks above this maximum');
+
+    const assessments = load('lms_assessments');
+    const assessment = assessments.find(a => same(a.id, editingAssessmentId));
+    if (!assessment) return;
+
+    Object.assign(assessment, { name, type, maxScore });
+    save('lms_assessments', assessments);
+
+    hideModal($('editAssessmentModal'));
+    showAssessments();
+    showStudents();
+    showMessage('Assessment updated');
+});
+
+async function deleteAssessment(id) {
+    const assessment = findAssessment(id);
+    if (!assessment || !confirm(`Delete "${assessment.name}" and all its marks?`)) return;
+
+    save('lms_assessments', load('lms_assessments').filter(a => !same(a.id, id)));
+    await removeScores([id]);
+
+    if (same(selectedAssessmentId, id)) selectedAssessmentId = null;
+    showAssessments();
+    showStudents();
+    showMessage('Assessment deleted');
+}
+
+
+// ==================================================
+// SHOW COURSES / ASSESSMENTS
+// ==================================================
+// one card with a title, optional type badge, info line, Update and Delete
+function makeCard({ title, type, info, selected, onSelect, onUpdate, onDelete }) {
+    const card = document.createElement('div');
+    card.className = 'card' + (selected ? ' selected' : '');
+
+    const content = document.createElement('div');
+    content.className = 'card-content';
+
+    [['card-title', title], ['card-type', type], ['card-info', info]].forEach(([className, text]) => {
+        if (!text) return;
+        const line = document.createElement('div');
+        line.className = className;
+        line.innerText = text;
+        content.append(line);
+    });
+
+    const button = (label, action) => {
+        const b = document.createElement('button');
+        b.innerText = label;
+        b.addEventListener('click', event => { event.stopPropagation(); action(); });
+        return b;
     };
 
+    card.addEventListener('click', onSelect);
+    card.append(content, button('Update', onUpdate), button('Delete', onDelete));
+    return card;
+}
 
-    courses.push(newCourse);
+function showCourses() {
+    const courses = myCourses();
 
-
-    localStorage.setItem(
-        "courses",
-        JSON.stringify(courses)
-    );
-
-
-    courseForm.reset();
-
-    courseModal.style.display = "none";
-
-
-    showMessage(
-        "Course added successfully."
-    );
-
-
-    await showCourses();
-
-});
-
-
-// ======================================================
-// UPDATE COURSE
-// ======================================================
-
-editCourseForm.addEventListener("submit", async function (e) {
-
-    e.preventDefault();
-
-
-    const newName =
-        editCourseName.value.trim();
-
-
-    if (!newName) {
-
-        showMessage(
-            "Please enter course name."
-        );
-
+    if (!courses.length) {
+        $('courses').innerHTML = '<p>No courses found.</p>';
         return;
-
     }
 
+    $('courses').replaceChildren(...courses.map(course => makeCard({
+        title: course.name,
+        info: `${course.studentsCount ?? 0} students`,
+        selected: same(course.id, selectedCourseId),
+        onSelect: () => { selectedCourseId = course.id; selectedAssessmentId = null; refresh(); },
+        onUpdate: () => updateCourse(course.id),
+        onDelete: () => deleteCourse(course.id)
+    })));
+}
 
-    const course =
-        courses.find(function (course) {
-
-            return course.id === editingCourseId;
-
-        });
-
-
-    if (course) {
-
-        course.name = newName;
-
-    }
-
-
-    localStorage.setItem(
-        "courses",
-        JSON.stringify(courses)
-    );
-
-
-    editCourseModal.style.display = "none";
-
-    editCourseForm.reset();
-
-
-    showMessage(
-        "Course updated successfully."
-    );
-
-
-    await showCourses();
-
-});
-
-
-// ======================================================
-// CLOSE EDIT COURSE
-// ======================================================
-
-closeEditCourseModal.addEventListener(
-    "click",
-    function () {
-
-        editCourseModal.style.display = "none";
-
-    }
-);
-
-
-// ======================================================
-// ADD ASSESSMENT BUTTON
-// ======================================================
-
-addAssessment.addEventListener("click", function () {
-
-    if (!selectedCourse) {
-
-        showMessage(
-            "Please select a course first."
-        );
-
+function showAssessments() {
+    if (!selectedCourseId) {
+        $('assessments').innerHTML = '<p>Select a course to see assessments.</p>';
         return;
-
     }
 
+    const list = myAssessments().filter(a => same(a.courseId, selectedCourseId));
 
-    assessmentModal.style.display = "flex";
-
-});
-
-
-// ======================================================
-// CLOSE ASSESSMENT MODAL
-// ======================================================
-
-closeModal.addEventListener("click", function () {
-
-    assessmentModal.style.display = "none";
-
-    assessmentForm.reset();
-
-});
-
-
-// ======================================================
-// ADD ASSESSMENT
-// ======================================================
-
-assessmentForm.addEventListener(
-    "submit",
-    async function (e) {
-
-        e.preventDefault();
-
-
-        if (!selectedCourse) {
-
-            showMessage(
-                "Please select a course first."
-            );
-
-            return;
-
-        }
-
-
-        const name =
-            assessmentName.value.trim();
-
-        const assessmentType =
-            type.value;
-
-        const score =
-            Number(maxScore.value);
-
-
-        if (!name) {
-
-            showMessage(
-                "Please enter assessment name."
-            );
-
-            return;
-
-        }
-
-
-        if (score <= 0) {
-
-            showMessage(
-                "Maximum score must be greater than 0."
-            );
-
-            return;
-
-        }
-
-
-        await loadAssessments();
-
-
-        const newAssessment = {
-
-            id:
-                "a" +
-                String(assessments.length + 1),
-
-            courseId:
-                selectedCourse.id,
-
-            name: name,
-
-            type:
-                assessmentType,
-
-            maxScore:
-                score
-
-        };
-
-
-        assessments.push(newAssessment);
-
-
-        localStorage.setItem(
-            "assessments",
-            JSON.stringify(assessments)
-        );
-
-
-        assessmentForm.reset();
-
-        assessmentModal.style.display =
-            "none";
-
-
-        showMessage(
-            "Assessment added successfully."
-        );
-
-
-        await showAssessments();
-
+    if (!list.length) {
+        $('assessments').innerHTML = '<p>No assessments for this course.</p>';
+        return;
     }
-);
 
-
-// ======================================================
-// UPDATE ASSESSMENT
-// ======================================================
-
-editAssessmentForm.addEventListener(
-    "submit",
-    async function (e) {
-
-        e.preventDefault();
-
-
-        const newName =
-            editAssessmentName.value.trim();
-
-        const newType =
-            editAssessmentType.value;
-
-        const newMaxScore =
-            Number(editAssessmentMaxScore.value);
-
-
-        if (!newName) {
-
-            showMessage(
-                "Please enter assessment name."
-            );
-
-            return;
-
-        }
-
-
-        if (newMaxScore <= 0) {
-
-            showMessage(
-                "Maximum score must be greater than 0."
-            );
-
-            return;
-
-        }
-
-
-        const assessment =
-            assessments.find(function (assessment) {
-
-                return assessment.id ===
-                    editingAssessmentId;
-
-            });
-
-
-        if (assessment) {
-
-            assessment.name =
-                newName;
-
-            assessment.type =
-                newType;
-
-            assessment.maxScore =
-                newMaxScore;
-
-        }
-
-
-        localStorage.setItem(
-            "assessments",
-            JSON.stringify(assessments)
-        );
-
-
-        editAssessmentModal.style.display =
-            "none";
-
-
-        editAssessmentForm.reset();
-
-
-        showMessage(
-            "Assessment updated successfully."
-        );
-
-
-        await showAssessments();
-
-    }
-);
-
-
-// ======================================================
-// CLOSE EDIT ASSESSMENT
-// ======================================================
-
-closeEditAssessmentModal.addEventListener(
-    "click",
-    function () {
-
-        editAssessmentModal.style.display =
-            "none";
-
-    }
-);
-
-
-// ======================================================
-// SAVE MARKS
-// ======================================================
-
-saveMarks.addEventListener(
-    "click",
-    async function () {
-
-        if (!selectedCourse) {
-
-            showMessage(
-                "Please select a course first."
-            );
-
-            return;
-
-        }
-
-
-        if (!selectedAssessment) {
-
-            showMessage(
-                "Please select an assessment first."
-            );
-
-            return;
-
-        }
-
-
-        const inputs =
-            document.querySelectorAll(
-                ".studentScore"
-            );
-
-
-        inputs.forEach(function (input) {
-
-            const studentId =
-                input.dataset.studentId;
-
-            const score =
-                Number(input.value);
-
-
-            const student =
-                students.find(function (student) {
-
-                    return String(student.id) ===
-                        String(studentId);
-
-                });
-
-
-            if (!student) {
-
-                return;
-
-            }
-
-
-            if (!student.scores) {
-
-                student.scores = [];
-
-            }
-
-
-            const existingScore =
-                student.scores.find(function (scoreObject) {
-
-                    return scoreObject.assessmentId ===
-                        selectedAssessment.id;
-
-                });
-
-
-            if (existingScore) {
-
-                existingScore.score =
-                    score;
-
-            } else {
-
-                student.scores.push({
-
-                    assessmentId:
-                        selectedAssessment.id,
-
-                    score:
-                        score
-
-                });
-
-            }
-
-        });
-
-
-        localStorage.setItem(
-            "students",
-            JSON.stringify(students)
-        );
-
-
-        showMessage(
-            "Marks saved successfully."
-        );
-
-    }
-);
-
-
-// ======================================================
-// SEARCH STUDENTS
-// ======================================================
-
-searchBtn.addEventListener(
-    "click",
-    async function () {
-
-        const searchValue =
-            searchInput.value
-                .trim()
-                .toLowerCase();
-
-
-        if (!searchValue) {
-
-            await showStudents();
-
-            return;
-
-        }
-
-
-        const allStudents =
-            await loadStudents();
-
-
-        const filteredStudents =
-            allStudents.filter(function (student) {
-
-                return (
-                    student.name
-                        .toLowerCase()
-                        .includes(searchValue)
-                    ||
-                    student.studentId
-                        .toLowerCase()
-                        .includes(searchValue)
-                );
-
-            });
-
-
-        studentsList.innerHTML = "";
-
-
-        if (!filteredStudents.length) {
-
-            studentsList.innerHTML = `
-                <p class="empty">
-                    No students found.
-                </p>
-            `;
-
-            return;
-
-        }
-
-
-        filteredStudents.forEach(function (student) {
-
-            const studentElement =
-                document.createElement("div");
-
-            studentElement.className =
-                "student";
-
-
-            studentElement.innerHTML = `
-
-                <div class="studentInfo">
-
-                    <h3>${student.name}</h3>
-
-                    <p>
-                        Student ID:
-                        ${student.studentId}
-                    </p>
-
-                </div>
-
-            `;
-
-
-            studentsList.appendChild(
-                studentElement
-            );
-
-        });
-
-    }
-);
-
-
-// ======================================================
-// SEARCH WHEN PRESS ENTER
-// ======================================================
-
-searchInput.addEventListener(
-    "keydown",
-    function (e) {
-
-        if (e.key === "Enter") {
-
-            searchBtn.click();
-
-        }
-
-    }
-);
-
-
-// ======================================================
-// INITIAL LOAD
-// ======================================================
-
-async function init() {
-
-    await loadCourses();
-
-    await loadStudents();
-
-    await loadAssessments();
-
-    await showCourses();
-
-    await showAssessments();
-
+    $('assessments').replaceChildren(...list.map(assessment => makeCard({
+        title: assessment.name,
+        type: assessment.type,
+        info: `Maximum score: ${assessment.maxScore}`,
+        selected: same(assessment.id, selectedAssessmentId),
+        onSelect: () => { selectedAssessmentId = assessment.id; showAssessments(); showStudents(); },
+        onUpdate: () => updateAssessment(assessment.id),
+        onDelete: () => deleteAssessment(assessment.id)
+    })));
 }
 
 
-init();
+// ==================================================
+// STUDENTS + MARKS
+// ==================================================
+async function showStudents() {
+    const box = $('students');
+    const section = $('studentsSection');
+
+    const assessment = selectedAssessmentId && findAssessment(selectedAssessmentId);
+
+    if (!assessment) {
+        box.replaceChildren();
+        section.style.display = 'none';
+        return;
+    }
+
+    section.style.display = 'block';
+
+    const students = (await getStudents()).filter(s =>
+        !s.archived && (s.courses || []).some(id => same(id, assessment.courseId)));
+
+    if (!students.length) {
+        box.innerHTML = '<p>No students found.</p>';
+        return;
+    }
+
+    const scores = load('lms_scores');
+
+    box.replaceChildren(...students.map((student, index) => {
+        const record = scores.find(s => same(s.studentId, student.id) && same(s.assessmentId, assessment.id));
+        const row = document.createElement('div');
+        row.className = 'student';
+
+        row.innerHTML = `
+            <div class="student-info">
+                <div class="student-name"></div>
+                <div class="student-id"></div>
+            </div>
+            <div class="student-mark">
+                <input type="number" min="0" placeholder="0">
+                <span>/ ${assessment.maxScore}</span>
+            </div>`;
+
+        row.querySelector('.student-name').innerText = student.name || `Student ${index + 1}`;
+        row.querySelector('.student-id').innerText = student.studentId || student.id;
+
+        const input = row.querySelector('input');
+        input.max = assessment.maxScore;
+        input.dataset.studentId = student.id;
+        input.value = record && record.score != null ? record.score : '';
+
+        return row;
+    }));
+}
+
+$('saveMarks').addEventListener('click', async () => {
+    const assessment = selectedAssessmentId && findAssessment(selectedAssessmentId);
+    if (!assessment) return showMessage('Please select an assessment');
+
+    const inputs = [...$('students').querySelectorAll('input')];
+
+    for (const input of inputs) {
+        const score = Number(input.value);
+        if (input.value !== '' && (score < 0 || score > assessment.maxScore)) {
+            showMessage(`Score must be between 0 and ${assessment.maxScore}`);
+            input.focus();
+            return;
+        }
+    }
+
+    const students = await getStudents();
+    const scores = load('lms_scores');
+
+    // finds a mark record in a list, or creates it
+    const getRecord = (list, match, create) => {
+        let record = list.find(match);
+        if (!record) list.push((record = create));
+        return record;
+    };
+
+    inputs.forEach(input => {
+        const id = input.dataset.studentId;
+        const value = input.value === '' ? null : Number(input.value);
+
+        getRecord(scores,
+            s => same(s.studentId, id) && same(s.assessmentId, assessment.id),
+            { studentId: id, assessmentId: assessment.id, score: null }
+        ).score = value;
+
+        const student = students.find(s => same(s.id, id));
+        if (!student) return;
+
+        student.scores = student.scores || [];
+        getRecord(student.scores,
+            s => same(s.assessmentId, assessment.id),
+            { assessmentId: assessment.id, score: null }
+        ).score = value;
+    });
+
+    save('lms_scores', scores);
+    save('students', students);
+    showMessage('Marks saved');
+});
+
+
+// ==================================================
+// START
+// ==================================================
+$('studentsSection').style.display = 'none';
+refresh();

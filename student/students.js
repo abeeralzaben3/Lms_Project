@@ -165,7 +165,7 @@ function readList(key) {
 async function getStudentData() {
 
     let students =
-        readList("students");
+        readList("myStudents");
 
 
     if (students.length > 0) {

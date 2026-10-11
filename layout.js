@@ -20,20 +20,21 @@ import { Cookie } from "../cookies/cookies.js";
 // ---------- page links ----------
 // resolved from THIS file's location, so they work from any folder.
 // change the folder names here if yours are different.
-const LINKS = {
+export const LINKS = {
     dashboard:   new URL("../dashboard/dashboard.html",     import.meta.url).href,
     students:    new URL("../student/students.html",        import.meta.url).href,
     assessments: new URL("../assessments/assessments.html", import.meta.url).href,
     reports:     new URL("../reports/reports.html",         import.meta.url).href,
     settings:    new URL("../settings/settings.html",       import.meta.url).href,
-    login:       new URL("../login/login.html",             import.meta.url).href
+    login:       new URL("../login/index.html",             import.meta.url).href
 };
 
 // ---------- cookies ----------
 const userCookie = new Cookie();
-export const currentUser = userCookie.getCookie("currentUser");
-export const userEmail = userCookie.getCookie("userEmail");
-export const userId = userCookie.getCookie("userId");
+
+export let currentUser = userCookie.getCookie("currentUser");
+export let userEmail = userCookie.getCookie("userEmail");
+export let userId = userCookie.getCookie("userId");
 
 // ---------- search handler (optional) ----------
 // default: go to the students page with ?search=...
@@ -359,12 +360,44 @@ const SIDEBAR_HTML = `
 
 <nav class="nav">
     <ul class="linksCount">
-        <li class="liLinks" id="dashboard">Dashboard</li>
-        <li class="liLinks" id="students">Students</li>
-        <li class="liLinks" id="assessments">Assessments</li>
-        <li class="liLinks" id="reports">Reports</li>
+        <li class="liLinks" id="nav-dashboard">Dashboard</li>
+        <li class="liLinks" id="nav-students">Students</li>
+        <li class="liLinks" id="nav-assessments">Assessments</li>
+        <li class="liLinks" id="nav-reports">Reports</li>
     </ul>
 </nav>`;
+
+// ---------- update layout user ----------
+export function updateLayoutUser() {
+    const cookie = new Cookie();
+
+    currentUser = cookie.getCookie("currentUser");
+    userEmail = cookie.getCookie("userEmail");
+    userId = cookie.getCookie("userId");
+
+    const headerName = document.getElementById("headerName");
+    const techName = document.getElementById("techName");
+    const logo = document.getElementById("logo");
+
+    if (headerName) {
+        headerName.textContent = currentUser || "";
+    }
+
+    if (techName) {
+        techName.textContent = currentUser || "";
+    }
+
+    if (logo) {
+        logo.textContent = currentUser
+            ? currentUser.trim()
+                .split(/\s+/)
+                .slice(0, 2)
+                .map(word => word[0])
+                .join("")
+                .toUpperCase()
+            : "";
+    }
+}
 
 // ---------- build the layout ----------
 function buildLayout() {
@@ -403,9 +436,7 @@ function buildLayout() {
     container.prepend(header, sideBar);
 
     // name + logo
-    $("headerName").textContent = currentUser;
-    $("techName").textContent = currentUser;
-    $("logo").textContent = currentUser.slice(0, 2).toUpperCase();
+    updateLayoutUser();
 
     // account menu
     const accountMinu = $("accountMinu");
@@ -431,7 +462,7 @@ function buildLayout() {
 
     // nav links (+ highlight the current page)
     ["dashboard", "students", "assessments", "reports"].forEach(name => {
-        const item = $(name);
+        const item = $("nav-" + name);
         item.addEventListener("click", () => (window.location.href = LINKS[name]));
         if (new URL(LINKS[name]).pathname === location.pathname) item.classList.add("active");
     });
@@ -444,6 +475,38 @@ function buildLayout() {
 }
 
 // ---------- start ----------
+// ---------- listen for user update ----------
+window.addEventListener("userUpdated", () => {
+    const cookie = new Cookie();
+
+    currentUser = cookie.getCookie("currentUser");
+    userEmail = cookie.getCookie("userEmail");
+    userId = cookie.getCookie("userId");
+
+    const headerName = document.getElementById("headerName");
+    const techName = document.getElementById("techName");
+    const logo = document.getElementById("logo");
+
+    if (headerName) {
+        headerName.textContent = currentUser || "";
+    }
+
+    if (techName) {
+        techName.textContent = currentUser || "";
+    }
+
+    if (logo) {
+        logo.textContent = currentUser
+            ? currentUser.trim()
+                .split(/\s+/)
+                .slice(0, 2)
+                .map(word => word[0])
+                .join("")
+                .toUpperCase()
+            : "";
+    }
+});
+
 if (!currentUser || !userId) {
     window.location.href = LINKS.login;      // not logged in
 } else if (document.readyState === "loading") {

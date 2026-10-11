@@ -8,14 +8,15 @@ const toggle_pass = document.getElementById("toggle-pass");
 const formError = document.getElementById("formError");
 
 
-let localData = JSON.parse(localStorage.getItem("instructors")) || []
+let localData = JSON.parse(localStorage.getItem("instructors")) ||  await fetchApi("instructors");
+
 //==================submet=========================
 
 loginForm.addEventListener("submit",async function (e) {
     e.preventDefault();
         
     if (!localData) {
-        localData = await fetchApi("instructors");
+        
     }
     for (const data of localData) {
         if (email.value === data.email && password.value === data.password) {

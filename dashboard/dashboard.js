@@ -34,7 +34,9 @@ const userEmail = userCookie.getCookie("userEmail")
 const userId = userCookie.getCookie("userId")
 
 
-// ==================minu and side=======================
+attendanceBtn.addEventListener("click",function(e){
+    window.location.href="../student/students.html";
+})
 
 
 
@@ -123,30 +125,65 @@ function updateAttendance(studentsData) {
 }
 // =================== Run ===================
 
+
 myCourses(userId).then(function (data) {
-
-    console.log("My Courses:", data);
-
     const courseData = data[0];
 
-    console.log("Current Course:", courseData);
+    if (!courseData) {
+        console.error("No course found for this instructor.");
+        return;
+    }
 
-   myStudents(courseData).then(function (studentsData) {
+    myStudents(courseData).then(function (studentsData) {
 
-    localStorage.setItem(
-        "myStudents",
-        JSON.stringify(studentsData)
-    );
+        // Get the students currently saved locally
+        const savedStudents = JSON.parse(
+            localStorage.getItem("myStudents") || "[]"
+        );
 
-    updateAttendance(studentsData);
+        // Merge the latest student data with saved attendance
+        const mergedStudents = studentsData.map(function (newStudent) {
 
-    createAttendanceChart(studentsData);
+            const oldStudent = savedStudents.find(
+                student =>
+                    String(student.id) === String(newStudent.id)
+            );
 
-    createCommitmentChart(studentsData);
+            if (!oldStudent) {
+                return {
+                    ...newStudent,
+                    attendance: Array.isArray(newStudent.attendance)
+                        ? newStudent.attendance
+                        : []
+                };
+            }
 
+            return {
+                ...newStudent,
+                ...oldStudent,
+
+                // Preserve attendance records already saved locally
+                attendance: Array.isArray(oldStudent.attendance)
+                    ? oldStudent.attendance
+                    : Array.isArray(newStudent.attendance)
+                        ? newStudent.attendance
+                        : []
+            };
+        });
+
+        // Save merged data instead of overwriting attendance
+        localStorage.setItem(
+            "myStudents",
+            JSON.stringify(mergedStudents)
+        );
+
+        // Use the merged data everywhere in the dashboard
+        updateAttendance(mergedStudents);
+        createAttendanceChart(mergedStudents);
+        createCommitmentChart(mergedStudents);
+    });
 });
 
-});
 
 
 function createAttendanceChart(studentsData) {
